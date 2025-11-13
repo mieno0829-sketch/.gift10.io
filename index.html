@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>自動車保険 更新手続き（完全版・修正版・保存用）</title>
-<!-- Version: full-2025-11-13-fixed-akasaka-uiA-progressfix-a11y -->
+<!-- Version: full-2025-11-13-fixed-akasaka-uiA-progressfix-a11y-spacing-icons -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -39,7 +39,7 @@
   .toggleLarge{border:1px solid var(--border);border-radius:6px;padding:4px 8px;background:#fff;color:var(--blue-900);cursor:pointer;font-size:13px}
 
   .aiAgent{display:flex;align-items:center;gap:6px;cursor:pointer}
-  .aiRobot{width:28px;height:28px;border-radius:6px;background:
+  .aiRobot{width:28px;height:28px;border-radius:8px;background:
     radial-gradient(circle at 9px 11px,#fff 4px,#3c7fe6 5px,#3c7fe6 9px,transparent 10px),
     radial-gradient(circle at 19px 11px,#fff 4px,#3c7fe6 5px,#3c7fe6 9px,transparent 10px),
     linear-gradient(180deg,#6f42c1,#3c7fe6);
@@ -55,17 +55,21 @@
 
   main{flex:1;padding-bottom:90px}
   .screen{display:none}.screen.active{display:block}
+
+  /* spacing scale */
+  :root { --sp-8:8px; --sp-12:12px; --sp-16:16px; }
+
   .card{
-    background:#fff;margin:10px 12px;padding:12px;border-radius:12px;
+    background:#fff;margin: var(--sp-12) var(--sp-12); padding: var(--sp-12); border-radius:12px;
     box-shadow:0 2px 8px rgba(15,61,122,.08); border:1px solid var(--border)
   }
-  .h1{
-    font-size:16px;font-weight:600;color:var(--blue-900);margin-bottom:6px; letter-spacing:.01em;
-  }
+  .card + .card{ margin-top: var(--sp-16); }
+
+  .h1{ font-size:16px; font-weight:600; color:var(--blue-900); margin-top:0; margin-bottom:var(--sp-8); letter-spacing:.01em; }
   .desc{font-size:13px;color:var(--sub);line-height:1.55; letter-spacing:.01em;}
-  .list,.item{font-size:13px;color:#222;line-height:1.55;margin:5px 0; letter-spacing:.005em;}
-  .field{margin-top:10px}
-  .label{font-size:13px;color:var(--blue-900);margin-bottom:5px}
+  .list,.item{font-size:13px;color:#222;line-height:1.55;margin: var(--sp-8) 0; letter-spacing:.005em;}
+  .field{margin-top: var(--sp-12)}
+  .label{font-size:13px;color:var(--blue-900);margin-bottom: var(--sp-8)}
   .input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:16px;background:#fff}
   .input:focus,select:focus,textarea:focus{outline:2px solid var(--blue-500);border-color:var(--blue-500)}
   .btnPrimary{
@@ -78,7 +82,7 @@
   .blockLink{display:inline-block;margin-top:6px}
   .redNote{color:var(--red);font-size:12px;margin-top:4px}
 
-  .priceTable{width:100%;border-collapse:collapse;margin-top:6px}
+  .priceTable{width:100%;border-collapse:collapse;margin-top: var(--sp-8)}
   .priceTable th, .priceTable td{border:1px solid var(--border);padding:8px;font-size:13px;text-align:right}
   .priceTable th{background:#f6f8fc;color:var(--blue-900);text-align:center}
   .rowLabel{width:28%;text-align:left;background:#f9fafc;color:var(--blue-900);font-weight:700}
@@ -95,16 +99,28 @@
   .gold{background:#ffd54f} .blue{background:#3c7fe6} .green{background:#0b7a3e}
 
   .infoRow{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .infoIcon{width:18px;height:18px;border-radius:50%;background:var(--yellow);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border:1px solid #e0c24f}
+  /* icon unification */
+  :root { --icon:20px; }
+  .infoIcon{
+    width:var(--icon); height:var(--icon); border-radius:50%;
+    background:var(--yellow); color:#1a1a1a; display:inline-flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:12px; border:1px solid #e0c24f;
+  }
+  .videoIcon{ width:var(--icon); height:var(--icon); }
+  .aiRobot{ border-radius:8px; }
+  .videoCta{ line-height:1.35; }
 
-  .foldCard{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;margin:10px 0;}
-  /* 折りたたみ内の3領域の行頭文字を「・」に統一 */
-  .foldCard .list{ list-style:none; padding-left:0; }
-  .foldCard .list li{ position:relative; padding-left:1.1em; }
-  .foldCard .list li::before{
-    content:'・';
-    position:absolute; left:0; top:0;
-    color: currentColor;
+  .foldCard{border:1px solid var(--border);border-radius:12px;padding: var(--sp-12);background:#fff;margin: var(--sp-12) 0;}
+  .foldCard .foldHeader{
+    font-weight:600; color:var(--blue-900); padding-bottom: var(--sp-8);
+    border-bottom:1px solid rgba(215,224,240,0.8);
+  }
+  .foldCard .foldBody{ margin-top: var(--sp-8); }
+  .foldCard .foldSub{
+    font-size:12px; color:var(--sub); margin-top: var(--sp-8); line-height:1.55;
+  }
+  @media (prefers-color-scheme:dark){
+    .foldCard .foldHeader{ border-bottom-color: rgba(215,224,240,0.25); }
   }
 
   footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);padding:6px 10px;z-index:20}
@@ -138,7 +154,7 @@
   /* 動画CTA（四角＋▶） */
   .videoCta{display:flex;align-items:center;gap:10px;background:var(--blue-700);color:#fff;padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;margin-top:8px}
   .videoCta:active{opacity:.9}
-  .videoIcon{width:22px;height:22px;flex:0 0 22px}
+  /* アイコン枠線微調整用のSVGはHTML側でstroke-width変更 */
 
   /* 文字拡大（強制上書き） */
   .large .h1{font-size:18px !important}
@@ -206,7 +222,7 @@
         <div class="list">・動画が見れます。</div>
         <a href="#" class="videoCta" onclick="openNotice('本番では１分動画に推移します')">
           <svg class="videoIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
-            <rect x="1.5" y="1.5" width="19" height="19" rx="4" fill="#fff" stroke="#fff" stroke-width="1.2"/>
+            <rect x="1.5" y="1.5" width="19" height="19" rx="4" fill="#fff" stroke="#fff" stroke-width="1"/>
             <polygon points="9,6.5 16,11 9,15.5" fill="#1f5fbf"/>
           </svg>
           はじめての方はコチラ（使い方の1分動画）
@@ -703,6 +719,7 @@
 
       <div class="card foldCard">
         <div class="foldHeader">章ごとの確認（タップで説明）</div>
+        <div class="foldSub">各項目をタップすると短い解説を表示します。</div>
         <div class="foldBody">
           <ul class="list">
             <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">1章：等級と割引のしくみ</a></li>
@@ -715,6 +732,7 @@
 
       <div class="card foldCard">
         <div class="foldHeader">用語をやさしく（タップで説明）</div>
+        <div class="foldSub">よく出る用語の意味を短く説明します。タップで詳しく読めます。</div>
         <div class="foldBody">
           <ul class="list">
             <li><a href="#" class="link" onclick="openNotice('本番では詳細解説画面に推移します')">「等級」＝翌年の割引の段階</a></li>
@@ -726,6 +744,7 @@
 
       <div class="card foldCard">
         <div class="foldHeader">重要事項の全文</div>
+        <div class="foldSub">全文の確認やPDFの受け取り方法をお選びいただけます。</div>
         <div class="foldBody">
           <div class="desc">全文はいつでも読めます。メールでもお送りします。</div>
           <div style="display:flex; gap:6px; margin-top:6px;">
@@ -816,7 +835,6 @@
           <input class="input" id="contactValue" placeholder="例：name@example.co.jp / 090..." />
         </div>
 
-        <!-- 追加：情報配信のご希望 -->
         <div class="field">
           <div class="label">情報配信のご希望</div>
           <div class="desc" style="margin-bottom:6px;">
@@ -1083,10 +1101,7 @@
 
   /* 色選択 */
   function selectColor(name, el){
-    try{
-      document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active'));
-      if(el) el.classList.add('active');
-    }catch(e){}
+    try{ document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active')); if(el) el.classList.add('active'); }catch(e){}
     try{ showToast(`${name}を選択しました`);}catch(e){}
     setTimeout(()=>{ try{ next(); }catch(e){} },800);
   }
