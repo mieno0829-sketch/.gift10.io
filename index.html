@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>自動車保険 更新手続き（完全版・修正版・安定版）</title>
-<!-- Version: stable-2025-11-13 -->
+<title>自動車保険 更新手続き（完全版・修正版・保存用）</title>
+<!-- Version: full-2025-11-13 -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -96,7 +96,7 @@
   .licBox.wide{flex:2}
   .licBox.red{border-color:#d32f2f}
   .licBox.short{max-width:calc(100% - 110px)}
-  .licBox.equal{flex:1}
+  .licBox.equal{flex:1} /* 氏名と生年月日を同程度の長さに */
   .faceBox{position:absolute;right:10px;bottom:10px;width:90px;height:110px;background:var(--face);border:1px solid var(--face-border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--blue-900);font-size:12px}
 
   /* OTP 4桁入力 */
@@ -128,37 +128,48 @@
   .large .priceTable th,
   .large .priceTable td{font-size:15px !important}
   .large .otpBox{font-size:26px !important}
-/* EXP-CTA START */
-.exp-cta .btnPrimary{
-  min-height:48px; padding:14px 14px; font-size:16px; border-radius:12px;
-  letter-spacing:.02em; box-shadow:0 2px 0 rgba(15,61,122,.08);
-  transition:transform .02s ease, box-shadow .12s ease;
-}
-.exp-cta .btnPrimary:active{ transform:translateY(1px); box-shadow:0 1px 0 rgba(15,61,122,.08); }
 
-.exp-cta .supportItem, .exp-cta .ghost{
-  min-height:44px; padding:10px 12px; font-size:14px; border-radius:10px;
-}
+  /* EXP-CTA START: CTA視認性の強化（端末非依存・安全領域/モード対応） */
+  .exp-cta .btnPrimary{
+    min-height:48px; padding:14px 14px; font-size:16px; border-radius:12px;
+    letter-spacing:.02em; box-shadow:0 2px 0 rgba(15,61,122,.08);
+    transition:transform .02s ease, box-shadow .12s ease;
+    /* 2行でも詰まらない調整＋青統一 */
+    line-height:1.35; white-space:normal; word-break:keep-all;
+    background:#3c7fe6; color:#fff;
+  }
+  .exp-cta .btnPrimary:active{ transform:translateY(1px); box-shadow:0 1px 0 rgba(15,61,122,.08); }
 
-.exp-cta .videoCta{
-  padding:12px 14px; border-radius:14px; box-shadow:0 2px 0 rgba(15,61,122,.08);
-}
-.exp-cta .videoCta:active{ transform:translateY(1px); }
+  .exp-cta .supportItem,
+  .exp-cta .ghost{
+    min-height:44px; padding:10px 12px; font-size:14px; border-radius:10px;
+  }
 
-@media (max-width:360px){
-  .exp-cta .btnPrimary{ font-size:17px; padding:16px 14px; }
-  .exp-cta .supportItem, .exp-cta .ghost{ font-size:15px; }
-}
-@media (min-resolution:2dppx){ .exp-cta .btnPrimary{ font-weight:700; } }
-@media (prefers-color-scheme:dark){
-  .exp-cta .btnPrimary{ background:#3c7fe6; color:#fff; }
-  .exp-cta .videoCta{ background:#3c7fe6; color:#fff; }
-}
+  .exp-cta .videoCta{
+    padding:12px 14px; border-radius:14px; box-shadow:0 2px 0 rgba(15,61,122,.08);
+    line-height:1.35; background:#3c7fe6; color:#fff;
+  }
+  .exp-cta .videoCta:active{ transform:translateY(1px); }
 
-.exp-cta footer{ padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
-.exp-cta :focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; border-radius:8px; }
-.exp-cta *{ -webkit-tap-highlight-color:rgba(31,95,191,0.15); }
-/* EXP-CTA END */
+  @media (max-width:360px){
+    .exp-cta .btnPrimary{ font-size:17px; padding:16px 14px; }
+    .exp-cta .supportItem, .exp-cta .ghost{ font-size:15px; }
+  }
+  @media (min-resolution:2dppx){ .exp-cta .btnPrimary{ font-weight:700; } }
+  @media (prefers-color-scheme:dark){
+    .exp-cta .btnPrimary{ background:#3c7fe6; color:#fff; }
+    .exp-cta .videoCta{ background:#3c7fe6; color:#fff; }
+  }
+
+  .exp-cta footer{ padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
+  .exp-cta :focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; border-radius:8px; }
+  .exp-cta *{ -webkit-tap-highlight-color:rgba(31,95,191,0.15); }
+  /* EXP-CTA END */
+
+  /* EXP-CTA ADDON: foldCard内ボタンにも2行行間調整を明示適用 */
+  .exp-cta .foldCard .btnPrimary{
+    line-height:1.35; white-space:normal; word-break:keep-all;
+  }
 </style>
 </head>
 <body>
@@ -513,7 +524,7 @@
         <button class="btnPrimary" onclick="chooseSameFlow()">現在と同じ補償内容で更新する</button>
         <button class="btnPrimary" onclick="openSimplePlans()">別のプランから選ぶ</button>
         <div class="redNote">オススメの補償充実プランと保険料を抑えたプランをご用意。</div>
-        <button class="btnPrimary" onclick="goStepByStep()">一つずつ設定する（人身傷害・車両・特約）</button>
+        <button class="btnPrimary" onclick="goStepByStep()">項目ごとに設定する（人身傷害・車両・特約）</button>
       </div>
     </section>
 
@@ -847,10 +858,10 @@
 <!-- モーダル -->
 <div class="modal" id="noticeModal">
   <div class="box">
-    <div class="h1">お知らせ</div>
+    <div class="h1" id="noticeTitle">お知らせ</div>
     <div class="desc" id="noticeBody">本番ではXXXX画面に推移します。</div>
     <div style="display:flex; gap:6px; margin-top:10px;">
-      <button class="btnPrimary" style="flex:1" onclick="closeNotice()">OK</button>
+      <button class="btnPrimary" style="flex:1" onclick="closeNotice()" id="noticeCloseBtn">OK</button>
     </div>
   </div>
 </div>
@@ -930,7 +941,7 @@
     const queue=buildGuidedQueue();
     const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
     const title=titles()[step];
-    const opts={rate:0.88, volume:1.0};
+    const opts={rate=0.88, volume=1.0};
     const merged=isIOS && title!=='お客様情報の確認' ? [{text:queue.map(q=>q.text).join('。'), pause:0}] : queue;
     speakQueue(merged, opts); showToast('音声で解説を開始しました（再タップで停止）');
   }
@@ -966,7 +977,7 @@
     if(rest.includes('東京都')){ segs.push('東京都'); rest=rest.replace('東京都',''); }
     if(rest.includes('港区'))  { segs.push('港区');   rest=rest.replace('港区',''); }
     if(rest.includes('芝公園')){ segs.push('シバコウエン'); rest=rest.replace('芝公園',''); }
-    rest = replaceMaruWords(rest);
+    rest = replaceMaruWords(rest); /* 〇〇 → マルマル */
     const normalized=normalizeDigitsAndDashes(rest);
     const blockMatch=normalized.match(/(\d+(?:-\d+)+|\d+)/);
     if(blockMatch){ segs.push(readBlockNumberForSpeech(blockMatch[1])); rest=rest.replace(/[０-９0-9][０-９0-9\-‐‑‒–—−ー－]*/, '').trim(); }
@@ -1157,7 +1168,7 @@
     let newM=same;
     if(type==='up'){
       newM=6900; const b=document.getElementById('diffBodily'); const v=document.getElementById('diffVehicle');
-      if(b) b.text内容='人身傷害：3,000万円 → 5,000万円';
+      if(b) b.textContent='人身傷害：3,000万円 → 5,000万円';
       if(v) v.textContent='車両保険：200万円（免責5万円） → 250万円（免責5万円）';
       optSummaryMode='fixedCurrent';
     }else{
@@ -1196,15 +1207,57 @@
   function sendPdf(){ openNotice('本番ではＰＤＦ送付確認画面に推移します。'); }
   function openReasonDetail(){ document.getElementById('reasonModal').classList.add('show'); }
 
+  /* EXP-CTA フラグ＋押下演出 */
+  (function(){
+    var enableCTA = true; // 無効化する場合は false
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.toggle('exp-cta', enableCTA);
+
+      // 押下演出（iOS/Safariなどで:activeが効かない場合対策）
+      var pressables = document.querySelectorAll('.btnPrimary, .videoCta');
+      pressables.forEach(function(el){
+        var add = function(){ el.classList.add('pressed'); };
+        var remove = function(){ el.classList.remove('pressed'); };
+        el.addEventListener('pointerdown', add);
+        el.addEventListener('pointerup', remove);
+        el.addEventListener('pointerleave', remove);
+        el.addEventListener('mousedown', add);
+        el.addEventListener('mouseup', remove);
+        el.addEventListener('mouseleave', remove);
+        el.addEventListener('touchstart', add, {passive:true});
+        el.addEventListener('touchend', remove);
+        el.addEventListener('touchcancel', remove);
+      });
+
+      // 文言パッチ（短文化試験用：必要時のみON）
+      var enableShortText = false; // 短文化を試す場合は true
+      if(enableShortText){
+        try{
+          var foldButtons = Array.from(document.querySelectorAll('.foldCard .btnPrimary'));
+          var pdfBtn = foldButtons.find(function(b){ return (b.textContent||'').includes('PDFで受け取る'); });
+          if(pdfBtn){
+            var txt = (pdfBtn.textContent||'').trim();
+            if(txt.includes('（メール送付）')){
+              pdfBtn.textContent = 'PDFで受け取る';
+              var hintId = 'pdfHint';
+              if(!document.getElementById(hintId)){
+                var hint = document.createElement('div');
+                hint.id = hintId;
+                hint.style.fontSize = '12px';
+                hint.style.color = '#445066';
+                hint.style.marginTop = '6px';
+                hint.textContent = '（メール送付）';
+                pdfBtn.parentNode.insertBefore(hint, pdfBtn.nextSibling);
+              }
+            }
+          }
+        }catch(e){}
+      }
+    });
+  })();
+
   setActive(0);
   document.addEventListener('DOMContentLoaded', populateDateSelects);
-/* EXP-CTA フラグ */
-(function(){
-  var enableCTA = true; // 無効化は false
-  document.addEventListener('DOMContentLoaded', function(){
-    document.body.classList.toggle('exp-cta', enableCTA);
-  });
-})();
 </script>
 </body>
 </html>
