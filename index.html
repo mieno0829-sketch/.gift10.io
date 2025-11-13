@@ -1,9 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>自動車保険 更新手続き（完全版・修正版）</title>
+<title>自動車保険 更新手続き（完全版・修正版・安定版）</title>
+<!-- Version: stable-2025-11-13 -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -80,7 +81,7 @@
   footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);padding:6px 10px;z-index:20}
   .footerRow{display:flex;gap:6px;align-items:center;justify-content:space-between}
   .ghost{padding:8px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:var(--blue-900);line-height:1.2}
-  .supportItem{padding:8px;border:1px solid var(--blue-700);color:var(--blue-700);background:#fff;border-radius:8px;font-size:13px;line-height:1.2;min-width:90px}
+  .supportItem{padding:8px;border:1px solid var(--blue-700);color:var(--blue-700);background:#fff;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1.2;min-width:90px}
 
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:100}
   .modal.show{display:flex}
@@ -89,16 +90,75 @@
   #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(15,61,122,.95);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;display:none;z-index:9999}
 
   /* 免許証見本（テキスト＋線のみ） */
-  .licenseSheet{border:1px solid var(--border);border-radius:8px;padding:8px;position:relative;background:#fff}
+  .licenseSheet{border:2px solid #1f5fbf;border-radius:8px;padding:8px;position:relative;background:#fff}
   .licRow{display:flex;gap:8px;align-items:center;margin:6px 0}
-  .licBox{border:1px solid #cfd8ea;border-radius:4px;padding:6px 8px;font-size:12px;color:var(--blue-900);background:#fff;flex:1}
+  .licBox{border:1px solid #cfd8ea;border-radius:4px;padding:6px 8px;font-size:12px;color:var(--blue-900);background:#fff;flex:1;white-space:nowrap}
   .licBox.wide{flex:2}
   .licBox.red{border-color:#d32f2f}
+  .licBox.short{max-width:calc(100% - 110px)}
+  .licBox.equal{flex:1}
   .faceBox{position:absolute;right:10px;bottom:10px;width:90px;height:110px;background:var(--face);border:1px solid var(--face-border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--blue-900);font-size:12px}
 
-  .large .h1{font-size:18px}
-  .large .desc,.large .list,.large .label,.large .item,.large .input,.large select,.large textarea,.large .btnPrimary{font-size:17px}
-  .large header .btn,.large .toggleLarge,.large .aiLabel{font-size:17px}
+  /* OTP 4桁入力 */
+  .otpRow{display:flex;gap:8px;margin-top:8px}
+  .otpBox{width:54px;height:54px;border:2px solid var(--blue-500);border-radius:10px;text-align:center;font-size:22px;line-height:1;background:#fff}
+  .otpBox:focus{outline:3px solid var(--blue-500);}
+
+  /* 動画CTA（四角＋▶アイコンを塗りつぶし、目立たせる） */
+  .videoCta{display:flex;align-items:center;gap:10px;background:var(--blue-700);color:#fff;padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;margin-top:8px}
+  .videoCta:active{opacity:.9}
+  .videoIcon{width:22px;height:22px;flex:0 0 22px}
+
+  /* 文字拡大（強制上書きパッチ。必ず末尾に置く） */
+  .large .h1{font-size:18px !important}
+  .large .desc,
+  .large .list,
+  .large .label,
+  .large .item,
+  .large .link{font-size:17px !important}
+  .large .input,
+  .large select,
+  .large textarea{font-size:18px !important}
+  .large .btnPrimary,
+  .large header .btn,
+  .large .toggleLarge,
+  .large .aiLabel,
+  .large .supportItem,
+  .large .ghost{font-size:17px !important}
+  .large .priceTable th,
+  .large .priceTable td{font-size:15px !important}
+  .large .otpBox{font-size:26px !important}
+/* EXP-CTA START */
+.exp-cta .btnPrimary{
+  min-height:48px; padding:14px 14px; font-size:16px; border-radius:12px;
+  letter-spacing:.02em; box-shadow:0 2px 0 rgba(15,61,122,.08);
+  transition:transform .02s ease, box-shadow .12s ease;
+}
+.exp-cta .btnPrimary:active{ transform:translateY(1px); box-shadow:0 1px 0 rgba(15,61,122,.08); }
+
+.exp-cta .supportItem, .exp-cta .ghost{
+  min-height:44px; padding:10px 12px; font-size:14px; border-radius:10px;
+}
+
+.exp-cta .videoCta{
+  padding:12px 14px; border-radius:14px; box-shadow:0 2px 0 rgba(15,61,122,.08);
+}
+.exp-cta .videoCta:active{ transform:translateY(1px); }
+
+@media (max-width:360px){
+  .exp-cta .btnPrimary{ font-size:17px; padding:16px 14px; }
+  .exp-cta .supportItem, .exp-cta .ghost{ font-size:15px; }
+}
+@media (min-resolution:2dppx){ .exp-cta .btnPrimary{ font-weight:700; } }
+@media (prefers-color-scheme:dark){
+  .exp-cta .btnPrimary{ background:#3c7fe6; color:#fff; }
+  .exp-cta .videoCta{ background:#3c7fe6; color:#fff; }
+}
+
+.exp-cta footer{ padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
+.exp-cta :focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; border-radius:8px; }
+.exp-cta *{ -webkit-tap-highlight-color:rgba(31,95,191,0.15); }
+/* EXP-CTA END */
 </style>
 </head>
 <body>
@@ -132,23 +192,40 @@
     <!-- 1: 手続き開始 -->
     <section class="screen active" data-title="手続き開始">
       <div class="card">
-        <div class="h1">選べます（スマホ／PC／紙／電話）</div>
+        <div class="h1">できます！</div>
         <div class="list">・スマホまたはPCで手続きできます（途中保存OK）</div>
         <div class="list">・紙の継続証の郵送も選べます（完了画面で指定）</div>
         <div class="list">・困ったらAIに質問できます。また電話予約やチャットもご利用いただけます</div>
+        <div class="list">・動画が見れます。</div>
+        <a href="#" class="videoCta" onclick="openNotice('本番では１分動画に推移します')">
+          <svg class="videoIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="19" height="19" rx="4" fill="#fff" stroke="#fff" stroke-width="1.2"/>
+            <polygon points="9,6.5 16,11 9,15.5" fill="#1f5fbf"/>
+          </svg>
+          はじめての方はコチラ（使い方の1分動画）
+        </a>
       </div>
       <div class="card">
         <div class="h1">ログイン</div>
-        <div class="field"><div class="label">電話番号</div><input class="input" id="loginPhone" placeholder="09012345678" inputmode="numeric" autocomplete="tel"></div>
-        <div class="field"><div class="label">パスワード（電話番号の下4桁）</div><input class="input" id="loginPass" placeholder="例：5678" inputmode="numeric"></div>
-        <button class="btnPrimary" onclick="if(validateLogin()) next()">ログインして次へ</button>
-        <div class="desc" style="margin-top:6px;display:flex;align-items:center;gap:6px;">
-          <svg width="18" height="18" aria-hidden="true">
-            <rect x="1.5" y="1.5" width="15" height="15" rx="2" fill="none" stroke="#3c7fe6" stroke-width="2"/>
-            <polygon points="7,5.5 13,9 7,12.5" fill="#3c7fe6"/>
-          </svg>
-          <a href="#" class="link" onclick="openNotice('本番では１分動画に推移します')">はじめての方はコチラ（使い方の1分動画）</a>
+
+        <!-- 新ログイン方式：電話番号 or メール + コード送信 + 4桁入力 -->
+        <div class="field">
+          <div class="label">電話番号またはメールアドレス</div>
+          <input class="input" id="loginId" placeholder="例：09012345678 / name@example.co.jp" autocomplete="username">
         </div>
+        <button class="btnPrimary" onclick="sendLoginCode()">コードを送信</button>
+
+        <div class="field">
+          <div class="label">認証コード（4桁）</div>
+          <div class="otpRow" role="group" aria-label="認証コード4桁">
+            <input class="otpBox" inputmode="numeric" maxlength="1" id="otp1" oninput="otpAutoNext(1)" />
+            <input class="otpBox" inputmode="numeric" maxlength="1" id="otp2" oninput="otpAutoNext(2)" />
+            <input class="otpBox" inputmode="numeric" maxlength="1" id="otp3" oninput="otpAutoNext(3)" />
+            <input class="otpBox" inputmode="numeric" maxlength="1" id="otp4" oninput="otpAutoNext(4)" />
+          </div>
+        </div>
+
+        <button class="btnPrimary" onclick="if(validateOtpLogin()) next()">認証して次へ</button>
       </div>
     </section>
 
@@ -278,27 +355,28 @@
     <!-- 6: 免許証の有効期限 -->
     <section class="screen" data-title="免許証の有効期限">
       <div class="card">
-        <div class="h1">免許証の有効期限（選択式）</div>
+        <div class="h1">免許証の有効期限</div>
+        <div class="desc">・免許証の有効期限の記載場所</div>
 
         <div class="licenseSheet" aria-hidden="true" style="margin-top:8px;">
           <div class="licRow">
-            <div class="licBox">氏名：山田 太郎</div>
-            <div class="licBox">生年月日：1965年04月12日</div>
+            <div class="licBox equal">氏名：〇〇 〇〇</div>
+            <div class="licBox equal">生年月日：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
-            <div class="licBox wide">住所：東京都シバコウエン1-1-1 〇〇マンション101</div>
+            <div class="licBox wide">住所：〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇〇</div>
           </div>
           <div class="licRow">
-            <div class="licBox">交付日：2021年05月01日</div>
+            <div class="licBox short">交付日：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
-            <div class="licBox red">有効期限：2030年04月12日</div>
+            <div class="licBox red short">有効期限：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
-            <div class="licBox">免許の条件等：眼鏡等</div>
+            <div class="licBox short">免許の条件等：XXXXXXXX</div>
           </div>
           <div class="licRow" style="margin-top:10px;">
-            <div class="licBox">番号：第999999999999号</div>
+            <div class="licBox short">番号：第999999999999号</div>
           </div>
           <div class="faceBox">顔写真</div>
         </div>
@@ -597,14 +675,14 @@
           <li>対人・対物：無制限</li>
           <li id="diffBodily">人身傷害：3,000万円 → 5,000万円</li>
           <li id="diffVehicle">車両保険：200万円（免責5万円） → 200万円（免責5万円）</li>
-          <li id="optSummary">特約：なし</li>
+          <li id="optSummary">特約：弁護士費用・代車費用（変更なし）</li>
         </ul>
         <button class="btnPrimary" onclick="goToTitle('重要なご説明')">OK</button>
         <button class="btnPrimary" onclick="goToTitle('人身傷害の金額を選ぶ')">修正へ戻る</button>
       </div>
     </section>
 
-    <!-- 19: 重要なご説明 -->
+    <!-- 19: 重要なご説明（▶表記なし） -->
     <section class="screen" data-title="重要なご説明">
       <div class="card foldCard">
         <div class="foldHeader">大切なポイント（短くまとめました）</div>
@@ -622,10 +700,10 @@
         <div class="foldHeader">章ごとの確認（タップで説明）</div>
         <div class="foldBody">
           <ul class="list">
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 1章：等級と割引のしくみ</a></li>
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 2章：自己負担（免責）について</a></li>
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 3章：告知（ご申告）のお願い</a></li>
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 4章：事故・故障時の連絡</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">1章：等級と割引のしくみ</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">2章：自己負担（免責）について</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">3章：告知（ご申告）のお願い</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">4章：事故・故障時の連絡</a></li>
           </ul>
         </div>
       </div>
@@ -634,9 +712,9 @@
         <div class="foldHeader">用語をやさしく（タップで説明）</div>
         <div class="foldBody">
           <ul class="list">
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 「等級」＝翌年の割引の段階</a></li>
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 「免責」＝自己負担する金額</a></li>
-            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">▶ 「約款」＝保険の大切なルール</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">「等級」＝翌年の割引の段階</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">「免責」＝自己負担する金額</a></li>
+            <li><a href="#" class="link" onclick="openNotice('本番では詳細を図を交えて表示する画面に推移します')">「約款」＝保険の大切なルール</a></li>
           </ul>
         </div>
       </div>
@@ -798,6 +876,7 @@
 <div id="toast"></div>
 
 <script>
+  /* ページ進行 */
   const screens=[...document.querySelectorAll('.screen')]; let step=0;
   const titles=()=>screens.map(s=>s.dataset.title);
 
@@ -818,7 +897,8 @@
 
   function applyLarge(on){
     document.body.classList.toggle('large',on);
-    document.querySelector('.toggleLarge').textContent = on ? '文字を小さく' : '文字を大きく';
+    const t=document.querySelector('.toggleLarge');
+    if(t) t.textContent = on ? '文字を小さく' : '文字を大きく';
   }
   function toggleLarge(){ applyLarge(!document.body.classList.contains('large')); }
 
@@ -839,7 +919,7 @@
     }
   }catch(e){}
 
-  /* 音声 */
+  /* 音声ガイド */
   let guidedSpeaking=false; let guidedCancelFn=null;
   const ITEM_PAUSE=1500, SUB_PAUSE=700, NAME_BRIEF_PAUSE=50;
 
@@ -874,6 +954,7 @@
   /* 住所・電話の読み上げ補助 */
   const DASH_REGEX=/[‐‑‒–—−ー－-]/g;
   function normalizeDigitsAndDashes(s){ const toHalf=s.replace(/[０-９]/g,d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0)); return toHalf.replace(DASH_REGEX,'-'); }
+  function replaceMaruWords(s){ return s.replace(/〇〇/g,'マルマル').replace(/〇/g,'マル'); }
   function readBlockNumberForSpeech(bn){
     const map={'0':'ゼロ','1':'イチ','2':'ニ','3':'サン','4':'ヨン','5':'ゴ','6':'ロク','7':'ナナ','8':'ハチ','9':'キュウ'};
     const normalized=normalizeDigitsAndDashes(bn);
@@ -884,8 +965,8 @@
     const segs=[]; let rest=addr;
     if(rest.includes('東京都')){ segs.push('東京都'); rest=rest.replace('東京都',''); }
     if(rest.includes('港区'))  { segs.push('港区');   rest=rest.replace('港区',''); }
-    // 芝公園は読み上げで「シバコウエン」に置換
     if(rest.includes('芝公園')){ segs.push('シバコウエン'); rest=rest.replace('芝公園',''); }
+    rest = replaceMaruWords(rest);
     const normalized=normalizeDigitsAndDashes(rest);
     const blockMatch=normalized.match(/(\d+(?:-\d+)+|\d+)/);
     if(blockMatch){ segs.push(readBlockNumberForSpeech(blockMatch[1])); rest=rest.replace(/[０-９0-9][０-９0-9\-‐‑‒–—−ー－]*/, '').trim(); }
@@ -898,10 +979,8 @@
   }
   function formatPhoneNo(phoneRaw){
     const p=phoneRaw.replace(/[^\d]/g,'');
-    // 3-4-4 or 3-4-3 どちらでも、各ブロックを連続カタカナに
     if(p.length===11) return `${kanaDigits(p.slice(0,3))}の${kanaDigits(p.slice(3,7))}の${kanaDigits(p.slice(7))}`;
     if(p.length===10) return `${kanaDigits(p.slice(0,3))}の${kanaDigits(p.slice(3,7))}の${kanaDigits(p.slice(7))}`;
-    // その他長さでもすべてカタカナ連続
     return kanaDigits(p);
   }
 
@@ -931,7 +1010,7 @@
     return [{text, pause:0}];
   }
 
-  /* OCR・通知・トースト */
+  /* OCR/通知/トースト */
   function showManual(){ ['ocrShoot','ocrGuide','ocrResult'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); const m=document.getElementById('manualForm'); if(m) m.style.display='block'; }
   function showOCRGuide(){ const s=document.getElementById('ocrShoot'), g=document.getElementById('ocrGuide'), r=document.getElementById('ocrResult'), m=document.getElementById('manualForm'); if(s) s.style.display='block'; if(g) g.style.display='block'; if(r) r.style.display='none'; if(m) m.style.display='none'; }
   function startShooting(){ openNotice('本番ではカメラ撮影に遷移します（デモは結果へ）'); setTimeout(showOCRResult,800); }
@@ -941,32 +1020,44 @@
   function closeNotice(){ document.getElementById('noticeModal').classList.remove('show'); }
   function showToast(message){ try{ const t=document.getElementById('toast'); if(!t) return; t.textContent=String(message||''); t.style.display='block'; clearTimeout(showToast._tid); showToast._tid=setTimeout(()=>{ t.style.display='none'; },1500);}catch(e){} }
 
-  /* 色選択（堅牢化） */
+  /* 色選択 */
   function selectColor(name, el){ try{ document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active')); if(el) el.classList.add('active'); }catch(e){} try{ showToast(`${name}を選択しました`);}catch(e){} setTimeout(()=>{ try{ next(); }catch(e){} },800); }
 
-  /* 入力補助・バリデーション */
-  function onMakerChange(){ const f=document.getElementById('modelField'); if(f) f.style.display='block'; }
-  function onModelChange(){ const f=document.getElementById('typeField'); if(f) f.style.display='block'; }
+  /* 入力補助・バリデーション（簡略） */
   function mockZipToAddress(zip){ const addr=document.getElementById('addr'); if(!addr) return; const z=(zip||'').replace(/[^\d]/g,''); if(z.length===7){ addr.value='東京都港区芝公園'; } }
-  function validateLogin(){
-    const phone=(document.getElementById('loginPhone')?.value||'').trim();
-    const pass =(document.getElementById('loginPass')?.value||'').trim();
-    const p=phone.replace(/\D/g,'');
-    if(p.length<10||p.length>11){ openNotice('電話番号は10〜11桁の数字で入力してください'); return false; }
-    if(pass!==p.slice(-4)){ openNotice('パスワードは電話番号の下4桁です'); return false; }
+
+  /* 新：OTPログイン */
+  let codeSent=false;
+  function sendLoginCode(){
+    const id=(document.getElementById('loginId')?.value||'').trim();
+    if(!id){ openNotice('電話番号またはメールアドレスを入力してください'); return; }
+    codeSent=true;
+    showToast('認証コードを送信しました（デモ）');
+    document.getElementById('otp1')?.focus();
+  }
+  function otpAutoNext(idx){
+    const cur=document.getElementById('otp'+idx);
+    if(!cur) return;
+    cur.value=cur.value.replace(/[^0-9０-９]/g,'').slice(-1).replace(/[０-９]/g, d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0));
+    if(cur.value && idx<4){ document.getElementById('otp'+(idx+1))?.focus(); }
+    if(idx===4){
+      const filled=['otp1','otp2','otp3','otp4'].every(id=> (document.getElementById(id)?.value||'').length===1);
+      if(filled) cur.blur();
+    }
+  }
+  function validateOtpLogin(){
+    const id=(document.getElementById('loginId')?.value||'').trim();
+    if(!id){ openNotice('電話番号またはメールアドレスを入力してください'); return false; }
+    const filled=['otp1','otp2','otp3','otp4'].every(id=> (document.getElementById(id)?.value||'').length===1);
+    if(!filled){ openNotice('認証コード4桁を入力してください'); return false; }
     return true;
   }
-  function populateDateSelects(){
-    const ySel=document.getElementById('licenseYear');
-    const mSel=document.getElementById('licenseMonth');
-    const dSel=document.getElementById('licenseDay');
-    if(ySel && ySel.options.length===1){ for(let y=2024;y<=2036;y++){ const opt=document.createElement('option'); opt.value=String(y); opt.textContent=`${y}年`; ySel.appendChild(opt);} }
-    if(mSel && mSel.options.length===1){ for(let m=1;m<=12;m++){ const opt=document.createElement('option'); opt.value=String(m).padStart(2,'0'); opt.textContent=`${m}月`; mSel.appendChild(opt);} }
-    if(dSel && dSel.options.length===1){ for(let d=1;d<=31;d++){ const opt=document.createElement('option'); opt.value=String(d).padStart(2,'0'); opt.textContent=`${d}日`; dSel.appendChild(opt);} }
-  }
-  document.addEventListener('DOMContentLoaded', populateDateSelects);
+
+  function validateVIN(){ return true; } /* デモ簡略 */
+
   function validateDateSelect(){ const y=document.getElementById('licenseYear')?.value, m=document.getElementById('licenseMonth')?.value, d=document.getElementById('licenseDay')?.value; if(!y||!m||!d){ openNotice('有効期限は「年・月・日」をすべて選択してください'); return false; } return true; }
-  function validateVIN(){ const vin=(document.getElementById('vin')?.value||'').trim(); const ok=/^[A-Za-z0-9\-]{8,17}$/.test(vin); if(!ok){ openNotice('車台番号は半角英数字（8〜17桁）で入力してください'); } return ok; }
+  function populateDateSelects(){ const ySel=document.getElementById('licenseYear'), mSel=document.getElementById('licenseMonth'), dSel=document.getElementById('licenseDay'); if(ySel && ySel.options.length===1){ for(let y=2024;y<=2036;y++){ const o=document.createElement('option'); o.value=String(y); o.textContent=`${y}年`; ySel.appendChild(o);} } if(mSel && mSel.options.length===1){ for(let m=1;m<=12;m++){ const o=document.createElement('option'); o.value=String(m).padStart(2,'0'); o.textContent=`${m}月`; mSel.appendChild(o);} } if(dSel && dSel.options.length===1){ for(let d=1;d<=31;d++){ const o=document.createElement('option'); o.value=String(d).padStart(2,'0'); o.textContent=`${d}日`; dSel.appendChild(o);} } }
+  document.addEventListener('DOMContentLoaded', populateDateSelects);
 
   /* 保険料（デモ） */
   let cur=5900, same=6400, bodily='3000';
@@ -974,6 +1065,7 @@
   function setCell(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
   function setDelta(id,v){ const el=document.getElementById(id); if(!el) return; const sign=v>=0?'+':'-'; const abs=Math.abs(v); el.textContent=`${sign}¥${Math.round(abs).toLocaleString()}`; el.classList.toggle('dpos',v>=0); el.classList.toggle('dneg',v<0); }
   function onBodilyChange(val){ bodily=val||'3000'; recalcAll(); }
+
   function recalcSamePage(){
     const sameM=same, sameY=same*12, curM=cur, curY=cur*12;
     setCell('curMonthly12', money(curM)); setCell('curYearly12', money(curY));
@@ -1027,9 +1119,27 @@
     updateOptionSummary(); updateDiffLinesDynamic();
   }
 
+  /* 特約の差分表示（現在との差分） */
+  const currentOptionBaseline=['弁護士費用特約','代車費用特約'];
   let optSummaryMode='dynamic';
   function getSelectedOptionsLabels(){ const s=[]; if(document.getElementById('opt_law')?.checked) s.push('弁護士費用特約'); if(document.getElementById('opt_rental')?.checked) s.push('代車費用特約'); if(document.getElementById('opt_dap')?.checked) s.push('DAP（ドライブレコーダー）特約'); return s; }
-  function updateOptionSummary(){ const el=document.getElementById('optSummary'); if(!el) return; if(optSummaryMode==='fixedCurrent'){ el.textContent='特約：現在と同じ'; return; } if(optSummaryMode==='fixedNone'){ el.textContent='特約：なし'; return; } const sel=getSelectedOptionsLabels(); el.textContent= sel.length?`特約：${sel.join('・')}`:'特約：なし'; }
+  function arrayEqualIgnoreOrder(a,b){ if(a.length!==b.length) return false; const aa=[...a].sort(), bb=[...b].sort(); return aa.every((v,i)=> v===bb[i]); }
+  function renderOptionDiff(newList){
+    const curStr='弁護士費用・代車費用';
+    const newStr = newList.length ? newList.join(',') : 'なし';
+    const el=document.getElementById('optSummary');
+    if(!el) return;
+    if(arrayEqualIgnoreOrder(newList, currentOptionBaseline)){
+      el.textContent = `特約：${curStr}（変更なし）`;
+    }else{
+      el.textContent = `特約：${curStr} → ${newStr}`;
+    }
+  }
+  function updateOptionSummary(){
+    if(optSummaryMode==='fixedCurrent'){ renderOptionDiff([...currentOptionBaseline]); return; }
+    if(optSummaryMode==='fixedNone'){ renderOptionDiff([]); return; }
+    const sel=getSelectedOptionsLabels(); renderOptionDiff(sel);
+  }
 
   function chooseSameFlow(){
     optSummaryMode='fixedCurrent'; const newM=same, newY=newM*12;
@@ -1047,7 +1157,7 @@
     let newM=same;
     if(type==='up'){
       newM=6900; const b=document.getElementById('diffBodily'); const v=document.getElementById('diffVehicle');
-      if(b) b.textContent='人身傷害：3,000万円 → 5,000万円';
+      if(b) b.text内容='人身傷害：3,000万円 → 5,000万円';
       if(v) v.textContent='車両保険：200万円（免責5万円） → 250万円（免責5万円）';
       optSummaryMode='fixedCurrent';
     }else{
@@ -1086,12 +1196,15 @@
   function sendPdf(){ openNotice('本番ではＰＤＦ送付確認画面に推移します。'); }
   function openReasonDetail(){ document.getElementById('reasonModal').classList.add('show'); }
 
-  setActive(0); recalcAll();
+  setActive(0);
   document.addEventListener('DOMContentLoaded', populateDateSelects);
-  ['opt_law','opt_rental','opt_dap'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){ el.addEventListener('change', ()=>{ updateOptionSummary(); updateDiffLinesDynamic(); }); }
+/* EXP-CTA フラグ */
+(function(){
+  var enableCTA = true; // 無効化は false
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.classList.toggle('exp-cta', enableCTA);
   });
+})();
 </script>
 </body>
 </html>
