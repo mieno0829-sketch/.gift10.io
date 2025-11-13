@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>自動車保険 更新手続き（完全版・修正版・保存用）</title>
-<!-- Version: full-2025-11-13-fixed-akasaka-uiA-progressfix-marketing -->
+<!-- Version: full-2025-11-13-fixed-akasaka-uiA-progressfix-a11y -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -117,6 +117,7 @@
   .modal .box{background:#fff;border-radius:12px;padding:12px;width:min(92vw,420px);border:1px solid var(--border)}
   .modal .box .h1{margin-top:0;font-size:16px}
 
+  /* トースト（a11y対応：role/aria-liveはHTML側で付与） */
   #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(15,61,122,.95);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;display:none;z-index:9999}
 
   /* 免許証見本（テキスト＋線のみ） */
@@ -189,7 +190,7 @@
 
   <div class="progress">
     <div id="progressText">進捗 1/22</div>
-    <div class="bar"><div id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="5"></div></div>
+    <div class="bar"><div id="progressBar" role="progressbar" aria-label="進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="5"></div></div>
     <div id="timeLeft">残り約10分</div>
   </div>
 
@@ -862,8 +863,8 @@
   </footer>
 </div>
 
-<!-- モーダル -->
-<div class="modal" id="noticeModal">
+<!-- モーダル（a11y対応：role/aria-modal/tabindex/ラベル） -->
+<div class="modal" id="noticeModal" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" tabindex="-1">
   <div class="box">
     <div class="h1" id="noticeTitle">お知らせ</div>
     <div class="desc" id="noticeBody">本番ではXXXX画面に推移します。</div>
@@ -873,9 +874,9 @@
   </div>
 </div>
 
-<div class="modal" id="reasonModal">
+<div class="modal" id="reasonModal" role="dialog" aria-modal="true" aria-labelledby="reasonTitle" tabindex="-1">
   <div class="box">
-    <div class="h1">保険料が変わる主な理由（FAQ）</div>
+    <div class="h1" id="reasonTitle">保険料が変わる主な理由（FAQ）</div>
     <div class="desc" id="reasonBody">
       以下は一般的な理由の例です。該当の有無は契約ごとに異なります。<br><br>
       ・料率改定（全体）：物価上昇、部品・修理費の上昇に伴う保険料算出の見直し。<br>
@@ -886,12 +887,13 @@
       詳しくは最終見積や契約控えで個別の条件をご確認ください。
     </div>
     <div style="display:flex; gap:6px; margin-top:10px;">
-      <button class="btnPrimary" style="flex:1" onclick="document.getElementById('reasonModal').classList.remove('show')">OK</button>
+      <button class="btnPrimary" style="flex:1" onclick="document.getElementById('reasonModal').classList.remove('show')" id="reasonCloseBtn">OK</button>
     </div>
   </div>
 </div>
 
-<div id="toast"></div>
+<!-- トースト（a11y対応：読み上げ） -->
+<div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
   /* 主要ステップの進捗チェーン＋編集画面のエイリアス */
@@ -927,10 +929,19 @@
     document.getElementById('progressText').textContent=`進捗 ${shown}/${total}`;
     const pct=(shown/total)*100;
     const bar=document.getElementById('progressBar');
-    if(bar){ bar.style.width=`${pct}%`; bar.setAttribute('aria-valuenow', String(Math.round(pct))); }
+    if(bar){
+      bar.style.width=`${pct}%`;
+      bar.setAttribute('aria-valuemin','0');
+      bar.setAttribute('aria-valuemax', String(total));
+      bar.setAttribute('aria-valuenow', String(shown));
+      bar.setAttribute('aria-valuetext', `全${total}ステップ中の${shown}ステップ目`);
+    }
     const remaining=Math.max(0,total-shown);
     document.getElementById('timeLeft').textContent = remaining>0 ? `残り約${Math.max(2, Math.min(Math.round(remaining*0.6)+6, 12))}分` : '';
     if (titleForProgress(curTitle)==='申込完了') updateCompletion();
+
+    // 画面遷移時、主要操作へ初期フォーカス
+    setTimeout(()=>{ focusFirstInteractive(); },0);
   }
   function next(){ step=Math.min(step+1,screens.length-1); setActive(step); recalcAll(); }
   function prev(){ step=Math.max(step-1,0); setActive(step); recalcAll(); }
@@ -984,7 +995,7 @@
     guidedSpeaking=true; setGuidedBtn(); play(0);
   }
 
-  /* 住所・電話の読み上げ補助（赤坂に最適化） */
+  /* 読み上げ補助（住所/電話） */
   const DASH_REGEX=/[‐‑‒–—−ー－-]/g;
   function normalizeDigitsAndDashes(s){ const toHalf=s.replace(/[０-９]/g,d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0)); return toHalf.replace(DASH_REGEX,'-'); }
   function replaceMaruWords(s){ return s.replace(/〇〇/g,'マルマル').replace(/〇/g,'マル'); }
@@ -1052,12 +1063,33 @@
   function startShooting(){ openNotice('本番ではカメラ撮影に遷移します（デモは結果へ）'); setTimeout(showOCRResult,800); }
   function showOCRResult(){ const s=document.getElementById('ocrShoot'), g=document.getElementById('ocrGuide'), r=document.getElementById('ocrResult'), m=document.getElementById('manualForm'); if(s) s.style.display='none'; if(g) g.style.display='none'; if(r) r.style.display='block'; if(m) m.style.display='none'; }
 
-  function openNotice(msg){ const b=document.getElementById('noticeBody'); if(b) b.textContent=msg; document.getElementById('noticeModal').classList.add('show'); }
-  function closeNotice(){ document.getElementById('noticeModal').classList.remove('show'); }
-  function showToast(message){ try{ const t=document.getElementById('toast'); if(!t) return; t.textContent=String(message||''); t.style.display='block'; clearTimeout(showToast._tid); showToast._tid=setTimeout(()=>{ t.style.display='none'; },1500);}catch(e){} }
+  function openNotice(msg){
+    const b=document.getElementById('noticeBody'); if(b) b.textContent=msg;
+    const modal=document.getElementById('noticeModal'); if(modal) openModal(modal);
+  }
+  function closeNotice(){
+    const modal=document.getElementById('noticeModal'); if(modal) closeModal(modal);
+  }
+  function showToast(message){
+    try{
+      const t=document.getElementById('toast'); if(!t) return;
+      // SR通知を確実化（いったん空→再設定）
+      t.textContent=''; void t.offsetHeight; t.textContent=String(message||'');
+      t.style.display='block';
+      clearTimeout(showToast._tid);
+      showToast._tid=setTimeout(()=>{ t.style.display='none'; },1500);
+    }catch(e){}
+  }
 
   /* 色選択 */
-  function selectColor(name, el){ try{ document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active')); if(el) el.classList.add('active'); }catch(e){} try{ showToast(`${name}を選択しました`);}catch(e){} setTimeout(()=>{ try{ next(); }catch(e){} },800); }
+  function selectColor(name, el){
+    try{
+      document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active'));
+      if(el) el.classList.add('active');
+    }catch(e){}
+    try{ showToast(`${name}を選択しました`);}catch(e){}
+    setTimeout(()=>{ try{ next(); }catch(e){} },800);
+  }
 
   /* 入力補助・赤坂補完 */
   function mockZipToAddress(zip){
@@ -1217,7 +1249,7 @@
   function finishContact(){ goToTitle('同意と申込'); }
 
   function sendPdf(){ openNotice('本番ではＰＤＦ送付確認画面に推移します。'); }
-  function openReasonDetail(){ document.getElementById('reasonModal').classList.add('show'); }
+  function openReasonDetail(){ const m=document.getElementById('reasonModal'); if(m) openModal(m); }
 
   /* EXP-CTA フラグ＋押下演出 */
   (function(){
@@ -1323,6 +1355,81 @@
       };
     }
   })();
+
+  /* a11y: フォーカストラップ/ESCで閉じる/フォーカス復帰 */
+  (function(){
+    let lastFocus = null;
+
+    function getFocusable(container){
+      return Array.from(container.querySelectorAll(
+        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter(el => el.offsetParent !== null);
+    }
+
+    function trapFocus(modal){
+      function onKeyDown(e){
+        if (e.key === 'Escape') { e.preventDefault(); closeModal(modal); return; }
+        if (e.key !== 'Tab') return;
+        const focusables = getFocusable(modal);
+        if (focusables.length === 0) return;
+        const first = focusables[0], last = focusables[focusables.length-1];
+        if (e.shiftKey) {
+          if (document.activeElement === first || !modal.contains(document.activeElement)) {
+            e.preventDefault(); last.focus();
+          }
+        } else {
+          if (document.activeElement === last || !modal.contains(document.activeElement)) {
+            e.preventDefault(); first.focus();
+          }
+        }
+      }
+      modal.__trapHandler = onKeyDown;
+      document.addEventListener('keydown', onKeyDown);
+    }
+
+    function untrapFocus(modal){
+      if (modal.__trapHandler){
+        document.removeEventListener('keydown', modal.__trapHandler);
+        modal.__trapHandler = null;
+      }
+    }
+
+    window.openModal = function(modal){
+      lastFocus = document.activeElement;
+      modal.classList.add('show');
+      const f = getFocusable(modal);
+      (f.find(el=>el.id && /CloseBtn$/i.test(el.id)) || f[0] || modal).focus();
+      trapFocus(modal);
+    };
+
+    window.closeModal = function(modal){
+      untrapFocus(modal);
+      modal.classList.remove('show');
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      lastFocus = null;
+    };
+
+    // 背景クリックで閉じる
+    ['noticeModal','reasonModal'].forEach(id=>{
+      const m=document.getElementById(id);
+      if(!m) return;
+      m.addEventListener('mousedown', (e)=>{ if(e.target===m) closeModal(m); });
+    });
+  })();
+
+  // 初期フォーカス（画面内の主要操作へ）
+  function focusFirstInteractive(scope){
+    const root = scope || document.querySelector('.screen.active');
+    if(!root) return;
+    const selectors = [
+      'button.btnPrimary',
+      'input, select, textarea, button, a[href]'
+    ];
+    for (const sel of selectors) {
+      const el = root.querySelector(sel);
+      if (el && typeof el.focus === 'function') { el.focus(); return; }
+    }
+  }
 
   setActive(0);
 </script>
