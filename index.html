@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>自動車保険 更新手続き（完全版・修正版・保存用）</title>
-<!-- Version: full-2025-11-13-fixed-akasaka-uiA-progressfix-a11y-spacing-icons -->
+<!-- Version: full-2025-11-14-stable-a11y-progress25-time-history-noticeLink-header2rows -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -21,23 +21,20 @@
     background-attachment: fixed;
   }
   @media (prefers-color-scheme:dark){
-    body{
-      background: linear-gradient(160deg, #161b23 0%, #1b2330 60%, #1f2a3a 100%);
-    }
+    body{ background: linear-gradient(160deg, #161b23 0%, #1b2330 60%, #1f2a3a 100%); }
   }
 
   .wrap{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
-  .officialBanner{background:#fff;border-bottom:1px solid var(--border);padding:8px 12px;display:flex;gap:8px;align-items:center}
-  .officialBanner .dot{width:8px;height:8px;border-radius:50%;background:var(--safe)}
-  .officialBanner .text{font-size:12px;color:var(--blue-900)}
-  .officialBanner .link{color:var(--blue-700);text-decoration:none;font-size:12px; white-space:nowrap;}
-
-  header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:6px;z-index:10}
+  /* ヘッダー2段構成 */
+  header{
+    position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);
+    padding:6px 10px;display:flex;flex-direction:column;gap:6px;z-index:10
+  }
+  .headerTop{display:flex;align-items:center;justify-content:space-between;gap:6px}
   .toolbar{display:flex;gap:6px;align-items:center}
   header .btn{font-size:13px;color:var(--blue-700);text-decoration:none;padding:4px 6px}
   .toggleLarge{border:1px solid var(--border);border-radius:6px;padding:4px 8px;background:#fff;color:var(--blue-900);cursor:pointer;font-size:13px}
-
   .aiAgent{display:flex;align-items:center;gap:6px;cursor:pointer}
   .aiRobot{width:28px;height:28px;border-radius:8px;background:
     radial-gradient(circle at 9px 11px,#fff 4px,#3c7fe6 5px,#3c7fe6 9px,transparent 10px),
@@ -46,17 +43,13 @@
     border:2px solid #d7e0f0}
   .aiLabel{font-size:12px;color:var(--blue-900)}
 
-  .progress{padding:8px 12px;font-size:12px;color:var(--blue-900);display:grid;gap:6px;background:#fff;border-bottom:1px solid var(--border)}
+  .progress{padding:6px 0 2px 0;font-size:12px;color:var(--blue-900);display:grid;gap:4px;background:#fff}
   .bar{height:8px;background:#e8eefb;border-radius:999px;overflow:hidden}
-  .bar div{
-    height:8px;background:var(--blue-700);width:0%;
-    transition:width .25s ease-out; border-radius:999px;
-  }
+  .bar div{ height:8px;background:var(--blue-700);width:0%;transition:width .25s ease-out;border-radius:999px; }
 
   main{flex:1;padding-bottom:90px}
   .screen{display:none}.screen.active{display:block}
 
-  /* spacing scale */
   :root { --sp-8:8px; --sp-12:12px; --sp-16:16px; }
 
   .card{
@@ -74,8 +67,7 @@
   .input:focus,select:focus,textarea:focus{outline:2px solid var(--blue-500);border-color:var(--blue-500)}
   .btnPrimary{
     display:block;width:100%;padding:12px;border-radius:12px;font-size:15px;font-weight:700;text-align:center;border:none;cursor:pointer;margin-top:10px;background:#e86f00;color:#fff;
-    transition:transform .06s ease, box-shadow .12s ease;
-    box-shadow:0 2px 0 rgba(15,61,122,.08);
+    transition:transform .06s ease, box-shadow .12s ease; box-shadow:0 2px 0 rgba(15,61,122,.08);
   }
   .btnPrimary:active{background:#c95f00}
   .link{color:var(--blue-700);text-decoration:none;font-size:13px}
@@ -86,11 +78,8 @@
   .priceTable th, .priceTable td{border:1px solid var(--border);padding:8px;font-size:13px;text-align:right}
   .priceTable th{background:#f6f8fc;color:var(--blue-900);text-align:center}
   .rowLabel{width:28%;text-align:left;background:#f9fafc;color:var(--blue-900);font-weight:700}
-  .rowCurrent{background:var(--curBg)}
-  .rowNew{background:var(--newBg)}
-  .rowDelta{background:var(--deltaBg)}
-  .dpos{color:var(--safe);font-weight:700}
-  .dneg{color:var(--alert);font-weight:700}
+  .rowCurrent{background:var(--curBg)} .rowNew{background:var(--newBg)} .rowDelta{background:var(--deltaBg)}
+  .dpos{color:var(--safe);font-weight:700} .dneg{color:var(--alert);font-weight:700}
 
   .colorRow{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
   .colorBtn{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--blue-700);background:#fff;color:var(--blue-700);border-radius:10px;cursor:pointer;flex:1}
@@ -99,29 +88,18 @@
   .gold{background:#ffd54f} .blue{background:#3c7fe6} .green{background:#0b7a3e}
 
   .infoRow{display:flex;align-items:center;gap:8px;margin-top:8px}
-  /* icon unification */
   :root { --icon:20px; }
-  .infoIcon{
-    width:var(--icon); height:var(--icon); border-radius:50%;
-    background:var(--yellow); color:#1a1a1a; display:inline-flex; align-items:center; justify-content:center;
-    font-weight:700; font-size:12px; border:1px solid #e0c24f;
-  }
+  .infoIcon{ width:var(--icon); height:var(--icon); border-radius:50%; background:var(--yellow); color:#1a1a1a;
+    display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; border:1px solid #e0c24f; }
   .videoIcon{ width:var(--icon); height:var(--icon); }
   .aiRobot{ border-radius:8px; }
   .videoCta{ line-height:1.35; }
 
   .foldCard{border:1px solid var(--border);border-radius:12px;padding: var(--sp-12);background:#fff;margin: var(--sp-12) 0;}
-  .foldCard .foldHeader{
-    font-weight:600; color:var(--blue-900); padding-bottom: var(--sp-8);
-    border-bottom:1px solid rgba(215,224,240,0.8);
-  }
+  .foldCard .foldHeader{ font-weight:600; color:var(--blue-900); padding-bottom: var(--sp-8); border-bottom:1px solid rgba(215,224,240,0.8); }
   .foldCard .foldBody{ margin-top: var(--sp-8); }
-  .foldCard .foldSub{
-    font-size:12px; color:var(--sub); margin-top: var(--sp-8); line-height:1.55;
-  }
-  @media (prefers-color-scheme:dark){
-    .foldCard .foldHeader{ border-bottom-color: rgba(215,224,240,0.25); }
-  }
+  .foldCard .foldSub{ font-size:12px; color:var(--sub); margin-top: var(--sp-8); line-height:1.55; }
+  @media (prefers-color-scheme:dark){ .foldCard .foldHeader{ border-bottom-color: rgba(215,224,240,0.25); } }
 
   footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);padding:6px 10px;z-index:20}
   .footerRow{display:flex;gap:6px;align-items:center;justify-content:space-between}
@@ -133,30 +111,21 @@
   .modal .box{background:#fff;border-radius:12px;padding:12px;width:min(92vw,420px);border:1px solid var(--border)}
   .modal .box .h1{margin-top:0;font-size:16px}
 
-  /* トースト（a11y対応：role/aria-liveはHTML側で付与） */
   #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(15,61,122,.95);color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;display:none;z-index:9999}
 
-  /* 免許証見本（テキスト＋線のみ） */
   .licenseSheet{border:2px solid #1f5fbf;border-radius:8px;padding:8px;position:relative;background:#fff}
   .licRow{display:flex;gap:8px;align-items:center;margin:6px 0}
   .licBox{border:1px solid #cfd8ea;border-radius:4px;padding:6px 8px;font-size:12px;color:var(--blue-900);background:#fff;flex:1;white-space:nowrap}
-  .licBox.wide{flex:2}
-  .licBox.red{border-color:#d32f2f}
-  .licBox.short{max-width:calc(100% - 110px)}
-  .licBox.equal{flex:1}
+  .licBox.wide{flex:2} .licBox.red{border-color:#d32f2f} .licBox.short{max-width:calc(100% - 110px)} .licBox.equal{flex:1}
   .faceBox{position:absolute;right:10px;bottom:10px;width:90px;height:110px;background:#e0f2ff;border:1px solid var(--face-border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--blue-900);font-size:12px}
 
-  /* OTP 4桁入力 */
   .otpRow{display:flex;gap:8px;margin-top:8px}
   .otpBox{width:54px;height:54px;border:2px solid var(--blue-500);border-radius:10px;text-align:center;font-size:22px;line-height:1;background:#fff}
   .otpBox:focus{outline:3px solid var(--blue-500);}
 
-  /* 動画CTA（四角＋▶） */
   .videoCta{display:flex;align-items:center;gap:10px;background:var(--blue-700);color:#fff;padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;margin-top:8px}
   .videoCta:active{opacity:.9}
-  /* アイコン枠線微調整用のSVGはHTML側でstroke-width変更 */
 
-  /* 文字拡大（強制上書き） */
   .large .h1{font-size:18px !important}
   .large .desc,.large .list,.large .label,.large .item,.large .link{font-size:17px !important}
   .large .input,.large select,.large textarea{font-size:18px !important}
@@ -164,7 +133,6 @@
   .large .priceTable th,.large .priceTable td{font-size:15px !important}
   .large .otpBox{font-size:26px !important}
 
-  /* EXP-CTA（青統一・行間・押下演出） */
   .exp-cta .btnPrimary{background:#3c7fe6;color:#fff;}
   .exp-cta .btnPrimary.pressed{ transform:translateY(1px) scale(0.99); box-shadow:0 1px 0 rgba(15,61,122,.08); }
   .exp-cta .videoCta{ padding:12px 14px; border-radius:14px; box-shadow:0 2px 0 rgba(15,61,122,.08); line-height:1.35; background:#3c7fe6; color:#fff;}
@@ -181,39 +149,58 @@
   .exp-cta footer{ padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
   .exp-cta :focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; border-radius:8px; }
   .exp-cta *{ -webkit-tap-highlight-color:rgba(31,95,191,0.15); }
-  .exp-cta .foldCard .btnPrimary{ line-height:1.35; white-space:normal; word-break:keep-all; }
+
+  /* 公式案内 先頭行（注意点リンク版） */
+  .officialInline{ display:block; padding:10px 12px 0 12px; }
+  .officialInline-row{ display:flex; align-items:flex-start; gap:8px; }
+  .officialInline-bullet{ width:18px; height:18px; flex:0 0 18px; }
+  .officialInline-text{ font-size:12px; color:var(--blue-900); line-height:1.5; }
+  .officialInline-text a{ color:var(--blue-700); text-decoration:none; }
+  .officialInline-text a:active{ opacity:0.85; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="officialBanner">
-    <div class="dot" aria-hidden="true"></div>
-    <div class="text">このページは公式サイト（example.co.jp）です。送信元メールは「@example.co.jp」から届きます。</div>
-    <a href="#" class="link" onclick="openNotice('偽サイトの見分け方：送信元ドメイン、リンク先URL、個人情報の要求有無を確認してください。')">注意点</a>
-  </div>
-
+  <!-- ヘッダー（2段） -->
   <header>
-    <div class="toolbar">
-      <a href="#" class="btn" id="btnSpeak" onclick="toggleGuidedVoice()">音声で解説</a>
-      <button class="toggleLarge" onclick="toggleLarge()">文字を大きく</button>
+    <div class="headerTop">
+      <div class="toolbar">
+        <a href="#" class="btn" id="btnSpeak" onclick="toggleGuidedVoice()">音声で解説</a>
+        <button class="toggleLarge" onclick="toggleLarge()">文字を大きく</button>
+      </div>
+      <div class="aiAgent" onclick="openNotice('本番ではAIとの自然言語もしくはチャットでの対話画面に推移します。')">
+        <div class="aiRobot" aria-hidden="true" title="AIエージェント"></div>
+        <div class="aiLabel">AIと対話できます</div>
+      </div>
     </div>
-    <div class="aiAgent" onclick="openNotice('本番ではAIとの自然言語もしくはチャットでの対話画面に推移します。')">
-      <div class="aiRobot" aria-hidden="true" title="AIエージェント"></div>
-      <div class="aiLabel">AIと対話できます</div>
+
+    <div class="progress">
+      <div id="progressText">進捗 1/25（最大）</div>
+      <div class="bar"><div id="progressBar" role="progressbar" aria-label="進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="4"></div></div>
+      <div id="timeLeft">残り約11分</div>
     </div>
   </header>
-
-  <div class="progress">
-    <div id="progressText">進捗 1/22</div>
-    <div class="bar"><div id="progressBar" role="progressbar" aria-label="進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="5"></div></div>
-    <div id="timeLeft">残り約10分</div>
-  </div>
 
   <main id="screens">
 
     <!-- 1: 手続き開始 -->
     <section class="screen active" data-title="手続き開始">
+
+      <!-- ログイン冒頭：公式案内（注意点リンク版） -->
+      <div class="officialInline" role="note" aria-label="公式案内と注意点">
+        <div class="officialInline-row">
+          <svg class="officialInline-bullet" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <polygon points="12,2 22,20 2,20" fill="#ffcc00" stroke="#e0b700" stroke-width="1"/>
+            <text x="12" y="16" text-anchor="middle" font-size="12" fill="#3b2f00" font-weight="700">!</text>
+          </svg>
+          <span class="officialInline-text">
+            このページは公式サイト（example.co.jp）です。送信元メールは「@example.co.jp」から届きます。
+            <a href="#" onclick="openNotice('偽サイトの見分け方：送信元ドメイン、リンク先URL、個人情報の要求有無（変更ではなく新規の要求の有無）を確認してください。')">注意点はコチラ</a>
+          </span>
+        </div>
+      </div>
+
       <div class="card">
         <div class="h1">できます！</div>
         <div class="list">・スマホまたはPCで手続きできます（途中保存OK）</div>
@@ -228,13 +215,14 @@
           はじめての方はコチラ（使い方の1分動画）
         </a>
       </div>
+
       <div class="card">
         <div class="h1">ログイン</div>
         <div class="field">
           <div class="label">ご登録の電話番号またはメールアドレス</div>
           <input class="input" id="loginId" placeholder="例：09012345678 / name@example.co.jp" autocomplete="username">
         </div>
-        <button class="btnPrimary" onclick="sendLoginCode()">コードを送信</button>
+        <button class="btnPrimary" onclick="sendLoginCode()">認証コードを送信</button>
 
         <div class="field">
           <div class="label">認証コード（4桁）</div>
@@ -297,7 +285,7 @@
       <div class="card" id="ocrGuide" style="display:none;">
         <div class="h1">車検証の読み取り枠</div>
         <img alt="読み取り枠" style="width:100%; border:1px solid var(--border); border-radius:8px;"
-             src="data:image/svg+xml;utf8,
+          src="data:image/svg+xml;utf8,
 <svg xmlns='http://www.w3.org/2000/svg' width='360' height='200'>
   <rect width='100%%' height='100%%' fill='%23eef4ff'/>
   <rect x='20' y='20' width='320' height='160' fill='none' stroke='%231f5fbf' stroke-width='3' stroke-dasharray='8,6'/>
@@ -391,7 +379,7 @@
             <div class="licBox short">交付日：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
-            <div class="licBox red short">有効期限：yyyy年mm月dd日</div>
+            <div class="licBox red short">有効期限：yyyy年mm月dd日まで有効</div>
           </div>
           <div class="licRow">
             <div class="licBox short">免許の条件等：XXXXXXXX</div>
@@ -415,7 +403,7 @@
       </div>
     </section>
 
-    <!-- 7: お客様情報の確認（赤坂） -->
+    <!-- 7: お客様情報の確認 -->
     <section class="screen" data-title="お客様情報の確認">
       <div class="card">
         <div class="h1">氏名・住所・電話番号・生年月日</div>
@@ -431,7 +419,20 @@
       </div>
     </section>
 
-    <!-- 8: 主に運転する方 -->
+    <!-- 8: お客様情報の編集 -->
+    <section class="screen" data-title="お客様情報の編集">
+      <div class="card">
+        <div class="h1">お客様情報の編集</div>
+        <div class="field"><div class="label">氏名</div><input class="input" placeholder="山田 太郎"></div>
+        <div class="field"><div class="label">郵便番号</div><input class="input" id="zip" placeholder="1234567" oninput="mockZipToAddress(this.value)"></div>
+        <div class="field"><div class="label">住所</div><input class="input" id="addr" placeholder="東京都港区赤坂1-1-1 〇〇マンション101"></div>
+        <div class="field"><div class="label">電話番号</div><input class="input" placeholder="09012345678"></div>
+        <div class="field"><div class="label">生年月日</div><input class="input" placeholder="19650412"></div>
+        <button class="btnPrimary" onclick="goToTitle('主に運転する方（記名被保険者）')">OK</button>
+      </div>
+    </section>
+
+    <!-- 9: 主に運転する方 -->
     <section class="screen" data-title="主に運転する方（記名被保険者）">
       <div class="card">
         <div class="h1">主に運転する方</div>
@@ -442,7 +443,16 @@
       </div>
     </section>
 
-    <!-- 9: 運転者の範囲と年齢条件 -->
+    <!-- 10: 主に運転する方の編集 -->
+    <section class="screen" data-title="主に運転する方の編集">
+      <div class="card">
+        <div class="h1">主に運転する方の編集</div>
+        <div class="field"><div class="label">主に運転する方（記名被保険者）</div><input class="input" placeholder="山田 太郎"></div>
+        <button class="btnPrimary" onclick="goToTitle('運転者の範囲と年齢条件')">OK</button>
+      </div>
+    </section>
+
+    <!-- 11: 運転者の範囲と年齢条件 -->
     <section class="screen" data-title="運転者の範囲と年齢条件">
       <div class="card">
         <div class="h1">運転者の範囲と年齢条件</div>
@@ -456,7 +466,32 @@
       </div>
     </section>
 
-    <!-- 10: 使用目的・走行距離 -->
+    <!-- 12: 運転者範囲・年齢条件の編集 -->
+    <section class="screen" data-title="運転者範囲・年齢条件の編集">
+      <div class="card">
+        <div class="h1">運転者範囲・年齢条件の編集</div>
+        <div class="field">
+          <div class="label">運転者の範囲</div>
+          <select id="driverScope">
+            <option>本人のみ</option>
+            <option selected>本人と配偶者</option>
+            <option>限定しない</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="label">年齢条件</div>
+          <select id="ageCond">
+            <option>年齢問わず</option>
+            <option>21歳以上補償</option>
+            <option selected>26歳以上補償</option>
+            <option>35歳以上補償</option>
+          </select>
+        </div>
+        <button class="btnPrimary" onclick="goToTitle('使用目的・走行距離')">OK</button>
+      </div>
+    </section>
+
+    <!-- 13: 使用目的・走行距離 -->
     <section class="screen" data-title="使用目的・走行距離">
       <div class="card">
         <div class="h1">使用目的・走行距離</div>
@@ -483,7 +518,7 @@
       </div>
     </section>
 
-    <!-- 11: 現在の内容を確認 -->
+    <!-- 14: 現在の内容を確認 -->
     <section class="screen" data-title="現在の内容を確認">
       <div class="card">
         <div class="h1">現在の補償内容と保険料</div>
@@ -503,7 +538,7 @@
       </div>
     </section>
 
-    <!-- 12: 現在と同じ補償内容で更新した場合の保険料 -->
+    <!-- 15: 現在と同じ補償内容で更新した場合の保険料 -->
     <section class="screen" data-title="現在と同じ補償内容で更新した場合の保険料">
       <div class="card">
         <div class="h1">現在と同じ補償内容で更新した場合の保険料</div>
@@ -521,13 +556,13 @@
         </div>
         <div class="desc">
           全体の料率改定（物価・部品・修理費の上昇）／年齢・地域・事故有無などの条件変化／等級の進行や事故有の影響（該当する場合）
-          <div><a href="#" class="link blockLink" onclick="openReasonDetail()">詳細はコチラ</a></div>
+          <div><a href="#" class="link blockLink" onclick="openNotice('本番では補償内容の詳細画面に推移します')">詳細はコチラ</a></div>
         </div>
         <button class="btnPrimary" onclick="goToTitle('更新方法の選択')">更新方法を選ぶ</button>
       </div>
     </section>
 
-    <!-- 13: 更新方法の選択 -->
+    <!-- 16: 更新方法の選択 -->
     <section class="screen" data-title="更新方法の選択">
       <div class="card">
         <div class="h1">更新方法をお選びください</div>
@@ -538,7 +573,7 @@
       </div>
     </section>
 
-    <!-- 14: 別のプランから選ぶ -->
+    <!-- 17: 別のプランから選ぶ -->
     <section class="screen" data-title="別のプランから選ぶ">
       <div class="card">
         <div class="h1">別のプランから選ぶ</div>
@@ -585,7 +620,7 @@
       </div>
     </section>
 
-    <!-- 15: 人身傷害の金額を選ぶ -->
+    <!-- 18: 人身傷害の金額を選ぶ -->
     <section class="screen" data-title="人身傷害の金額を選ぶ">
       <div class="card">
         <div class="h1">人身傷害の金額を選ぶ</div>
@@ -616,7 +651,7 @@
       </div>
     </section>
 
-    <!-- 16: 車両保険の金額を選ぶ -->
+    <!-- 19: 車両保険の金額を選ぶ -->
     <section class="screen" data-title="車両保険の金額を選ぶ">
       <div class="card">
         <div class="h1">車両保険の金額を選ぶ</div>
@@ -648,7 +683,7 @@
       </div>
     </section>
 
-    <!-- 17: 特約の付け外し -->
+    <!-- 20: 特約の付け外し -->
     <section class="screen" data-title="特約の付け外し">
       <div class="card">
         <div class="h1">特約の付け外し</div>
@@ -680,7 +715,7 @@
       </div>
     </section>
 
-    <!-- 18: 最終見積のまとめ -->
+    <!-- 21: 最終見積のまとめ -->
     <section class="screen" data-title="最終見積のまとめ">
       <div class="card">
         <div class="h1">最終見積のまとめ</div>
@@ -703,7 +738,7 @@
       </div>
     </section>
 
-    <!-- 19: 重要なご説明 -->
+    <!-- 22: 重要なご説明 -->
     <section class="screen" data-title="重要なご説明">
       <div class="card foldCard">
         <div class="foldHeader">大切なポイント（短くまとめました）</div>
@@ -755,70 +790,11 @@
       </div>
 
       <div class="card">
-        <button class="btnPrimary" onclick="goToTitle('連絡方法を選ぶ')">次へ</button>
+        <button class="btnPrimary" onclick="goToTitle('連絡方法を選ぶ')">次へ（連絡方法を選ぶ）</button>
       </div>
     </section>
 
-    <!-- 20: お客様情報の編集（赤坂） -->
-    <section class="screen" data-title="お客様情報の編集">
-      <div class="card">
-        <div class="h1">お客様情報の編集</div>
-        <div class="field"><div class="label">氏名</div><input class="input" placeholder="山田 太郎"></div>
-        <div class="field"><div class="label">郵便番号</div><input class="input" id="zip" placeholder="1234567" oninput="mockZipToAddress(this.value)"></div>
-        <div class="field"><div class="label">住所</div><input class="input" id="addr" placeholder="東京都港区赤坂1-1-1 〇〇マンション101"></div>
-        <div class="field"><div class="label">電話番号</div><input class="input" placeholder="09012345678"></div>
-        <div class="field"><div class="label">生年月日</div><input class="input" placeholder="19650412"></div>
-        <button class="btnPrimary" onclick="goToTitle('主に運転する方（記名被保険者）')">OK</button>
-      </div>
-    </section>
-
-    <!-- 21: 主に運転する方の編集 -->
-    <section class="screen" data-title="主に運転する方の編集">
-      <div class="card">
-        <div class="h1">主に運転する方の編集</div>
-        <div class="field"><div class="label">主に運転する方（記名被保険者）</div><input class="input" placeholder="山田 太郎"></div>
-        <button class="btnPrimary" onclick="goToTitle('運転者の範囲と年齢条件')">OK</button>
-      </div>
-    </section>
-
-    <!-- 22: 運転者範囲・年齢条件の編集 -->
-    <section class="screen" data-title="運転者範囲・年齢条件の編集">
-      <div class="card">
-        <div class="h1">運転者範囲・年齢条件の編集</div>
-        <div class="field">
-          <div class="label">運転者の範囲</div>
-          <select id="driverScope">
-            <option>本人のみ</option>
-            <option selected>本人と配偶者</option>
-            <option>限定しない</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="label">年齢条件</div>
-          <select id="ageCond">
-            <option>年齢問わず</option>
-            <option>21歳以上補償</option>
-            <option selected>26歳以上補償</option>
-            <option>35歳以上補償</option>
-          </select>
-        </div>
-        <button class="btnPrimary" onclick="goToTitle('使用目的・走行距離')">OK</button>
-      </div>
-    </section>
-
-    <!-- 23: 同意と申込 -->
-    <section class="screen" data-title="同意と申込">
-      <div class="card">
-        <div class="h1">同意と申込と控え</div>
-        <div class="item"><label><input type="checkbox" id="agree1"> 入力内容を確認しました</label></div>
-        <div class="item"><label><input type="checkbox" id="agree2"> 重要なご説明を読みました</label></div>
-        <div class="item"><label><input type="checkbox" id="sendPdf"> 控えを受け取る</label></div>
-        <div class="item"><label><input type="checkbox" id="postalCert"> 紙の継続証を郵送で受け取る</label></div>
-        <button class="btnPrimary" style="margin-top:10px;" onclick="onAgreeSubmit()">内容に同意して申し込む</button>
-      </div>
-    </section>
-
-    <!-- 24: 連絡方法を選ぶ -->
+    <!-- 23: 連絡方法を選ぶ -->
     <section class="screen" data-title="連絡方法を選ぶ">
       <div class="card">
         <div class="h1">連絡方法を選ぶ</div>
@@ -847,7 +823,19 @@
           </select>
         </div>
 
-        <button class="btnPrimary" onclick="finishContact()">次へ（同意と申込へ）</button>
+        <button class="btnPrimary" onclick="finishContact()">次へ（同意と申込）</button>
+      </div>
+    </section>
+
+    <!-- 24: 同意と申込 -->
+    <section class="screen" data-title="同意と申込">
+      <div class="card">
+        <div class="h1">同意と申込と控え</div>
+        <div class="item"><label><input type="checkbox" id="agree1"> 入力内容を確認しました</label></div>
+        <div class="item"><label><input type="checkbox" id="agree2"> 重要なご説明を読みました</label></div>
+        <div class="item"><label><input type="checkbox" id="sendPdf"> 控えを受け取る</label></div>
+        <div class="item"><label><input type="checkbox" id="postalCert"> 紙の継続証を郵送で受け取る</label></div>
+        <button class="btnPrimary" style="margin-top:10px;" onclick="onAgreeSubmit()">内容に同意して申し込む</button>
       </div>
     </section>
 
@@ -881,7 +869,7 @@
   </footer>
 </div>
 
-<!-- モーダル（a11y対応：role/aria-modal/tabindex/ラベル） -->
+<!-- モーダル -->
 <div class="modal" id="noticeModal" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" tabindex="-1">
   <div class="box">
     <div class="h1" id="noticeTitle">お知らせ</div>
@@ -910,60 +898,86 @@
   </div>
 </div>
 
-<!-- トースト（a11y対応：読み上げ） -->
 <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
-  /* 主要ステップの進捗チェーン＋編集画面のエイリアス */
-  const PROGRESS_CHAIN = [
-    '手続き開始','事前にご準備ください','お車の情報','車検証の情報','免許証の色','免許証の有効期限',
-    'お客様情報の確認','主に運転する方（記名被保険者）','運転者の範囲と年齢条件','使用目的・走行距離',
-    '現在の内容を確認','現在と同じ補償内容で更新した場合の保険料','更新方法の選択','別のプランから選ぶ',
-    '人身傷害の金額を選ぶ','車両保険の金額を選ぶ','特約の付け外し','最終見積のまとめ','重要なご説明',
-    '連絡方法を選ぶ','同意と申込','申込完了'
-  ];
-  const PROGRESS_ALIAS = {
-    'お客様情報の編集':'お客様情報の確認',
-    '主に運転する方の編集':'主に運転する方（記名被保険者）',
-    '運転者範囲・年齢条件の編集':'運転者の範囲と年齢条件'
+  /* 固定番号（x/25）マップ */
+  const TITLE_NO = {
+    '手続き開始':1,'事前にご準備ください':2,'お車の情報':3,'車検証の情報':4,'免許証の色':5,'免許証の有効期限':6,
+    'お客様情報の確認':7,'お客様情報の編集':8,'主に運転する方（記名被保険者）':9,'主に運転する方の編集':10,
+    '運転者の範囲と年齢条件':11,'運転者範囲・年齢条件の編集':12,'使用目的・走行距離':13,'現在の内容を確認':14,
+    '現在と同じ補償内容で更新した場合の保険料':15,'更新方法の選択':16,'別のプランから選ぶ':17,
+    '人身傷害の金額を選ぶ':18,'車両保険の金額を選ぶ':19,'特約の付け外し':20,'最終見積のまとめ':21,'重要なご説明':22,
+    '連絡方法を選ぶ':23,'同意と申込':24,'申込完了':25
   };
-  let lastProgressShown = 1;
+  const MAX_STEPS = 25;
 
-  const screens=[...document.querySelectorAll('.screen')]; let step=0;
+  const screens=[...document.querySelectorAll('.screen')];
+  let step=0; // DOMインデックス
   const titles=()=>screens.map(s=>s.dataset.title);
-  function titleForProgress(t){ return PROGRESS_ALIAS[t] || t; }
-  function progressIndexForTitle(title){
-    const key=titleForProgress(title); const idx=PROGRESS_CHAIN.indexOf(key);
-    return (idx>=0)?(idx+1):1;
+
+  /* 履歴スタック（戻る対策） */
+  const historyStack = [];
+  function pushHistory(idx){
+    if (typeof idx!=='number') return;
+    if (historyStack.length && historyStack[historyStack.length-1]===idx) return;
+    historyStack.push(idx);
   }
+  function titleToNo(title){ return TITLE_NO[title] || 1; }
 
   function setActive(i){
     stopGuidedVoice();
     screens.forEach((s,idx)=>s.classList.toggle('active',idx===i));
-    const total=PROGRESS_CHAIN.length;
     const curTitle=titles()[i]||'';
-    let shown=progressIndexForTitle(curTitle);
-    if(shown<lastProgressShown){ shown=lastProgressShown; } else { lastProgressShown=shown; }
-    document.getElementById('progressText').textContent=`進捗 ${shown}/${total}`;
-    const pct=(shown/total)*100;
+    const x = titleToNo(curTitle);
+
+    // 進捗表示（初回のみ（最大）を併記）
+    const progText = document.getElementById('progressText');
+    if (progText) {
+      progText.textContent = x===1 ? `進捗 ${x}/${MAX_STEPS}（最大）` : `進捗 ${x}/${MAX_STEPS}`;
+    }
+    // バー幅（x/25）
+    const pct=(x/MAX_STEPS)*100;
     const bar=document.getElementById('progressBar');
     if(bar){
       bar.style.width=`${pct}%`;
       bar.setAttribute('aria-valuemin','0');
-      bar.setAttribute('aria-valuemax', String(total));
-      bar.setAttribute('aria-valuenow', String(shown));
-      bar.setAttribute('aria-valuetext', `全${total}ステップ中の${shown}ステップ目`);
+      bar.setAttribute('aria-valuemax', String(MAX_STEPS));
+      bar.setAttribute('aria-valuenow', String(x));
+      bar.setAttribute('aria-valuetext', `全${MAX_STEPS}ステップ中の${x}ステップ目`);
     }
-    const remaining=Math.max(0,total-shown);
-    document.getElementById('timeLeft').textContent = remaining>0 ? `残り約${Math.max(2, Math.min(Math.round(remaining*0.6)+6, 12))}分` : '';
-    if (titleForProgress(curTitle)==='申込完了') updateCompletion();
+    // 残り時間（四捨五入・0分も表示）
+    const remaining=Math.round(12 * (MAX_STEPS - x) / MAX_STEPS);
+    const timeLeftEl = document.getElementById('timeLeft');
+    if (timeLeftEl) timeLeftEl.textContent = `残り約${remaining}分`;
 
-    // 画面遷移時、主要操作へ初期フォーカス
+    if (curTitle==='申込完了') updateCompletion();
     setTimeout(()=>{ focusFirstInteractive(); },0);
+    step=i;
   }
-  function next(){ step=Math.min(step+1,screens.length-1); setActive(step); recalcAll(); }
-  function prev(){ step=Math.max(step-1,0); setActive(step); recalcAll(); }
-  function goToTitle(title){ const idx=titles().indexOf(title); if(idx>=0){ step=idx; setActive(step); recalcAll(); } }
+
+  function next(){
+    pushHistory(step);
+    const nextIdx = Math.min(step+1, screens.length-1);
+    setActive(nextIdx);
+    recalcAll();
+  }
+  function prev(){
+    if (!historyStack.length) return;
+    const backIdx = historyStack.pop();
+    if (typeof backIdx==='number') {
+      setActive(backIdx);
+      recalcAll();
+    }
+  }
+  function goToTitle(title){
+    const idx=titles().indexOf(title);
+    if(idx>=0){
+      pushHistory(step);
+      setActive(idx);
+      recalcAll();
+    }
+  }
 
   function applyLarge(on){
     document.body.classList.toggle('large',on);
@@ -974,13 +988,13 @@
 
   function saveDraft(){
     try{
-      const data={ step, timestamp:new Date().toISOString() };
+      const data={ step, title: titles()[step], timestamp:new Date().toISOString(), hist:[...historyStack] };
       localStorage.setItem('auto_ins_update_draft', JSON.stringify(data));
       openNotice('途中保存しました。次回は前回の続きから再開できます（デモ）。');
     }catch(e){ openNotice('保存に失敗しました（デモ）。'); }
   }
 
-  /* 音声ガイド（港区赤坂対応） */
+  /* 音声ガイド（既存） */
   let guidedSpeaking=false; let guidedCancelFn=null;
   const ITEM_PAUSE=1500, SUB_PAUSE=700, NAME_BRIEF_PAUSE=50;
 
@@ -990,11 +1004,10 @@
     if (guidedSpeaking) { stopGuidedVoice(); showToast('音声を停止しました'); return; }
     const queue=buildGuidedQueue();
     const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-    const title=titles()[step];
     const opts={ rate:0.88, volume:1.0 };
-    const merged=isIOS && title!=='お客様情報の確認' ? [{text:queue.map(q=>q.text).join('。'), pause:0}] : queue;
-    speakQueue(merged, opts);
-    showToast('音声で解説を開始しました（再タップで停止）');
+    const merged=isIOS && (titles()[step] !== 'お客様情報の確認')
+      ? [{text:queue.map(q=>q.text).join('。'), pause:0}] : queue;
+    speakQueue(merged, opts); showToast('音声で解説を開始しました（再タップで停止）');
   }
   function setGuidedBtn(){ const btn=document.getElementById('btnSpeak'); if(btn) btn.textContent=guidedSpeaking?'音声を停止':'音声で解説'; }
   function speakQueue(queue,{rate=1.0,volume=1.0}={}){
@@ -1013,7 +1026,6 @@
     guidedSpeaking=true; setGuidedBtn(); play(0);
   }
 
-  /* 読み上げ補助（住所/電話） */
   const DASH_REGEX=/[‐‑‒–—−ー－-]/g;
   function normalizeDigitsAndDashes(s){ const toHalf=s.replace(/[０-９]/g,d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0)); return toHalf.replace(DASH_REGEX,'-'); }
   function replaceMaruWords(s){ return s.replace(/〇〇/g,'マルマル').replace(/〇/g,'マル'); }
@@ -1038,17 +1050,13 @@
     if(rest) segs.push(rest.replace(/\s+/g,''));
     return segs.filter(Boolean);
   }
-  function kanaDigits(s){
-    const map={'0':'ゼロ','1':'イチ','2':'ニ','3':'サン','4':'ヨン','5':'ゴ','6':'ロク','7':'ナナ','8':'ハチ','9':'キュウ'};
-    return s.split('').map(d=> map[d]||d).join('');
-  }
+  function kanaDigits(s){ const map={'0':'ゼロ','1':'イチ','2':'ニ','3':'サン','4':'ヨン','5':'ゴ','6':'ロク','7':'ナナ','8':'ハチ','9':'キュウ'}; return s.split('').map(d=> map[d]||d).join(''); }
   function formatPhoneNo(phoneRaw){
     const p=phoneRaw.replace(/[^\d]/g,'');
     if(p.length===11) return `${kanaDigits(p.slice(0,3))}の${kanaDigits(p.slice(3,7))}の${kanaDigits(p.slice(7))}`;
     if(p.length===10) return `${kanaDigits(p.slice(0,3))}の${kanaDigits(p.slice(3,7))}の${kanaDigits(p.slice(7))}`;
     return kanaDigits(p);
   }
-
   function buildGuidedQueue(){
     const title=titles()[step];
     if(title==='お客様情報の確認'){
@@ -1077,41 +1085,41 @@
 
   /* OCR/通知/トースト */
   function showManual(){ ['ocrShoot','ocrGuide','ocrResult'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); const m=document.getElementById('manualForm'); if(m) m.style.display='block'; }
-  function showOCRGuide(){ const s=document.getElementById('ocrShoot'), g=document.getElementById('ocrGuide'), r=document.getElementById('ocrResult'), m=document.getElementById('manualForm'); if(s) s.style.display='block'; if(g) g.style.display='block'; if(r) r.style.display='none'; if(m) m.style.display='none'; }
+  function showOCRGuide(){
+    const s=document.getElementById('ocrShoot'),
+          g=document.getElementById('ocrGuide'),
+          r=document.getElementById('ocrResult'),
+          m=document.getElementById('manualForm');
+    if(s) s.style.display='block'; if(g) g.style.display='block'; if(r) r.style.display='none'; if(m) m.style.display='none';
+  }
   function startShooting(){ openNotice('本番ではカメラ撮影に遷移します（デモは結果へ）'); setTimeout(showOCRResult,800); }
-  function showOCRResult(){ const s=document.getElementById('ocrShoot'), g=document.getElementById('ocrGuide'), r=document.getElementById('ocrResult'), m=document.getElementById('manualForm'); if(s) s.style.display='none'; if(g) g.style.display='none'; if(r) r.style.display='block'; if(m) m.style.display='none'; }
+  function showOCRResult(){
+    const s=document.getElementById('ocrShoot'),
+          g=document.getElementById('ocrGuide'),
+          r=document.getElementById('ocrResult'),
+          m=document.getElementById('manualForm');
+    if(s) s.style.display='none'; if(g) g.style.display='none'; if(r) r.style.display='block'; if(m) m.style.display='none';
+  }
 
-  function openNotice(msg){
-    const b=document.getElementById('noticeBody'); if(b) b.textContent=msg;
-    const modal=document.getElementById('noticeModal'); if(modal) openModal(modal);
-  }
-  function closeNotice(){
-    const modal=document.getElementById('noticeModal'); if(modal) closeModal(modal);
-  }
+  function openNotice(msg){ const b=document.getElementById('noticeBody'); if(b) b.textContent=msg; const modal=document.getElementById('noticeModal'); if(modal) openModal(modal); }
+  function closeNotice(){ const modal=document.getElementById('noticeModal'); if(modal) closeModal(modal); }
   function showToast(message){
     try{
       const t=document.getElementById('toast'); if(!t) return;
-      // SR通知を確実化（いったん空→再設定）
       t.textContent=''; void t.offsetHeight; t.textContent=String(message||'');
-      t.style.display='block';
-      clearTimeout(showToast._tid);
-      showToast._tid=setTimeout(()=>{ t.style.display='none'; },1500);
+      t.style.display='block'; clearTimeout(showToast._tid);
+      showToast._tid=setTimeout(()=>{ t.style.display='none'; },4500);
     }catch(e){}
   }
 
   /* 色選択 */
   function selectColor(name, el){
     try{ document.querySelectorAll('.colorBtn').forEach(b=> b.classList.remove('active')); if(el) el.classList.add('active'); }catch(e){}
-    try{ showToast(`${name}を選択しました`);}catch(e){}
-    setTimeout(()=>{ try{ next(); }catch(e){} },800);
+    try{ showToast(`${name}を選択しました`);}catch(e){} setTimeout(()=>{ try{ next(); }catch(e){} },800);
   }
 
-  /* 入力補助・赤坂補完 */
-  function mockZipToAddress(zip){
-    const addr=document.getElementById('addr'); if(!addr) return;
-    const z=(zip||'').replace(/[^\d]/g,'');
-    if(z.length===7){ addr.value='東京都港区赤坂'; }
-  }
+  /* 郵便→住所 */
+  function mockZipToAddress(zip){ const addr=document.getElementById('addr'); if(!addr) return; const z=(zip||'').replace(/[^\d]/g,''); if(z.length===7){ addr.value='東京都港区赤坂'; } }
 
   /* OTP */
   let codeSent=false;
@@ -1119,7 +1127,7 @@
     const id=(document.getElementById('loginId')?.value||'').trim();
     if(!id){ openNotice('電話番号またはメールアドレスを入力してください'); return; }
     codeSent=true;
-    showToast('認証コードを送信しました（デモ）');
+    showToast('認証コードを送信しました（デモ）。届いた４桁の認証コードを入力してください');
     document.getElementById('otp1')?.focus();
   }
   function otpAutoNext(idx){
@@ -1127,10 +1135,7 @@
     if(!cur) return;
     cur.value=cur.value.replace(/[^0-9０-９]/g,'').slice(-1).replace(/[０-９]/g, d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0));
     if(cur.value && idx<4){ document.getElementById('otp'+(idx+1))?.focus(); }
-    if(idx===4){
-      const filled=['otp1','otp2','otp3','otp4'].every(id=> (document.getElementById(id)?.value||'').length===1);
-      if(filled) cur.blur();
-    }
+    if(idx===4){ const filled=['otp1','otp2','otp3','otp4'].every(id=> (document.getElementById(id)?.value||'').length===1); if(filled) cur.blur(); }
   }
   function validateOtpLogin(){
     const id=(document.getElementById('loginId')?.value||'').trim();
@@ -1140,13 +1145,12 @@
     return true;
   }
 
-  /* 保険料・差分表示 */
+  /* 保険料・差分（既存） */
   let cur=5900, same=6400, bodily='3000';
   function money(n){ return '¥'+Math.round(n).toLocaleString(); }
   function setCell(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
   function setDelta(id,v){ const el=document.getElementById(id); if(!el) return; const sign=v>=0?'+':'-'; const abs=Math.abs(v); el.textContent=`${sign}¥${Math.round(abs).toLocaleString()}`; el.classList.toggle('dpos',v>=0); el.classList.toggle('dneg',v<0); }
   function onBodilyChange(val){ bodily=val||'3000'; recalcAll(); }
-
   function recalcSamePage(){
     const sameM=same, sameY=same*12, curM=cur, curY=cur*12;
     setCell('curMonthly12', money(curM)); setCell('curYearly12', money(curY));
@@ -1158,19 +1162,13 @@
     setCell('planDownCurM', money(curM)); setCell('planDownCurY', money(curY));
     setCell('planDownNewM', money(4800)); setCell('planDownNewY', money(4800*12)); setDelta('planDownDeltaM', 4800-curM); setDelta('planDownDeltaY', 4800*12-curY);
   }
-
   function updateDiffLinesDynamic(){
     const bEl = document.getElementById('diffBodily');
     if (bEl){
-      const curB = '3,000万円';
-      let newB = '3,000万円';
-      if (bodily === '5000') newB = '5,000万円';
-      else if (bodily === '8000') newB = '8,000万円';
-      else if (bodily === '10000') newB = '1億円';
-      else if (bodily === 'unlimited') newB = '無制限';
-      bEl.textContent = (newB === curB)
-        ? `人身傷害：${curB}（変更なし）`
-        : `人身傷害：${curB} → ${newB}`;
+      const curB = '3,000万円'; let newB = '3,000万円';
+      if (bodily === '5000') newB = '5,000万円'; else if (bodily === '8000') newB = '8,000万円';
+      else if (bodily === '10000') newB = '1億円'; else if (bodily === 'unlimited') newB = '無制限';
+      bEl.textContent = (newB === curB)? `人身傷害：${curB}（変更なし）` : `人身傷害：${curB} → ${newB}`;
     }
     const vEl = document.getElementById('diffVehicle');
     if (vEl){
@@ -1178,18 +1176,11 @@
       const deduct = Number(document.getElementById('deduct')?.value || 50000);
       const curV = `200万円（免責5万円）`;
       let newV = '';
-      if (vehA === 0) {
-        newV = 'なし';
-      } else {
-        const dMText = (deduct === 0) ? '0万円' : (deduct === 100000 ? '10万円' : '5万円');
-        newV = `${vehA}万円（免責${dMText}）`;
-      }
-      vEl.textContent = (newV === curV)
-        ? `車両保険：${curV}（変更なし）`
-        : `車両保険：${curV} → ${newV}`;
+      if (vehA === 0) newV = 'なし';
+      else { const dMText = (deduct === 0) ? '0万円' : (deduct === 100000 ? '10万円' : '5万円'); newV = `${vehA}万円（免責${dMText}）`; }
+      vEl.textContent = (newV === curV)? `車両保険：${curV}（変更なし）` : `車両保険：${curV} → ${newV}`;
     }
   }
-
   function recalcAll(){
     recalcSamePage();
     let bodilyAdj=0;
@@ -1212,7 +1203,6 @@
     updateOptionSummary(); updateDiffLinesDynamic();
   }
 
-  /* 特約差分表示／プラン選択 */
   const currentOptionBaseline=['弁護士費用特約','代車費用特約']; let optSummaryMode='dynamic';
   function getSelectedOptionsLabels(){ const s=[]; if(document.getElementById('opt_law')?.checked) s.push('弁護士費用特約'); if(document.getElementById('opt_rental')?.checked) s.push('代車費用特約'); if(document.getElementById('opt_dap')?.checked) s.push('DAP（ドライブレコーダー）特約'); return s; }
   function arrayEqualIgnoreOrder(a,b){ if(a.length!==b.length) return false; const aa=[...a].sort(), bb=[...b].sort(); return aa.every((v,i)=> v===bb[i]); }
@@ -1243,7 +1233,7 @@
     updateOptionSummary(); goToTitle('重要なご説明');
   }
 
-  /* 同意〜完了・連絡 */
+  /* 同意〜完了 */
   let flagSendPdf=false, flagPostal=false;
   function onAgreeSubmit(){
     const g1=document.getElementById('agree1'), g2=document.getElementById('agree2');
@@ -1266,7 +1256,7 @@
   function sendPdf(){ openNotice('本番ではＰＤＦ送付確認画面に推移します。'); }
   function openReasonDetail(){ const m=document.getElementById('reasonModal'); if(m) openModal(m); }
 
-  /* EXP-CTA フラグ＋押下演出 */
+  /* 押下演出 */
   (function(){
     var enableCTA = true;
     document.addEventListener('DOMContentLoaded', function(){
@@ -1288,7 +1278,7 @@
     });
   })();
 
-  /* 手入力ハンドラ＆VINバリデーション */
+  /* 手入力・VINチェック（既存） */
   (function(){
     window.onMakerChange = function(){
       try{
@@ -1327,7 +1317,7 @@
     };
   })();
 
-  /* 有効期限プルダウン（安全版） */
+  /* 日付プルダウン（既存） */
   (function(){
     function populateDateSelectsSafe(){
       try{
@@ -1338,16 +1328,10 @@
         const needY = (ySel.options.length <= 1);
         const needM = (mSel.options.length <= 1);
         const needD = (dSel.options.length <= 1);
-        if (needY){
-          const now=new Date(), startY=now.getFullYear(), endY=startY+12;
-          for(let y=startY;y<=endY;y++){ const o=document.createElement('option'); o.value=String(y); o.textContent=`${y}年`; ySel.appendChild(o); }
-        }
-        if (needM){
-          for(let m=1;m<=12;m++){ const o=document.createElement('option'); o.value=String(m).padStart(2,'0'); o.textContent=`${m}月`; mSel.appendChild(o); }
-        }
-        if (needD){
-          for(let d=1;d<=31;d++){ const o=document.createElement('option'); o.value=String(d).padStart(2,'0'); o.textContent=`${d}日`; dSel.appendChild(o); }
-        }
+        if (needY){ const now=new Date(), startY=now.getFullYear(), endY=startY+12;
+          for(let y=startY;y<=endY;y++){ const o=document.createElement('option'); o.value=String(y); o.textContent=`${y}年`; ySel.appendChild(o); } }
+        if (needM){ for(let m=1;m<=12;m++){ const o=document.createElement('option'); o.value=String(m).padStart(2,'0'); o.textContent=`${m}月`; mSel.appendChild(o); } }
+        if (needD){ for(let d=1;d<=31;d++){ const o=document.createElement('option'); o.value=String(d).padStart(2,'0'); o.textContent=`${d}日`; dSel.appendChild(o); } }
       }catch(e){ console.error('populateDateSelectsSafe error:', e); }
     }
     if(typeof window.populateDateSelects!=='function'){ window.populateDateSelects = populateDateSelectsSafe; }
@@ -1366,84 +1350,49 @@
       const _setActive = window.setActive;
       window.setActive = function(i){
         _setActive(i);
-        try{ const t=window.titles()[i]||''; if(titleForProgress(t)==='免許証の有効期限'){ populateDateSelectsSafe(); } }catch(e){}
+        try{ const t=titles()[i]||''; if(t==='免許証の有効期限'){ populateDateSelectsSafe(); } }catch(e){}
       };
     }
   })();
 
-  /* a11y: フォーカストラップ/ESCで閉じる/フォーカス復帰 */
+  /* a11y: モーダル制御（既存） */
   (function(){
     let lastFocus = null;
-
     function getFocusable(container){
-      return Array.from(container.querySelectorAll(
-        'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )).filter(el => el.offsetParent !== null);
+      return Array.from(container.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null);
     }
-
     function trapFocus(modal){
       function onKeyDown(e){
         if (e.key === 'Escape') { e.preventDefault(); closeModal(modal); return; }
         if (e.key !== 'Tab') return;
-        const focusables = getFocusable(modal);
-        if (focusables.length === 0) return;
-        const first = focusables[0], last = focusables[focusables.length-1];
-        if (e.shiftKey) {
-          if (document.activeElement === first || !modal.contains(document.activeElement)) {
-            e.preventDefault(); last.focus();
-          }
-        } else {
-          if (document.activeElement === last || !modal.contains(document.activeElement)) {
-            e.preventDefault(); first.focus();
-          }
-        }
+        const f = getFocusable(modal); if (f.length === 0) return;
+        const first = f[0], last = f[f.length-1];
+        if (e.shiftKey){ if (document.activeElement === first || !modal.contains(document.activeElement)) { e.preventDefault(); last.focus(); } }
+        else { if (document.activeElement === last || !modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); } }
       }
-      modal.__trapHandler = onKeyDown;
-      document.addEventListener('keydown', onKeyDown);
+      modal.__trapHandler = onKeyDown; document.addEventListener('keydown', onKeyDown);
     }
-
-    function untrapFocus(modal){
-      if (modal.__trapHandler){
-        document.removeEventListener('keydown', modal.__trapHandler);
-        modal.__trapHandler = null;
-      }
-    }
-
+    function untrapFocus(modal){ if (modal.__trapHandler){ document.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler = null; } }
     window.openModal = function(modal){
-      lastFocus = document.activeElement;
-      modal.classList.add('show');
-      const f = getFocusable(modal);
-      (f.find(el=>el.id && /CloseBtn$/i.test(el.id)) || f[0] || modal).focus();
-      trapFocus(modal);
+      lastFocus = document.activeElement; modal.classList.add('show');
+      const f = getFocusable(modal); (f.find(el=>el.id && /CloseBtn$/i.test(el.id)) || f[0] || modal).focus(); trapFocus(modal);
     };
-
     window.closeModal = function(modal){
-      untrapFocus(modal);
-      modal.classList.remove('show');
+      untrapFocus(modal); modal.classList.remove('show');
       if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
       lastFocus = null;
     };
-
-    // 背景クリックで閉じる
     ['noticeModal','reasonModal'].forEach(id=>{
-      const m=document.getElementById(id);
-      if(!m) return;
+      const m=document.getElementById(id); if(!m) return;
       m.addEventListener('mousedown', (e)=>{ if(e.target===m) closeModal(m); });
     });
   })();
 
-  // 初期フォーカス（画面内の主要操作へ）
   function focusFirstInteractive(scope){
     const root = scope || document.querySelector('.screen.active');
     if(!root) return;
-    const selectors = [
-      'button.btnPrimary',
-      'input, select, textarea, button, a[href]'
-    ];
-    for (const sel of selectors) {
-      const el = root.querySelector(sel);
-      if (el && typeof el.focus === 'function') { el.focus(); return; }
-    }
+    const selectors = [ 'button.btnPrimary', 'input, select, textarea, button, a[href]' ];
+    for (const sel of selectors) { const el = root.querySelector(sel); if (el && typeof el.focus === 'function') { el.focus(); return; } }
   }
 
   setActive(0);
