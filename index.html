@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>自動車保険 更新手続き（完全版・修正版・保存用）</title>
-<!-- Version: full-2025-11-14-stable-a11y-progress25-time-history-noticeLink-header2rows -->
+<!-- Version: full-2025-11-14-stable-a11y-progress25-time-history-noticeLink-header2rows-fixes-terms-2025-11-14c -->
 <style>
   :root {
     --blue-900:#0f3d7a; --blue-700:#1f5fbf; --blue-500:#3c7fe6;
@@ -131,7 +131,7 @@
   .large .input,.large select,.large textarea{font-size:18px !important}
   .large .btnPrimary,.large header .btn,.large .toggleLarge,.large .aiLabel,.large .supportItem,.large .ghost{font-size:17px !important}
   .large .priceTable th,.large .priceTable td{font-size:15px !important}
-  .large .otpBox{font-size:26px !important}
+  .large .otpBox{font-size:26px !重要}
 
   .exp-cta .btnPrimary{background:#3c7fe6;color:#fff;}
   .exp-cta .btnPrimary.pressed{ transform:translateY(1px) scale(0.99); box-shadow:0 1px 0 rgba(15,61,122,.08); }
@@ -379,7 +379,7 @@
             <div class="licBox short">交付日：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
-            <div class="licBox red short">有効期限：yyyy年mm月dd日まで有効</div>
+            <div class="licBox red short">有効期限：yyyy年mm月dd日</div>
           </div>
           <div class="licRow">
             <div class="licBox short">免許の条件等：XXXXXXXX</div>
@@ -414,7 +414,7 @@
           <li>生年月日：1965年04月12日</li>
         </ul>
         <div class="desc">変更はございますか？</div>
-        <button class="btnPrimary" onclick="next()">変更なし</button>
+        <button class="btnPrimary" onclick="goToTitle('主に運転する方（記名被保険者）')">変更なし</button>
         <button class="btnPrimary" onclick="goToTitle('お客様情報の編集')">変更する</button>
       </div>
     </section>
@@ -438,7 +438,7 @@
         <div class="h1">主に運転する方</div>
         <div class="list">現在の登録：山田 太郎</div>
         <div class="desc">変更はございますか？</div>
-        <button class="btnPrimary" onclick="next()">変更なし</button>
+        <button class="btnPrimary" onclick="goToTitle('運転者の範囲と年齢条件')">変更なし</button>
         <button class="btnPrimary" onclick="goToTitle('主に運転する方の編集')">変更する</button>
       </div>
     </section>
@@ -461,7 +461,7 @@
           <li>年齢条件：26歳以上補償</li>
         </ul>
         <div class="desc">変更はございますか？</div>
-        <button class="btnPrimary" onclick="next()">変更なし</button>
+        <button class="btnPrimary" onclick="goToTitle('使用目的・走行距離')">変更なし</button>
         <button class="btnPrimary" onclick="goToTitle('運転者範囲・年齢条件の編集')">変更する</button>
       </div>
     </section>
@@ -556,7 +556,7 @@
         </div>
         <div class="desc">
           全体の料率改定（物価・部品・修理費の上昇）／年齢・地域・事故有無などの条件変化／等級の進行や事故有の影響（該当する場合）
-          <div><a href="#" class="link blockLink" onclick="openNotice('本番では補償内容の詳細画面に推移します')">詳細はコチラ</a></div>
+          <div><a href="#" class="link blockLink" onclick="openReasonDetail()">詳細はコチラ</a></div>
         </div>
         <button class="btnPrimary" onclick="goToTitle('更新方法の選択')">更新方法を選ぶ</button>
       </div>
@@ -765,6 +765,7 @@
         </div>
       </div>
 
+      <!-- 復元：用語をやさしく -->
       <div class="card foldCard">
         <div class="foldHeader">用語をやさしく（タップで説明）</div>
         <div class="foldSub">よく出る用語の意味を短く説明します。タップで詳しく読めます。</div>
@@ -784,7 +785,10 @@
           <div class="desc">全文はいつでも読めます。メールでもお送りします。</div>
           <div style="display:flex; gap:6px; margin-top:6px;">
             <button class="btnPrimary" style="flex:1" onclick="openNotice('本番では重要事項の全文表示画面に遷移します')">全文を表示する</button>
-            <button class="btnPrimary" style="flex:1" onclick="sendPdf()">PDFで受け取る（メール送付）</button>
+            <button class="btnPrimary" style="flex:1" onclick="sendPdf()">
+              PDFで受け取る
+              <span style="display:block; font-weight:400;">（メール送付）</span>
+            </button>
           </div>
         </div>
       </div>
@@ -913,7 +917,7 @@
   const MAX_STEPS = 25;
 
   const screens=[...document.querySelectorAll('.screen')];
-  let step=0; // DOMインデックス
+  let step=0;
   const titles=()=>screens.map(s=>s.dataset.title);
 
   /* 履歴スタック（戻る対策） */
@@ -931,12 +935,10 @@
     const curTitle=titles()[i]||'';
     const x = titleToNo(curTitle);
 
-    // 進捗表示（初回のみ（最大）を併記）
     const progText = document.getElementById('progressText');
     if (progText) {
       progText.textContent = x===1 ? `進捗 ${x}/${MAX_STEPS}（最大）` : `進捗 ${x}/${MAX_STEPS}`;
     }
-    // バー幅（x/25）
     const pct=(x/MAX_STEPS)*100;
     const bar=document.getElementById('progressBar');
     if(bar){
@@ -946,7 +948,6 @@
       bar.setAttribute('aria-valuenow', String(x));
       bar.setAttribute('aria-valuetext', `全${MAX_STEPS}ステップ中の${x}ステップ目`);
     }
-    // 残り時間（四捨五入・0分も表示）
     const remaining=Math.round(12 * (MAX_STEPS - x) / MAX_STEPS);
     const timeLeftEl = document.getElementById('timeLeft');
     if (timeLeftEl) timeLeftEl.textContent = `残り約${remaining}分`;
@@ -994,7 +995,7 @@
     }catch(e){ openNotice('保存に失敗しました（デモ）。'); }
   }
 
-  /* 音声ガイド（既存） */
+  /* 音声ガイド */
   let guidedSpeaking=false; let guidedCancelFn=null;
   const ITEM_PAUSE=1500, SUB_PAUSE=700, NAME_BRIEF_PAUSE=50;
 
@@ -1145,7 +1146,7 @@
     return true;
   }
 
-  /* 保険料・差分（既存） */
+  /* 保険料・差分 */
   let cur=5900, same=6400, bodily='3000';
   function money(n){ return '¥'+Math.round(n).toLocaleString(); }
   function setCell(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
@@ -1208,7 +1209,18 @@
   function arrayEqualIgnoreOrder(a,b){ if(a.length!==b.length) return false; const aa=[...a].sort(), bb=[...b].sort(); return aa.every((v,i)=> v===bb[i]); }
   function renderOptionDiff(newList){ const curStr='弁護士費用・代車費用'; const newStr = newList.length ? newList.join(',') : 'なし'; const el=document.getElementById('optSummary'); if(!el) return; if(arrayEqualIgnoreOrder(newList, currentOptionBaseline)){ el.textContent = `特約：${curStr}（変更なし）`; }else{ el.textContent = `特約：${curStr} → ${newStr}`; } }
   function updateOptionSummary(){ if(optSummaryMode==='fixedCurrent'){ renderOptionDiff([...currentOptionBaseline]); return; } if(optSummaryMode==='fixedNone'){ renderOptionDiff([]); return; } const sel=getSelectedOptionsLabels(); renderOptionDiff(sel); }
-  function chooseSameFlow(){ optSummaryMode='fixedCurrent'; const newM=same, newY=newM*12; setCell('sumCurMonthly', money(cur)); setCell('sumCurYearly', money(cur*12)); setCell('sumNewMonthly', money(newM)); setCell('sumNewYearly', money(newY)); setDelta('sumDeltaMonthly', newM-cur); setDelta('sumDeltaYearly', newY - cur*12); const b=document.getElementById('diffBodily'), v=document.getElementById('diffVehicle'); if(b) b.textContent='変更なし（前年同条件で更新）'; if(v) v.textContent='—'; updateOptionSummary(); goToTitle('重要なご説明'); }
+  function chooseSameFlow(){
+    optSummaryMode='fixedCurrent';
+    const newM=same, newY=newM*12;
+    setCell('sumCurMonthly', money(cur)); setCell('sumCurYearly', money(cur*12));
+    setCell('sumNewMonthly', money(newM)); setCell('sumNewYearly', money(newY));
+    setDelta('sumDeltaMonthly', newM-cur); setDelta('sumDeltaYearly', newY - cur*12);
+    const b=document.getElementById('diffBodily'), v=document.getElementById('diffVehicle');
+    if(b) b.textContent='変更なし（前年同条件で更新）';
+    if(v) v.textContent='—';
+    updateOptionSummary();
+    goToTitle('重要なご説明');
+  }
   function openSimplePlans(){ goToTitle('別のプランから選ぶ'); }
   function goStepByStep(){ optSummaryMode='dynamic'; goToTitle('人身傷害の金額を選ぶ'); }
   function chooseSimplePlan(type){
@@ -1278,7 +1290,7 @@
     });
   })();
 
-  /* 手入力・VINチェック（既存） */
+  /* 手入力・VINチェック */
   (function(){
     window.onMakerChange = function(){
       try{
@@ -1317,7 +1329,7 @@
     };
   })();
 
-  /* 日付プルダウン（既存） */
+  /* 日付プルダウン */
   (function(){
     function populateDateSelectsSafe(){
       try{
@@ -1355,7 +1367,7 @@
     }
   })();
 
-  /* a11y: モーダル制御（既存） */
+  /* a11y: モーダル制御 */
   (function(){
     let lastFocus = null;
     function getFocusable(container){
