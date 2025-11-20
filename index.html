@@ -205,48 +205,25 @@
     white-space:nowrap;
   }
 
-  /* 微小モーション：画面アクティブ時にカードを軽くフェードイン */
   @keyframes fadeInUp {
     from { opacity:0; transform: translateY(4px); }
     to   { opacity:1; transform: translateY(0); }
   }
-  .screen.anim-in .card{
-    animation: fadeInUp .22s ease both;
-  }
+  .screen.anim-in .card{ animation: fadeInUp .22s ease both; }
   .screen.anim-in .card:nth-of-type(2){ animation-delay: .03s; }
   .screen.anim-in .card:nth-of-type(3){ animation-delay: .06s; }
   .screen.anim-in .card:nth-of-type(4){ animation-delay: .09s; }
 
-  /* choiceToggle の質感強化（hover/active/transition） */
   .choiceToggle{
-    transition:
-      background-color .15s ease, border-color .15s ease,
-      box-shadow .15s ease, transform .06s ease;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .06s ease;
     box-shadow:0 1px 0 rgba(31,95,191,.06);
     background-image: linear-gradient(180deg, #ffffff 0%, #fdfdff 100%);
   }
-  .choiceToggle:hover{
-    border-color:#aecdff;
-    box-shadow:0 2px 0 rgba(31,95,191,.08);
-  }
-  .choiceToggle:focus-visible{
-    outline:3px solid #3c7fe6;
-    outline-offset:2px;
-    border-radius:8px;
-  }
-  .choiceToggle.active{
-    background:#eef4ff;
-    outline:2px solid var(--blue-800);
-    border-color: var(--blue-800);
-    box-shadow:0 2px 0 rgba(31,95,191,.10);
-    transform: translateY(0);
-  }
-  .choiceToggle:active{
-    transform: translateY(1px) scale(0.995);
-    box-shadow:0 1px 0 rgba(31,95,191,.08);
-  }
+  .choiceToggle:hover{ border-color:#aecdff; box-shadow:0 2px 0 rgba(31,95,191,.08); }
+  .choiceToggle:focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; border-radius:8px; }
+  .choiceToggle.active{ background:#eef4ff; outline:2px solid var(--blue-800); border-color: var(--blue-800); box-shadow:0 2px 0 rgba(31,95,191,.10); transform: translateY(0); }
+  .choiceToggle:active{ transform: translateY(1px) scale(0.995); box-shadow:0 1px 0 rgba(31,95,191,.08); }
 
-  /* 進捗バーのマイルストーン（25/50/75%） */
   .bar{ position:relative; }
   .bar::before{
     content:""; position:absolute; inset:0; pointer-events:none; border-radius:999px;
@@ -256,79 +233,54 @@
       linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 74.5%, rgba(31,95,191,.18) 75%, rgba(0,0,0,0) 75.5%);
   }
 
-  /* 進捗章ラベル（入力→見積→説明→申込） */
-  .chapters{
-    display:flex; gap:6px; justify-content:space-between; margin:2px 10px 0 10px;
-    font-size:11px; color:#5b6470;
-  }
+  .chapters{ display:flex; gap:6px; justify-content:space-between; margin:2px 10px 0 10px; font-size:11px; color:#5b6470; }
   .chapter{ flex:1; text-align:center; opacity:.75; }
-  .chapter.active{
-    color:#1f5fbf; font-weight:700; opacity:1;
+  .chapter.active{ color:#1f5fbf; font-weight:700; opacity:1; }
+
+  .foldCard .btnPrimary{ padding:9px 12px; font-size:14px; line-height:1.25; }
+  .foldCard .choiceToggle{ padding:7px 10px; white-space:nowrap; }
+
+  /* ヘッダーのボタンをアイコン＋ラベルのフラットに統一 */
+  .headerTop .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 6px; border:none; background:transparent;
+    color:var(--blue-800); font-size:13px; font-weight:600; text-decoration:none;
+  }
+  .headerTop .btn svg{ display:block; }
+  /* 旧toggleLargeの枠線をオーバーライドしてフラット化 */
+  .headerTop .toggleLarge{
+    border:none !important; border-radius:0 !important; background:transparent !important;
+    padding:4px 6px !important; color:var(--blue-800) !important;
   }
 
-  /* 重要事項の全文の下のボタン（高さを少し短く） */
-  .foldCard .btnPrimary{
-    padding:9px 12px;
-    font-size:14px;
-    line-height:1.25;
-  }
-  /* 重要事項（choiceボタン）のコンパクト化＋二段回避 */
-  .foldCard .choiceToggle{
-    padding:7px 10px;
-    white-space:nowrap;
-  }
-
-  /* ヘッダーAIアイコン（aiRobot）を「青四角＋白い人型」に上書き */
   .aiRobot{
     width:28px;height:28px;border-radius:8px;
-    background-color:#3c7fe6 !important; /* 青い四角 */
+    background-color:#3c7fe6 !important;
     border:2px solid #d7e0f0;
-    /* 白い人型を中央に表示（SVGデータURI） */
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/></svg>');
-    background-repeat:no-repeat;
-    background-position:center;
-    background-size:70% 70%;
+    background-repeat:no-repeat; background-position:center; background-size:70% 70%;
   }
 
-  /* トースト（#toast）のアイコン化＋フェード */
   #toast{
     position:fixed; left:50%; bottom:90px; transform:translateX(-50%) translateY(6px);
     background:rgba(15,61,122,.95); color:#fff;
-    padding:8px 12px 8px 32px; /* 左にアイコン分 */
-    border-radius:8px; font-size:13px; display:none; z-index:9999;
+    padding:8px 12px 8px 32px; border-radius:8px; font-size:13px; display:none; z-index:9999;
     box-shadow:0 4px 12px rgba(0,0,0,.22);
     opacity:0; transition: opacity .2s ease-out, transform .2s ease-out;
   }
-  #toast[style*="display: block"]{
-    opacity:1; transform:translateX(-50%) translateY(0);
-  }
+  #toast[style*="display: block"]{ opacity:1; transform:translateX(-50%) translateY(0); }
   #toast::before{
     content:""; position:absolute; left:10px; top:50%; transform:translateY(-50%);
-    width:16px; height:16px;
-    background-repeat:no-repeat; background-size:16px 16px; opacity:.95;
-    /* 白い丸＋青い i アイコン */
+    width:16px; height:16px; background-repeat:no-repeat; background-size:16px 16px; opacity:.95;
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="8" fill="%23ffffff"/><path fill="%233c7fe6" d="M7.25 4.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Zm.25 2.25h1v5h-1z"/></svg>');
   }
 
-  /* フッター補足行（サポート時間） */
-  .footerNote{
-    font-size:12px; color:#5b6470; text-align:center; padding:4px 10px 0 10px;
-  }
+  .footerNote{ font-size:12px; color:#5b6470; text-align:center; padding:4px 10px 0 10px; }
 
-  /* 仕上げ1：ボタンの二段化ゼロ対策（強制単行）＋フォーカス可視化 */
-  .btnPrimary{
-    white-space:nowrap; /* 二段化回避 */
-    line-height:1.25;
-  }
-  .btnPrimary:hover{
-    filter:brightness(0.98);
-  }
-  .btnPrimary:focus-visible{
-    outline:3px solid #3c7fe6;
-    outline-offset:2px;
-  }
+  .btnPrimary{ white-space:nowrap; line-height:1.25; }
+  .btnPrimary:hover{ filter:brightness(0.98); }
+  .btnPrimary:focus-visible{ outline:3px solid #3c7fe6; outline-offset:2px; }
 
-  /* 仕上げ2：ローディングオーバーレイ（軽量） */
   .loadingOverlay{
     position:fixed; inset:0; background:rgba(255,255,255,.65);
     display:flex; align-items:center; justify-content:center;
@@ -339,24 +291,20 @@
     border:3px solid rgba(31,95,191,.25); border-top-color:#1f5fbf;
     animation: spin .8s linear infinite;
   }
-  @keyframes spin{
-    to { transform:rotate(360deg); }
-  }
+  @keyframes spin{ to { transform:rotate(360deg); } }
 
-  /* 仕上げ3：簡易モーション設定に追従（アニメ/トランジションの抑制） */
   @media (prefers-reduced-motion: reduce){
-    .screen.anim-in .card{ animation: none !important; }
-    .videoChip, .choiceToggle, .btnPrimary, #toast{
-      transition: none !important;
-    }
+    .screen.anim-in .card{ animation:none !important; }
+    .videoChip, .choiceToggle, .btnPrimary, #toast{ transition:none !important; }
   }
 
-  /* 狭幅のみ：ヘッダーの「公式」バッジを非表示 */
+  /* 狭幅対応の調整（公式は削除済のため非表示指定は不要） */
   @media (max-width:375px){
-    .headerTop .toolbar [aria-label="公式バッジ"]{ display:none; }
     .headerTop .toolbar .btn{ font-size:12px; }
-    .headerTop .toggleLarge{ padding:3px 6px; font-size:12px; }
   }
+
+  /* AIモーダルの選択ボタンの文字を少し大きく */
+  #aiChoiceModal .choiceToggle{ font-size:15px; }
 </style>
 <!-- END: styles-addon -->
 
@@ -368,11 +316,21 @@
 <!-- START: header-top -->
 <div class="headerTop">
   <div class="toolbar">
-    <span aria-label="公式バッジ" style="display:inline-flex;align-items:center;gap:6px;border:1px solid #c8d6f3;color:#1f5fbf;background:#f1f6ff;border-radius:8px;padding:2px 6px;font-size:11px;font-weight:700;">
-      公式
-    </span>
-    <a href="#" class="btn" id="btnSpeak" onclick="toggleGuidedVoice()">音声で解説</a>
-    <button class="toggleLarge" onclick="toggleLarge()">文字を大きく</button>
+    <!-- 公式バッジは削除してUIを統一 -->
+    <a href="#" class="btn" id="btnSpeak" onclick="toggleGuidedVoice()">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
+      </svg>
+      音声で解説
+    </a>
+    <a href="#" class="btn toggleLarge" onclick="toggleLarge()">
+      <!-- “あ”アイコン風（角丸の中に文字） -->
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="2" y="3" width="20" height="18" rx="4" fill="#3c7fe6"></rect>
+        <text x="12" y="16" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="700">あ</text>
+      </svg>
+      文字を大きく
+    </a>
   </div>
   <div class="aiAgent" onclick="openAiChoice()">
     <div class="aiRobot" aria-hidden="true" title="AIエージェント"></div>
@@ -936,53 +894,81 @@
 </section>
 <!-- END: screen-14-renewal-method -->
 
-    <!-- START: screen-15-simple-plans -->
-    <section class="screen" data-title="別のプランから選ぶ">
-      <div class="card">
-        <div class="h1">別のプランから選ぶ</div>
+<!-- START: screen-15-simple-plans -->
+<section class="screen" data-title="別のプランから選ぶ">
+  <div class="card">
+    <div class="h1">別のプランから選ぶ</div>
 
-        <div class="card" style="margin-top:8px;">
-          <div class="label">補償を充実 <span class="badge">安心重視</span></div>
-          <ul class="list">
-            <li>対人・対物：無制限</li>
-            <li>人身傷害：<span class="changePlus">5,000万円</span>（現在:3,000万円）</li>
-            <li>車両保険：<span class="changePlus">250万円・免責5万円</span>（現在:200万円・免責5万円）</li>
-            <li>特約：弁護士費用・代車費用（現在と同じ）</li>
-          </ul>
-          <table class="priceTable">
-            <thead><tr><th class="rowLabel"></th><th>月額</th><th>年額</th></tr></thead>
-            <tbody>
-              <tr class="rowCurrent"><td class="rowLabel">現在</td><td id="planUpCurM">¥5,900</td><td id="planUpCurY">¥70,800</td></tr>
-              <tr class="rowNew"><td class="rowLabel">更新後</td><td id="planUpNewM">¥6,900</td><td id="planUpNewY">¥82,800</td></tr>
-              <tr class="rowDelta"><td class="rowLabel">差額</td><td id="planUpDeltaM">+¥1,000</td><td id="planUpDeltaY">+¥12,000</td></tr>
-            </tbody>
-          </table>
-          <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細画面に推移します')">補償内容の詳細はコチラ</a></div>
-          <button class="btnPrimary" onclick="chooseSimplePlan('up')">このプランで進む</button>
-        </div>
+    <!-- タブヘッダー -->
+    <div class="tabHeader" role="tablist" aria-label="プランの切り替え" style="display:flex; gap:6px; margin-top:6px;">
+      <button id="tab_up" class="choiceToggle active" role="tab" aria-selected="true" aria-controls="panel_up" onclick="switchPlanTab('up')">安心重視</button>
+      <button id="tab_down" class="choiceToggle" role="tab" aria-selected="false" aria-controls="panel_down" onclick="switchPlanTab('down')">保険料重視</button>
+    </div>
 
-        <div class="card" style="margin-top:8px;">
-          <div class="label">補償を控えめ <span class="badge">保険料重視</span></div>
-          <ul class="list">
-            <li>対人・対物：無制限</li>
-            <li>人身傷害：3,000万円（現在と同じ）</li>
-            <li>車両保険：<span class="changeMinus">なし</span>（現在:200万円・免責5万円）</li>
-            <li>特約：なし（現在:弁護士費用・代車費用）</li>
-          </ul>
-          <table class="priceTable">
-            <thead><tr><th class="rowLabel"></th><th>月額</th><th>年額</th></tr></thead>
-            <tbody>
-              <tr class="rowCurrent"><td class="rowLabel">現在</td><td id="planDownCurM">¥5,900</td><td id="planDownCurY">¥70,800</td></tr>
-              <tr class="rowNew"><td class="rowLabel">更新後</td><td id="planDownNewM">¥4,800</td><td id="planDownNewY">¥57,600</td></tr>
-              <tr class="rowDelta"><td class="rowLabel">差額</td><td id="planDownDeltaM">-¥1,100</td><td id="planDownDeltaY">-¥13,200</td></tr>
-            </tbody>
-          </table>
-          <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細画面に推移します')">補償内容の詳細はコチラ</a></div>
-          <button class="btnPrimary" onclick="chooseSimplePlan('down')">このプランで進む</button>
-        </div>
-      </div>
-    </section>
-    <!-- END: screen-15-simple-plans -->
+    <!-- タブパネル：安心重視 -->
+    <div id="panel_up" role="tabpanel" aria-labelledby="tab_up" style="margin-top:8px;">
+      <div class="label">補償を充実 <span class="badge">安心重視</span></div>
+      <ul class="list">
+        <li>対人・対物：無制限</li>
+        <li>人身傷害：<span class="changePlus">5,000万円</span>（現在:3,000万円）</li>
+        <li>車両保険：<span class="changePlus">250万円・免責5万円</span>（現在:200万円・免責5万円）</li>
+        <li>特約：弁護士費用・代車費用（現在と同じ）</li>
+      </ul>
+      <table class="priceTable">
+        <thead><tr><th class="rowLabel"></th><th>月額</th><th>年額</th></tr></thead>
+        <tbody>
+          <tr class="rowCurrent"><td class="rowLabel">現在</td><td id="planUpCurM">¥5,900</td><td id="planUpCurY">¥70,800</td></tr>
+          <tr class="rowNew"><td class="rowLabel">更新後</td><td id="planUpNewM">¥6,900</td><td id="planUpNewY">¥82,800</td></tr>
+          <tr class="rowDelta"><td class="rowLabel">差額</td><td id="planUpDeltaM">+¥1,000</td><td id="planUpDeltaY">+¥12,000</td></tr>
+        </tbody>
+      </table>
+      <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細画面に推移します')">補償内容の詳細はコチラ</a></div>
+      <button class="btnPrimary" onclick="chooseSimplePlan('up')">このプランで進む</button>
+    </div>
+
+    <!-- タブパネル：保険料重視 -->
+    <div id="panel_down" role="tabpanel" aria-labelledby="tab_down" style="margin-top:8px; display:none;">
+      <div class="label">補償を控えめ <span class="badge">保険料重視</span></div>
+      <ul class="list">
+        <li>対人・対物：無制限</li>
+        <li>人身傷害：3,000万円（現在と同じ）</li>
+        <li>車両保険：<span class="changeMinus">なし</span>（現在:200万円・免責5万円）</li>
+        <li>特約：なし（現在:弁護士費用・代車費用）</li>
+      </ul>
+      <table class="priceTable">
+        <thead><tr><th class="rowLabel"></th><th>月額</th><th>年額</th></tr></thead>
+        <tbody>
+          <tr class="rowCurrent"><td class="rowLabel">現在</td><td id="planDownCurM">¥5,900</td><td id="planDownCurY">¥70,800</td></tr>
+          <tr class="rowNew"><td class="rowLabel">更新後</td><td id="planDownNewM">¥4,800</td><td id="planDownNewY">¥57,600</td></tr>
+          <tr class="rowDelta"><td class="rowLabel">差額</td><td id="planDownDeltaM">-¥1,100</td><td id="planDownDeltaY">-¥13,200</td></tr>
+        </tbody>
+      </table>
+      <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細画面に推移します')">補償内容の詳細はコチラ</a></div>
+      <button class="btnPrimary" onclick="chooseSimplePlan('down')">このプランで進む</button>
+    </div>
+  </div>
+
+  <script>
+    function switchPlanTab(which){
+      try{
+        const upTab = document.getElementById('tab_up');
+        const downTab = document.getElementById('tab_down');
+        const upPanel = document.getElementById('panel_up');
+        const downPanel = document.getElementById('panel_down');
+
+        const isUp = (which === 'up');
+        upTab.classList.toggle('active', isUp);
+        downTab.classList.toggle('active', !isUp);
+        upTab.setAttribute('aria-selected', isUp ? 'true' : 'false');
+        downTab.setAttribute('aria-selected', !isUp ? 'true' : 'false');
+
+        upPanel.style.display = isUp ? '' : 'none';
+        downPanel.style.display = isUp ? 'none' : '';
+      }catch(e){}
+    }
+  </script>
+</section>
+<!-- END: screen-15-simple-plans -->
 
     <!-- START: screen-16-bodily-amount -->
     <section class="screen" data-title="人身傷害の金額を選ぶ">
@@ -1399,7 +1385,6 @@
     historyStack.push(idx);
   }
 
-  /* 軽量ローディング */
   function ensureLoading(){
     let o=document.getElementById('loadingOverlay');
     if(!o){
@@ -1430,7 +1415,6 @@
     return era ? `${year}年（${era}）` : `${year}年`;
   }
 
-  // 免許証の有効期限（年/月/日）に和暦表記を付与
   function populateDateSelectsSafe(){
     try{
       const ySel = document.getElementById('licenseYear');
@@ -1461,7 +1445,6 @@
     }catch(e){ openNotice('有効期限の選択でエラーが発生しました。再度お試しください。'); return false; }
   }
 
-  // 生年月日プルダウン（年は和暦表記／過去年のみ）
   function populateDobSelectsSafe(){
     try{
       const ySel = document.getElementById('dobYear');
@@ -1469,7 +1452,7 @@
       const dSel = document.getElementById('dobDay');
       if (!ySel || !mSel || !dSel) return;
       if (ySel.options.length <= 1){
-        const now=new Date(), endY=now.getFullYear(), startY=endY-100; // 100年分
+        const now=new Date(), endY=now.getFullYear(), startY=endY-100;
         for(let y=startY;y<=endY;y++){
           const o=document.createElement('option'); o.value=String(y);
           o.textContent=formatYearWithEra(y);
@@ -1494,30 +1477,26 @@
     }catch(e){ openNotice('生年月日の選択でエラーが発生しました。再度お試しください。'); return false; }
   }
 
-  // 初度登録年月プルダウン（年は和暦表記／未来不可）
   function populateFirstRegSelectsSafe(){
     try{
       const ySel = document.getElementById('firstRegYear');
       const mSel = document.getElementById('firstRegMonth');
       if (!ySel || !mSel) return;
       if (ySel.options.length <= 1){
-        const now=new Date(), endY=now.getFullYear(), startY=endY-50; // 50年分
+        const now=new Date(), endY=now.getFullYear(), startY=endY-50;
         for(let y=startY;y<=endY;y++){
           const o=document.createElement('option'); o.value=String(y);
           o.textContent=formatYearWithEra(y);
           ySel.appendChild(o);
         }
       }
-      // 月は1〜12。ただし選択年が今年なら未来月は除外
       const selectedY = Number(ySel.value || new Date().getFullYear());
       const now = new Date();
       const maxMonth = (selectedY === now.getFullYear()) ? (now.getMonth()+1) : 12;
-      // いったんクリアして再生成
       mSel.innerHTML = '<option value="">月</option>';
       for(let m=1;m<=maxMonth;m++){
         const o=document.createElement('option'); o.value=String(m).padStart(2,'0'); o.textContent=`${m}月`; mSel.appendChild(o);
       }
-      // 年が変更されたら月を再計算
       ySel.addEventListener('change', populateFirstRegSelectsSafe, { once:true });
     }catch(e){ console.error('populateFirstRegSelectsSafe error:', e); }
   }
@@ -1526,7 +1505,6 @@
       const y=document.getElementById('firstRegYear')?.value || '';
       const m=document.getElementById('firstRegMonth')?.value || '';
       if(!y||!m){ openNotice('初度登録年月を「年・月」から選んでください'); return false; }
-      // 未来チェック
       const now = new Date();
       const sel = new Date(Number(y), Number(m)-1, 1);
       if (sel > new Date(now.getFullYear(), now.getMonth(), 1)){
@@ -1582,7 +1560,6 @@
     const curTitle=titles()[i]||'';
     if (curTitle==='申込完了') updateCompletion();
 
-    // 画面に応じてプルダウンを初期化
     try{
       if (curTitle==='免許証の有効期限' || curTitle==='免許証の色'){ populateDateSelectsSafe(); }
       if (curTitle==='お客様情報の編集'){ populateDobSelectsSafe(); }
@@ -1632,7 +1609,7 @@
   }
 
   let guidedSpeaking=false; let guidedCancelFn=null;
-  const ITEM_PAUSE=1500, SUB_PAUSE=700, NAME_BRIEF_PAUSE=50;
+  const ITEM_PAUSE=1500, SUB_PAUSE=700, NAME_BRIEF_PAUSE=50, BREAK_PAUSE=400;
 
   function stopGuidedVoice(){ if(!('speechSynthesis'in window))return; try{speechSynthesis.cancel();}catch(e){} if(typeof guidedCancelFn==='function'){try{guidedCancelFn();}catch(e){}} guidedCancelFn=null; guidedSpeaking=false; setGuidedBtn(); }
   function toggleGuidedVoice(){
@@ -1693,6 +1670,7 @@
     if(p.length===10) return `${kanaDigits(p.slice(0,3))}の${kanaDigits(p.slice(3,7))}の${kanaDigits(p.slice(7))}`;
     return kanaDigits(p);
   }
+
   function buildGuidedQueue(){
     const title=titles()[step];
     if(title==='お客様情報の確認'){
@@ -1715,8 +1693,14 @@
       q.push({text:'内容に変更はございますか。変更がある場合は、変更するボタンを押してください。', pause:0});
       return q;
     }
-    const text=(screens[step]?.innerText||'').replace(/\s+/g,' ');
-    return [{text, pause:0}];
+    // 改行ごとに短い無音を挿入
+    const raw = (screens[step]?.innerText || '');
+    const lines = raw.split('\n').map(s=> s.trim()).filter(Boolean);
+    const queue = [];
+    lines.forEach((line, idx)=>{
+      queue.push({ text: line, pause: (idx === lines.length-1 ? SUB_PAUSE : BREAK_PAUSE) });
+    });
+    return queue.length ? queue : [{text: raw.replace(/\s+/g,' '), pause:0}];
   }
 
   function showManual(){ ['ocrShoot','ocrGuide','ocrResult'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); const m=document.getElementById('manualForm'); if(m) m.style.display='block'; }
@@ -2274,12 +2258,13 @@
   function fallbackMock(reasonText){
     try{ setStatus(reasonText || 'この端末では音声認識は未対応です。サンプルを入力します。'); }catch(e){}
     if (targetFieldId){
-      if (targetFieldId === 'mainDriverName') putName('山田 花子');
-      else if (targetFieldId === 'cust_name') putValue(targetFieldId, '山田 花子');
-      else if (targetFieldId === 'zip') putValue(targetFieldId, '1234567');
-      else if (targetFieldId === 'addr') putValue(targetFieldId, '東京都港区赤坂1-1-1 〇〇マンション101');
-      else if (targetFieldId === 'cust_phone') putValue(targetFieldId, '09012345678');
-      else putValue(targetFieldId, 'サンプル');
+      if (targetFieldId === 'mainDriverName') { putName('山田 花子'); }
+      else if (targetFieldId === 'cust_name') { putValue(targetFieldId, '山田 花子'); }
+      else if (targetFieldId === 'zip') { putValue(targetFieldId, '1234567'); }
+      else if (targetFieldId === 'addr') { putValue(targetFieldId, '東京都港区赤坂1-1-1 〇〇マンション101'); }
+      else if (targetFieldId === 'cust_phone') { putValue(targetFieldId, '09012345678'); }
+      else if (targetFieldId === 'vin') { putValue(targetFieldId, 'A000000000'); } /* VINは決め打ち */
+      else { putValue(targetFieldId, 'サンプル'); }
     } else {
       putName('山田 花子');
     }
