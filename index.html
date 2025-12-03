@@ -2629,7 +2629,15 @@
         s.classList.toggle('anim-in', isActive);
       });
 
-      document.body.classList.toggle('cover', isCover(i));
+      // cover表示制御
+      const onCover = isCover(i);
+      document.body.classList.toggle('cover', onCover);
+
+      // フッターの音声ステータスは画面切替後は非表示（受付時間のみ表示）
+      try{
+        const vs = document.getElementById('voiceStatus');
+        if (vs) vs.style.display = 'none';
+      }catch(e){}
 
       // スクロール
       safe(()=> window.scrollToTop && window.scrollToTop());
