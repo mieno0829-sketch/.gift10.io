@@ -3932,12 +3932,27 @@
     }catch(e){ return false; }
   }
 
+  // 各種ダッシュ・スペース語の正規化（共通）
+  function normalizeDashesAndSpaces(s){
+    let t = String(s || '');
+    // 各種ダッシュを "-" に統一
+    t = t.replace(/ー|−|―|‐|–|—/g, '-'); // 長音・各種ダッシュ
+    t = t.replace(/ハイフン|ダッシュ|まいなす|マイナス|minus/gi, '-');
+    // スペース関連語は空白に
+    t = t.replace(/スペース|空白|ブランク/gi, ' ');
+    return t;
+  }
+
   // 日本語の数字表現を半角数字へ正規化（電話番号・郵便番号向け）
   function normalizeJapaneseNumberSpeech(s){
     if (!s) return '';
-    let t = String(s);
+    let t = normalizeDashesAndSpaces(s);
 
-    // ひらがな/カタカナ/漢数字の代表的な読みを数字へ
+    // よく発話される区切り語は削除
+    t = t.replace(/の|ノ|ー/g, ''); // 人が「090の…」と話すケース
+    t = t.replace(/[、。.,\s]/g, ''); // 句読点・スペース
+
+    // 漢数字・仮名の代表的な読みを数字へ
     const map = [
       {re:/ゼロ|れい|レイ|零|〇|○/gi, rep:'0'},
       {re:/いち|イチ|一/gi, rep:'1'},
@@ -3952,46 +3967,84 @@
     ];
     map.forEach(m => { t = t.replace(m.re, m.rep); });
 
-    // 記号・スペースの代表的なものを削除／統一
-    t = t.replace(/ー|−|―|‐|–|—/g, '-'); // 長音・各種ダッシュ
-    t = t.replace(/ハイフン|まいなす|マイナス/gi, '-');
-    t = t.replace(/[、。.,\s]/g, ''); // 句読点・スペース
-
     // 全角数字を半角へ
     t = t.replace(/[０-９]/g, d=> String.fromCharCode(d.charCodeAt(0)-0xFEE0));
 
-    // 数字以外は落とす（電話・郵便などは純数字で扱う）
+    // 数字以外は削除（電話・郵便は純数字で扱う）
     t = t.replace(/[^\d]/g, '');
     return t;
+  }
+
+  // VIN向け：全角英数字→半角、ダッシュ統一、英数字＋ダッシュ以外を除去
+  function normalizeVinSpeech(s){
+    if (!s) return '';
+    let t = normalizeDashesAndSpaces(s);
+    // 全角英数字→半角
+    t = t.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(ch){
+      const code = ch.charCodeAt(0);
+      return String.fromCharCode(code - 0xFEE0);
+    });
+    // 余計な句読点・スペース除去
+    t = t.replace(/[、。.,\s]/g, '');
+    // 英数字＋ダッシュ以外は除去（カタカナ「ゼット」などは除外）
+    t = t.replace(/[^A-Za-z0-9-]/g, '');
+    // ダッシュは最大2つ程度まで（連続を1に統一）
+    t = t.replace(/-+/g, '-');
+    return t;
+  }
+
+  // 電話番号のハイフン挿入（11桁=3-4-4、10桁=3-3-4の簡易ルール）
+  function formatPhoneDisplay(digits){
+    const p = String(digits || '');
+    if (p.length === 11) return `${p.slice(0,3)}-${p.slice(3,7)}-${p.slice(7)}`;
+    if (p.length === 10) return `${p.slice(0,3)}-${p.slice(3,6)}-${p.slice(6)}`;
+    return p;
+  }
+
+  // 郵便番号のハイフン挿入（7桁のみ）
+  function formatZipDisplay(digits){
+    const z = String(digits || '');
+    if (z.length === 7) return `${z.slice(0,3)}-${z.slice(3)}`;
+    return z;
   }
 
   function putValue(fieldId, valueText){
     if (!isActiveField(fieldId)) return;
 
     const inp = getEl(fieldId);
-    if(inp){
-      let v = String(valueText||'').trim();
+    if(!inp) return;
 
-      // 数字欄では日本語読みを確実に数字化
-      if (modeDigitsOnly) {
-        v = normalizeJapaneseNumberSpeech(v);
-      } else {
-        // 全角英数字→半角へ（VIN等で有効）
-        v = v.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(ch){
-          const code = ch.charCodeAt(0);
-          return String.fromCharCode(code - 0xFEE0);
-        });
-      }
+    let v = String(valueText||'').trim();
 
-      inp.value = v;
+    // フィールド別の正規化
+    if (fieldId === 'cust_phone' || fieldId === 'md_phone'){
+      // 数字読みを半角数字へ
+      v = normalizeJapaneseNumberSpeech(v);
+      // 画面表示はハイフン挿入
+      v = formatPhoneDisplay(v);
+    } else if (fieldId === 'zip' || fieldId === 'md_zip'){
+      v = normalizeJapaneseNumberSpeech(v);
+      v = formatZipDisplay(v);
+    } else if (fieldId === 'vin'){
+      v = normalizeVinSpeech(v);
+    } else {
+      // その他は全角英数字→半角に（住所・会社など）
+      v = normalizeDashesAndSpaces(v);
+      v = v.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(ch){
+        return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
+      });
+    }
 
-      // 入力連動（郵便→住所、主運転者郵便→住所）
-      if (fieldId === 'zip') {
-        try{ mockZipToAddress(v); }catch(e){}
-      }
-      if (fieldId === 'md_zip' && typeof window.mdZipToAddress === 'function') {
-        try{ mdZipToAddress(v); }catch(e){}
-      }
+    inp.value = v;
+
+    // 入力連動（郵便→住所、主運転者郵便→住所）
+    if (fieldId === 'zip'){
+      const pure = v.replace(/[^\d]/g,''); // API連動は数字のみで判断
+      try{ mockZipToAddress(pure); }catch(e){}
+    }
+    if (fieldId === 'md_zip' && typeof window.mdZipToAddress === 'function'){
+      const pure = v.replace(/[^\d]/g,'');
+      try{ mdZipToAddress(pure); }catch(e){}
     }
   }
 
@@ -4006,7 +4059,7 @@
           break;
         case 'zip':
         case 'md_zip':
-          putValue(targetFieldId, '1050001'); // 港区赤坂付近の例（デモ）
+          putValue(targetFieldId, '1050001'); // ハイフンは表示側で付加（7桁→123-4567）
           break;
         case 'addr':
         case 'md_addr':
@@ -4014,14 +4067,14 @@
           break;
         case 'cust_phone':
         case 'md_phone':
-          putValue(targetFieldId, '09012345678');
+          putValue(targetFieldId, '09012345678'); // 表示側でハイフン付与
           break;
         case 'company':
         case 'md_company':
           putValue(targetFieldId, 'ABC株式会社');
           break;
         case 'vin':
-          putValue(targetFieldId, 'ZVW50-1234567'); // VINの例（英数字混在）
+          putValue(targetFieldId, 'ZVW50-1234567'); // 英数字＋ダッシュのみ
           break;
         default:
           putValue(targetFieldId, 'テスト');
@@ -4077,10 +4130,16 @@
             transcript += res[0]?.transcript || '';
             if(res.isFinal){ transcript = res[0]?.transcript || transcript; }
           }
-          // 数字欄は日本語読みから数字化、それ以外は従来どおり
-          const normalized = modeDigitsOnly
-            ? normalizeJapaneseNumberSpeech(transcript)
-            : transcript.replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
+
+          // フィールド別に正規化
+          let normalized = transcript;
+          if (targetFieldId === 'cust_phone' || targetFieldId === 'md_phone' || targetFieldId === 'zip' || targetFieldId === 'md_zip'){
+            normalized = normalizeJapaneseNumberSpeech(transcript);
+          } else if (targetFieldId === 'vin'){
+            normalized = normalizeVinSpeech(transcript);
+          } else {
+            normalized = normalizeDashesAndSpaces(transcript).replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
+          }
 
           if (targetFieldId && isActiveField(targetFieldId)){
             putValue(targetFieldId, normalized);
