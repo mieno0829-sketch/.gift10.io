@@ -3912,6 +3912,7 @@
   let supported = false;
   let targetFieldId = null;
   let modeDigitsOnly = false;
+  let lastFinalTranscript = ''; // 最後に確定したfinal文字列（数字欄の確定用）
 
   function getEl(id){ return document.getElementById(id); }
   function setStatus(text){ const s=getEl('voiceStatus'); if(s){ s.textContent = String(text||''); } }
@@ -3935,10 +3936,8 @@
   // 各種ダッシュ・スペース語の正規化（共通）
   function normalizeDashesAndSpaces(s){
     let t = String(s || '');
-    // 各種ダッシュを "-" に統一
     t = t.replace(/ー|−|―|‐|–|—/g, '-'); // 長音・各種ダッシュ
     t = t.replace(/ハイフン|ダッシュ|まいなす|マイナス|minus/gi, '-');
-    // スペース関連語は空白に
     t = t.replace(/スペース|空白|ブランク/gi, ' ');
     return t;
   }
@@ -3947,11 +3946,9 @@
   function normalizeJapaneseNumberSpeech(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
-
     // よく発話される区切り語は削除
-    t = t.replace(/の|ノ|ー/g, ''); // 人が「090の…」と話すケース
-    t = t.replace(/[、。.,\s]/g, ''); // 句読点・スペース
-
+    t = t.replace(/の|ノ|ー/g, '');
+    t = t.replace(/[、。.,\s]/g, '');
     // 漢数字・仮名の代表的な読みを数字へ
     const map = [
       {re:/ゼロ|れい|レイ|零|〇|○/gi, rep:'0'},
@@ -3966,10 +3963,8 @@
       {re:/きゅう|キュウ|九/gi, rep:'9'}
     ];
     map.forEach(m => { t = t.replace(m.re, m.rep); });
-
     // 全角数字を半角へ
     t = t.replace(/[０-９]/g, d=> String.fromCharCode(d.charCodeAt(0)-0xFEE0));
-
     // 数字以外は削除（電話・郵便は純数字で扱う）
     t = t.replace(/[^\d]/g, '');
     return t;
@@ -3979,16 +3974,12 @@
   function normalizeVinSpeech(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
-    // 全角英数字→半角
     t = t.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(ch){
       const code = ch.charCodeAt(0);
       return String.fromCharCode(code - 0xFEE0);
     });
-    // 余計な句読点・スペース除去
     t = t.replace(/[、。.,\s]/g, '');
-    // 英数字＋ダッシュ以外は除去（カタカナ「ゼット」などは除外）
     t = t.replace(/[^A-Za-z0-9-]/g, '');
-    // ダッシュは最大2つ程度まで（連続を1に統一）
     t = t.replace(/-+/g, '-');
     return t;
   }
@@ -4010,7 +4001,6 @@
 
   function putValue(fieldId, valueText){
     if (!isActiveField(fieldId)) return;
-
     const inp = getEl(fieldId);
     if(!inp) return;
 
@@ -4018,9 +4008,7 @@
 
     // フィールド別の正規化
     if (fieldId === 'cust_phone' || fieldId === 'md_phone'){
-      // 数字読みを半角数字へ
       v = normalizeJapaneseNumberSpeech(v);
-      // 画面表示はハイフン挿入
       v = formatPhoneDisplay(v);
     } else if (fieldId === 'zip' || fieldId === 'md_zip'){
       v = normalizeJapaneseNumberSpeech(v);
@@ -4028,7 +4016,6 @@
     } else if (fieldId === 'vin'){
       v = normalizeVinSpeech(v);
     } else {
-      // その他は全角英数字→半角に（住所・会社など）
       v = normalizeDashesAndSpaces(v);
       v = v.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(ch){
         return String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
@@ -4039,7 +4026,7 @@
 
     // 入力連動（郵便→住所、主運転者郵便→住所）
     if (fieldId === 'zip'){
-      const pure = v.replace(/[^\d]/g,''); // API連動は数字のみで判断
+      const pure = v.replace(/[^\d]/g,'');
       try{ mockZipToAddress(pure); }catch(e){}
     }
     if (fieldId === 'md_zip' && typeof window.mdZipToAddress === 'function'){
@@ -4051,31 +4038,24 @@
   function fallbackMock(reasonText){
     try{ setStatus(reasonText || 'この端末では音声認識は未対応です。サンプルを入力します。'); }catch(e){}
     if (targetFieldId && isActiveField(targetFieldId)){
-      // フィールドごとに本番に近いサンプルを投入
       switch (targetFieldId) {
         case 'cust_name':
         case 'mainDriverName':
-          putValue(targetFieldId, '山田 花子');
-          break;
+          putValue(targetFieldId, '山田 花子'); break;
         case 'zip':
         case 'md_zip':
-          putValue(targetFieldId, '1050001'); // ハイフンは表示側で付加（7桁→123-4567）
-          break;
+          putValue(targetFieldId, '1050001'); break;
         case 'addr':
         case 'md_addr':
-          putValue(targetFieldId, '東京都港区赤坂1-1-1 〇〇マンション101');
-          break;
+          putValue(targetFieldId, '東京都港区赤坂1-1-1 〇〇マンション101'); break;
         case 'cust_phone':
         case 'md_phone':
-          putValue(targetFieldId, '09012345678'); // 表示側でハイフン付与
-          break;
+          putValue(targetFieldId, '09012345678'); break;
         case 'company':
         case 'md_company':
-          putValue(targetFieldId, 'ABC株式会社');
-          break;
+          putValue(targetFieldId, 'ABC株式会社'); break;
         case 'vin':
-          putValue(targetFieldId, 'ZVW50-1234567'); // 英数字＋ダッシュのみ
-          break;
+          putValue(targetFieldId, 'ZVW50-1234567'); break;
         default:
           putValue(targetFieldId, 'テスト');
       }
@@ -4085,6 +4065,7 @@
     recognizing = false;
     targetFieldId = null;
     modeDigitsOnly = false;
+    lastFinalTranscript = '';
   }
 
   function initRecognizer(){
@@ -4094,10 +4075,11 @@
       recognition = new SR();
       recognition.lang = 'ja-JP';
       recognition.continuous = false;
-      recognition.interimResults = true;
+      recognition.interimResults = true; // 常時trueにしてfinalのみ反映（数字欄の捕捉性を上げる）
 
       recognition.onstart = function(){
         recognizing = true;
+        lastFinalTranscript = '';
         setStatus('録音中です。お話しください…');
         toggleButtons(true);
       };
@@ -4113,38 +4095,67 @@
       recognition.onend = function(){
         recognizing = false;
         toggleButtons(false);
-        // 目標がアクティブで、値が未入力ならサンプルフォールバック
-        if(targetFieldId && isActiveField(targetFieldId) && !getEl(targetFieldId)?.value){
-          fallbackMock('入力が確認できませんでした。サンプルを入力します。');
-        }else{
-          setStatus('認識結果を入力しました。');
+        // 数字欄でfinalが得られていないが候補がある場合、最後のfinalバッファで確定
+        if (modeDigitsOnly && targetFieldId && isActiveField(targetFieldId)){
+          const buf = String(lastFinalTranscript || '').trim();
+          if (buf){
+            const normalized = normalizeJapaneseNumberSpeech(buf);
+            putValue(targetFieldId, normalized);
+            setStatus('認識結果を入力しました。');
+          } else if (!getEl(targetFieldId)?.value){
+            // 入力が未セットならフォールバック
+            fallbackMock('入力が確認できませんでした。サンプルを入力します。');
+          }
+        } else {
+          // 非数字欄：未入力ならフォールバック
+          if(targetFieldId && isActiveField(targetFieldId) && !getEl(targetFieldId)?.value){
+            fallbackMock('入力が確認できませんでした。サンプルを入力します。');
+          } else {
+            setStatus('認識結果を入力しました。');
+          }
         }
         targetFieldId = null;
         modeDigitsOnly = false;
+        lastFinalTranscript = '';
       };
       recognition.onresult = function(evt){
         try{
-          let transcript = '';
+          let finalChunk = '';
+          let interimAccum = '';
           for(let i=evt.resultIndex; i<evt.results.length; i++){
             const res = evt.results[i];
-            transcript += res[0]?.transcript || '';
-            if(res.isFinal){ transcript = res[0]?.transcript || transcript; }
+            const text = res[0]?.transcript || '';
+            if (res.isFinal){
+              finalChunk += text;
+            } else {
+              interimAccum += text;
+            }
           }
+          // final結果をバッファへ記録
+          if (finalChunk) lastFinalTranscript = finalChunk;
 
-          // フィールド別に正規化
-          let normalized = transcript;
-          if (targetFieldId === 'cust_phone' || targetFieldId === 'md_phone' || targetFieldId === 'zip' || targetFieldId === 'md_zip'){
-            normalized = normalizeJapaneseNumberSpeech(transcript);
-          } else if (targetFieldId === 'vin'){
-            normalized = normalizeVinSpeech(transcript);
+          let normalized = '';
+          if (modeDigitsOnly){
+            // finalが来たときのみ確定入力（interimでは確定しない）
+            if (finalChunk){
+              normalized = normalizeJapaneseNumberSpeech(finalChunk);
+              if (targetFieldId && isActiveField(targetFieldId)){
+                putValue(targetFieldId, normalized);
+              }
+              setStatus('認識中…');
+            } else {
+              // interim中はステータスのみ更新（未確定）
+              setStatus('認識中…');
+            }
           } else {
-            normalized = normalizeDashesAndSpaces(transcript).replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
+            // 非数字欄は従来どおり（final優先／interimも読みやすく整形）
+            const raw = (finalChunk || interimAccum);
+            normalized = normalizeDashesAndSpaces(raw).replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
+            if (targetFieldId && isActiveField(targetFieldId)){
+              putValue(targetFieldId, normalized);
+            }
+            setStatus('認識中…');
           }
-
-          if (targetFieldId && isActiveField(targetFieldId)){
-            putValue(targetFieldId, normalized);
-          }
-          setStatus('認識中…');
         }catch(e){
           fallbackMock('認識結果の処理に失敗しました。サンプルを入力します。');
         }
@@ -4163,20 +4174,21 @@
     toggleButtons(false);
     targetFieldId = null;
     modeDigitsOnly = false;
+    lastFinalTranscript = '';
     setStatus('停止しました。');
   };
 
   window.startVoiceForField = function(fieldId, mode){
     targetFieldId = fieldId;
     modeDigitsOnly = (mode === 'digits'); // zip/phone等にのみ指定される
-
+    lastFinalTranscript = '';
     toggleButtons(true); setStatus('録音中です。お話しください…');
 
     if(recognition === null) initRecognizer();
     if(!supported || !recognition){ fallbackMock('音声認識は未対応です。サンプルを入力します。'); return; }
 
-    // 数字入力時はinterimResultsを抑制（安定化）し、確定結果で反映
-    try{ recognition.interimResults = modeDigitsOnly ? false : true; }catch(e){}
+    // interimResultsは常時true（finalのみ反映することで確定性を担保）
+    try{ recognition.interimResults = true; }catch(e){}
     try{ recognition.start(); }catch(e){ fallbackMock('音声認識の開始に失敗しました。サンプルを入力します。'); }
   };
 
