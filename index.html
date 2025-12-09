@@ -189,43 +189,41 @@
 
 <!-- START: styles-addon -->
 <style>
-  /* ヒーロー導入（横並び・改行抑制・小さめ） */
-  .heroStrip{ display:flex; align-items:center; gap:10px; flex-wrap:nowrap; padding:0; margin:8px 0 0 0; background:none; border:none; }
-  .heroStrip svg{ display:block; width:18px; height:18px; }
-  .heroChip{ display:inline-flex; align-items:center; gap:6px; background:transparent; border:none; padding:0; box-shadow:none; color:#0f3d7a; font-size:12px; font-weight:600; white-space:nowrap; }
-
-  /* ヘッダー：左寄せで1行維持、ラベル13px/600の統一 */
-  .headerTop{ display:flex; align-items:center; justify-content:flex-start; gap:6px; flex-wrap:nowrap; }
-  .toolbar{ display:flex; gap:6px; align-items:center; flex-wrap:nowrap; flex:0 0 auto; }
+  /* ヘッダー：一行に収める（アイコン縮小・余白圧縮・フォント調整） */
+  .headerTop{ display:flex; align-items:center; justify-content:flex-start; gap:4px; flex-wrap:nowrap; }
+  .toolbar{ display:flex; gap:4px; align-items:center; flex-wrap:nowrap; flex:0 0 auto; }
   .headerTop .btn{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:4px 6px; border:none; background:transparent;
-    color:var(--blue-800); font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap;
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 4px; border:none; background:transparent;
+    color:var(--blue-800); font-size:12px; font-weight:600; text-decoration:none; white-space:nowrap;
   }
-  .headerTop .btn svg{ width:28px; height:28px; display:block; }
-
-  .aiAgent{ display:inline-flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:6px; }
-  .aiLabel{ font-size:13px; font-weight:600; color:var(--blue-800); white-space:nowrap; }
-
+  .headerTop .btn svg{ width:22px; height:22px; display:block; }
+  .aiAgent{ display:inline-flex; align-items:center; gap:4px; cursor:pointer; white-space:nowrap; flex-shrink:1; margin-left:4px; }
+  .aiLabel{ font-size:12px; font-weight:600; color:var(--blue-800); white-space:nowrap; }
   .headerTop .toggleLarge{
     border:none !important; border-radius:0 !important; background:transparent !important;
-    padding:4px 6px !important; color:var(--blue-800) !important; font-size:13px; white-space:nowrap;
+    padding:3px 4px !important; color:var(--blue-800) !important; font-size:12px; white-space:nowrap;
   }
   .large .headerTop .btn, .large .headerTop .toggleLarge, .large .aiLabel, .large #lblSpeak, .large #lblLarge{ font-size:13px !important; }
 
   .badgeOfficial{
     display:inline-flex; align-items:center; justify-content:center;
-    padding:4px 8px; border:1px solid var(--blue-800); border-radius:999px;
-    background:#eef4ff; color:var(--blue-800); font-size:12px; font-weight:700; line-height:1; white-space:nowrap;
+    padding:3px 6px; border:1px solid var(--blue-800); border-radius:999px;
+    background:#eef4ff; color:#1f5fbf; font-size:12px; font-weight:700; line-height:1; white-space:nowrap;
   }
 
+  /* AIと対話アイコン：わずかに縮小（22px） */
   .aiRobot{
-    width:28px; height:28px; border-radius:8px;
-    background-color:#3c7fe6 !important; border:2px solid #d7e0f0;
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/></svg>');
-    background-repeat:no-repeat; background-position:center; background-size:70% 70%;
+    width:22px; height:22px; border-radius:8px;
+    background-color:#3c7fe6 !important;
+    border:2px solid #d7e0f0;
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/></svg>') !important;
+    background-repeat:no-repeat !important;
+    background-position:center !important;
+    background-size:68% 68% !important;
   }
 
+  /* 進捗と章ラベル */
   .bar{ position:relative; }
   .bar::before{
     content:""; position:absolute; inset:0; pointer-events:none; border-radius:999px;
@@ -234,24 +232,21 @@
       linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 49.5%, rgba(31,95,191,.18) 50%, rgba(0,0,0,0) 50.5%),
       linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 74.5%, rgba(31,95,191,.18) 75%, rgba(0,0,0,0) 75.5%);
   }
-
   .chapters{ display:flex; gap:6px; justify-content:space-between; margin:2px 10px 0 10px; font-size:11px; color:#5b6470; }
   .chapter{ flex:1; text-align:center; opacity:.75; }
   .chapter.active{ color:#1f5fbf; font-weight:700; opacity:1; }
 
-  /* cover時はヘッダー/進捗/フッターを確実に非表示、背景は淡青 */
-  body.cover{ background:#e6f0ff !important; }
+  /* cover時はヘッダー/進捗/フッターを非表示、背景調整 */
+  body.cover{ background:#dbe7ff !important; background-image:none !important; }
   body.cover header{ background:transparent !important; border-bottom:none !important; padding:0 !important; position:static !important; }
   body.cover .headerTop, body.cover .chapters, body.cover .progress, body.cover footer{ display:none !important; }
 
   .coverWrap{ min-height:100vh; min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px 16px; color:#111; }
   .coverCar svg{ width:72%; max-width:320px; height:auto; margin-bottom:18px; }
-
   .coverTitle .coverLine{ position:relative; color:#000; font-size:20px; font-weight:700; line-height:1.75; letter-spacing:.02em; padding-left:0; }
   .coverTitle .coverLine::before{ content:none !important; }
   .coverTitle .coverLine.noBullet{ padding-left:0 !important; }
   .coverTitle .coverLine.noBullet::before{ content:none !important; }
-
   .coverStartBtn{
     margin-top:22px; display:inline-block; padding:12px 20px; border-radius:14px;
     background:#3c7fe6; color:#fff; font-size:16px; font-weight:800; border:none; cursor:pointer;
@@ -261,39 +256,51 @@
   .coverStartBtn:hover{ filter:brightness(1.02); }
   .coverStartBtn:active{ transform:translateY(1px) scale(0.99); filter:brightness(0.98); }
 
-  #licenseYear, #dobYear, #firstRegYear{ flex:1 1 48%; min-width:136px; }
-  #licenseMonth, #licenseDay, #dobMonth, #dobDay, #firstRegMonth{ flex:0 0 92px; max-width:100px; }
-  #md_dobYear{ flex:1 1 48%; min-width:136px; }
-  #md_dobMonth, #md_dobDay{ flex:0 0 92px; max-width:100px; }
+  /* リンクの操作の手がかり（矢印アイコン常時併設） */
+  .link{ color:var(--blue-800); text-decoration:none; position:relative; font-weight:700; }
+  .link::after{ content:"›"; display:inline-block; margin-left:4px; color:var(--blue-800); font-weight:700; }
+  .link:active{ opacity:.85; }
+  .link:focus-visible{ text-decoration:underline; outline:3px solid #3c7fe6; outline-offset:2px; border-radius:2px; }
 
-  @media (max-width:360px){
-    .toolbar{ gap:2px; }
-    .headerTop .btn{ gap:2px; padding:3px 4px; }
-    .headerTop .toggleLarge{ padding:3px 4px !important; }
-    .aiAgent{ gap:2px; margin-left:2px; flex-shrink:1; }
-
-    #licenseYear, #dobYear, #firstRegYear, #md_dobYear{ min-width:126px; flex-basis:46%; }
-    #licenseMonth, #licenseDay, #dobMonth, #dobDay, #md_dobMonth, #md_dobDay, #firstRegMonth{ flex-basis:82px; max-width:88px; }
-    select#licenseMonth, select#licenseDay, select#dobMonth, select#dobDay, select#md_dobMonth, select#md_dobDay, select#firstRegMonth{ font-size:15px; padding:7px; }
+  /* 新規：WEBと書面の選択（免許証色UIと同系） */
+  .choiceRow{ display:flex; gap:6px; margin-top:6px; }
+  .choiceToggle{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    padding:8px 10px; border-radius:10px; border:1px solid var(--blue-800); background:#fff; color:var(--blue-800);
+    font-weight:700; cursor:pointer; white-space:nowrap; /* 二段化防止 */
   }
+  .choiceToggle.active{ outline:2px solid var(--blue-800); background:#eef4ff; }
 
-  @media (prefers-reduced-motion: reduce){
-    .screen.anim-in .card, .videoChip, .choiceToggle, .btnPrimary, #toast, .coverCar svg, .coverStartBtn{ transition:none !important; }
-  }
+  /* ヒーロー導入（1行・小さめ・改行抑止） */
+  .heroStrip{ display:flex; align-items:center; gap:10px; flex-wrap:nowrap; padding:0; margin:8px 0 0 0; background:none; border:none; }
+  .heroStrip svg{ display:block; width:18px; height:18px; }
+  .heroChip{ display:inline-flex; align-items:center; gap:6px; background:transparent; border:none; padding:0; box-shadow:none; color:#0f3d7a; font-size:12px; font-weight:600; white-space:nowrap; }
 
-  .footerNote{ text-align:center; font-size:12px !important; line-height:1.5; margin-top:6px; color:var(--blue-900); }
-  .large .footerNote{ font-size:12px !important; }
+  /* フッターノート（センタリング＋本文相当13px） */
+  .footerNote{ text-align:center; font-size:13px !important; line-height:1.55; margin-top:6px; color:var(--blue-900); }
+  .large .footerNote{ font-size:13px !important; }
 
+  /* フッターアクション（戻ると途中保存の等幅維持） */
   .footerActions{ display:grid; grid-template-columns: 1fr 1fr; gap:6px; width:100%; }
   .footerActions .ghost{ width:100%; }
 
+  /* 申込完了リスト（行頭記号 ■） */
   #donePostalUnder.doneLine, #doneList .doneLine{ position:relative; padding-left:1.8em; }
   #donePostalUnder.doneLine::before, #doneList .doneLine::before{
     content:"■"; position:absolute; left:0.25em; top:0.1em; color:var(--blue-900);
     font-weight:700; font-size:0.95em; line-height:1;
   }
 
-  .progressTop{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  /* 進捗行は改行しない */
+  .progressTop{ display:flex; align-items:center; justify-content:space-between; gap:8px; white-space:nowrap; }
+
+  /* 長文ボタンのフォントわずかに小さく（改行抑止） */
+  .btnPrimary{ font-size:15px; white-space:nowrap; }
+
+  /* ④ 免許証の確認画面の2ボタンを車情報に合わせて縦積み（同じ間隔） */
+  .screen[data-title="免許証の情報を確認する"] .card > div[style*="display:flex"]{
+    display:block !important;
+  }
 </style>
 <!-- END: styles-addon -->
 
@@ -301,7 +308,7 @@
 <style>
   /* AIと対話のアイコンを青地＋白シルエットに統一（「文字を大きく」アイコンと同系の青） */
   .aiRobot{
-    width:28px; height:28px; border-radius:8px;
+    width:23px; height:23px; border-radius:8px;
     background-color:#3c7fe6 !重要;
     border:2px solid #d7e0f0;
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/></svg>') !重要;
@@ -418,6 +425,7 @@
     display:inline-flex; align-items:center; gap:6px;
     margin-top:6px; padding:4px 8px; border:1px solid #c8d6f3; border-radius:999px;
     background:#eef4ff; color:#1f5fbf; font-size:12px; font-weight:700;
+    will-change: opacity, transform;
   }
   .voiceIndicator .dot {
     width:8px; height:8px; border-radius:50%;
@@ -427,12 +435,176 @@
   .voiceIndicator.recognizing .dot { background:#ffb300; } /* 認識中は黄 */
   .voiceIndicator.ready .dot { background:#3c7fe6; } /* 準備中は青 */
 
+  /* 縮退フェード（0.25s） */
+  @keyframes fadeShrink {
+    0% { opacity:1; transform:scale(1); }
+    100% { opacity:0; transform:scale(0.92); }
+  }
+  .fadeShrink {
+    animation: fadeShrink 0.25s ease-out forwards;
+  }
+
+  /* フッター音声ステータスにも同じ縮退フェードを適用可能 */
+  #voiceStatus.fadeShrink {
+    animation: fadeShrink 0.25s ease-out forwards;
+  }
+
   @media (prefers-color-scheme: dark){
     .voiceIndicator { border-color:#3c7fe6; background:#16365f; color:#fff; }
     .voiceIndicator .dot { box-shadow:none; }
   }
+
+  /* 動きを好まない設定への配慮：アニメーション無効化 */
+  @media (prefers-reduced-motion: reduce){
+    .fadeShrink {
+      animation: none !important;
+    }
+  }
 </style>
 <!-- END: styles-voice-indicator -->
+
+<!-- START: styles-tap-visual-tips -->
+<style>
+  /* タップ領域（44px以上）＋二段表示対策（nowrap） */
+  .btnPrimary{
+    min-height:46px;
+    padding:12px;
+    font-size:15px;
+    white-space:nowrap;     /* sop btn no wrap */
+  }
+  .choiceToggle{
+    min-height:44px;
+    padding:10px 12px;
+    font-size:14px;
+    white-space:nowrap;     /* prevent two lines */
+  }
+  .colorBtn{
+    min-height:44px;
+    padding:10px 12px;
+    font-size:14px;
+    white-space:nowrap;
+  }
+
+  /* フッターのゴーストボタン（戻る／途中保存）を「電話予約／チャット」と高さ揃え */
+  .footerActions .ghost{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    font-size:13px;
+    line-height:1.2;
+    white-space:nowrap;
+    min-height:auto;
+  }
+
+  /* 選択済みの見える化（チェック：choiceToggle） */
+  .choiceToggle.active{
+    position:relative; background:#eef4ff; outline:2px solid var(--blue-800);
+  }
+  .choiceToggle.active::after{
+    content:"✓"; position:absolute; right:10px; top:6px;
+    color:var(--blue-800); font-size:14px; font-weight:800;
+  }
+
+  /* 選択済みの見える化（チェック：colorBtn＝免許色） */
+  .colorBtn.active{
+    position:relative; background:#eef4ff; outline:2px solid var(--blue-800);
+  }
+  .colorBtn.active::after{
+    content:"✓"; position:absolute; right:10px; top:6px;
+    color:var(--blue-800); font-size:14px; font-weight:800;
+  }
+
+  @media (prefers-color-scheme:dark){
+    .choiceToggle.active::after{ color:#66B2FF; }
+    .colorBtn.active::after{ color:#66B2FF; }
+  }
+
+  /* 解説アイコン：右横に置き、やや下げる（ベースライン寄り） */
+  .label{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+  }
+  .tipIcon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:999px;
+    border:none; background:transparent; cursor:pointer;
+    padding:0; margin-left:8px;
+    font-size:0; line-height:0;
+    position:relative;
+    top:2px; /* ほんの少し下げて上付き感を解消 */
+  }
+  .tipIcon::before{
+    content:"";
+    display:block; width:22px; height:22px;
+    background-repeat:no-repeat; background-position:center; background-size:contain;
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%233c7fe6" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 17.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm2-6.8c-.6.6-1 .9-1 .8v.5h-2v-1c0-.6.5-1.1 1.1-1.3.9-.3 1.9-1.1 1.9-2.2 0-1.3-1.1-2.3-2.5-2.3-1.1 0-2 .6-2.4 1.6l-1.8-.8C8 5.7 9.9 4.5 12 4.5c2.5 0 4.5 1.7 4.5 3.9 0 1.6-.8 2.6-2.5 3.3z"/></svg>');
+  }
+  .tipIcon:active{ opacity:.9; }
+  @media (prefers-color-scheme:dark){
+    .tipIcon::before{
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2366B2FF" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 17.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm2-6.8c-.6.6-1 .9-1 .8v.5h-2v-1c0-.6.5-1.1 1.1-1.3.9-.3 1.9-1.1 1.9-2.2 0-1.3-1.1-2.3-2.5-2.3-1.1 0-2 .6-2.4 1.6l-1.8-.8C8 5.7 9.9 4.5 12 4.5c2.5 0 4.5 1.7 4.5 3.9 0 1.6-.8 2.6-2.5 3.3z"/></svg>');
+    }
+  }
+</style>
+<!-- END: styles-tap-visual-tips -->
+
+<!-- START: styles-fixes-1204v7 -->
+<style>
+  /* 表紙（cover）時の背景色を、やや濃い淡青に調整 */
+  body.cover{ background:#dbe7ff !important; }
+
+  /* 進捗行（n/26 と 残り時間）を横並びで改行しない */
+  .progress .progressTop{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:8px; white-space:nowrap;
+  }
+  .progress #progressText, .progress #timeLeft{ white-space:nowrap; }
+
+  /* 申込完了リストの行頭に■を付与（重なり防止：左に余白を作り、■は絶対配置） */
+  #doneList .doneLine{
+    position:relative;
+    padding-left:1.8em; /* ■の分だけ左余白 */
+  }
+  #doneList .doneLine::before{
+    content:"■";
+    position:absolute;
+    left:0.25em; top:0.1em;
+    color:var(--blue-900);
+    font-weight:700; font-size:0.95em; line-height:1;
+  }
+  @media (prefers-color-scheme:dark){
+    #doneList .doneLine::before{ color:#66B2FF; }
+  }
+</style>
+<!-- END: styles-fixes-1204v7 -->
+
+<!-- START: styles-year-select-fix -->
+<style>
+  /* 年セレクトの幅を復元（年は約半幅、月・日は十分な幅で一行維持） */
+  #licenseYear, #dobYear, #md_dobYear, #firstRegYear{
+    flex: 1 1 48%;
+    min-width: 136px;
+    width: auto !important;
+  }
+  /* 月・日ボタン（表示用）は十分な幅を確保（従来値） */
+  #licenseMonth, #licenseDay, #dobMonth, #dobDay, #md_dobMonth, #md_dobDay, #firstRegMonth{
+    flex: 0 0 92px;
+    max-width: 100px;
+  }
+  .mdDisplayBtn{ flex: 0 0 70px; }
+
+  @media (max-width:360px){
+    #licenseYear, #dobYear, #md_dobYear, #firstRegYear{ min-width:126px; flex-basis:46%; }
+    #licenseMonth, #licenseDay, #dobMonth, #dobDay, #md_dobMonth, #md_dobDay, #firstRegMonth{ flex-basis:82px; max-width:88px; }
+    select#licenseMonth, select#licenseDay, select#dobMonth, select#dobDay, select#md_dobMonth, select#md_dobDay, select#firstRegMonth{ font-size:15px; padding:7px; }
+  }
+</style>
+<!-- END: styles-year-select-fix -->
 
 </head>
 <body>
@@ -442,8 +614,6 @@
 <!-- START: header-top -->
 <div class="headerTop">
   <div class="toolbar">
-    <span class="badgeOfficial" aria-label="公式バッジ">公式</span>
-
     <a href="#" class="btn" id="btnSpeak" onclick="toggleGuidedVoice()">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path fill="#3c7fe6" d="M2 12h2c.4 0 .7-.3.8-.7l.5-3.2c.1-.6 1-.6 1.1 0l.7 4.2c.1.6 1 .6 1.1 0l1.1-6.4c.1-.6 1-.6 1.1 0l1.2 8c.1.6 1 .6 1.1 0l1-5.4c.1-.6 1-.6 1.1 0l.8 4.5c.1.4.4.7.8.7h3c.6 0 1 .4 1 1s-.4 1-1 1h-3c-.4 0-.7.3-.8.7l-.8 4.5c-.1.6-1 .6-1.1 0l-1-5.4c-.1-.6-1-.6-1.1 0l-1.2 8c-.1.6-1 .6-1.1 0l-1.1-6.4c-.1-.6-1-.6-1.1 0l-.7 4.2c-.1.6-1 .6-1.1 0l-.5-3.2c-.1-.4-.4-.7-.8-.7H2c-.6 0-1-.4-1-1s.4-1 1-1z"/>
@@ -457,6 +627,13 @@
         <text x="12" y="16" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="700">あ</text>
       </svg>
       <span id="lblLarge">文字拡大</span>
+    </a>
+
+    <a href="#" class="btn" onclick="openHelp()" aria-label="ヘルプを開く">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="#3c7fe6" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 17.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm2-6.8c-.6.6-1 .9-1 .8v.5h-2v-1c0-.6.5-1.1 1.1-1.3.9-.3 1.9-1.1 1.9-2.2 0-1.3-1.1-2.3-2.5-2.3-1.1 0-2 .6-2.4 1.6l-1.8-.8C8 5.7 9.9 4.5 12 4.5c2.5 0 4.5 1.7 4.5 3.9 0 1.6-.8 2.6-2.5 3.3z"/>
+      </svg>
+      <span>ヘルプ</span>
     </a>
   </div>
 
@@ -491,7 +668,7 @@
 <section class="screen active" data-title="表紙" data-role="cover" aria-label="プロトタイプの表紙（セダン・ラインアート／タイヤ重ね＋青塗り）">
   <div class="coverWrap">
     <!-- セダン：青のアウトライン。タイヤは車体ラインに少し重ね、青で塗りつぶし -->
-    <div class="coverCar" aria-hidden="true">
+    <div class="coverCar" aria-hidden="true" style="margin-bottom:4px;">
 <svg viewBox="0 0 280 120" role="img" aria-label="セダンのラインアート（タイヤ青塗り）">
   <path d="M30 78c0-10 12-22 28-26h60c10 0 18-6 26-12 12-8 24-12 36-12h26c20 0 34 12 40 28l6 16c6 2 10 8 10 14 0 6-4 10-10 10H42c-6 0-10-4-10-10 0-6 4-12 10-16h-4c-6 0-8-2-8-6z"
         fill="none" stroke="#3c7fe6" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
@@ -500,15 +677,76 @@
 </svg>
     </div>
 
-    <div class="coverTitle">
+    <!-- タイトル（線画との間は1行分の余白） -->
+    <div class="coverTitle" style="margin-top:4px; margin-bottom:4px;">
       <div class="coverLine">プロトタイプ</div>
-      <div aria-hidden="true" style="height:1.75em;"></div>
-      <div class="coverLine noBullet">狙い：イメージ共有</div>
-      <div class="coverLine">・スマらく改修</div>
-      <div class="coverLine">・e-Auto更新 </div>
     </div>
 
-    <button class="coverStartBtn" onclick="startDemo()" aria-label="デモを開始する">デモ開始</button>
+    <!-- 番号と本文の開始位置を綺麗に揃える：1行＝1グリッド行 -->
+    <style>
+      .coverOutline{
+        width:100%; max-width:420px;
+        margin:0 auto;
+        padding-left:80px; /* 既存の右寄せ量を維持 */
+        text-align:left;
+      }
+      .coverRow{
+        display:grid;
+        grid-template-columns: 1.6em 1fr; /* 番号列をコンパクト化（過剰スペース解消） */
+        column-gap:6px;
+        align-items:baseline;
+        margin:4px 0;
+      }
+      .coverRow .num{
+        text-align:right; color:#0f3d7a; font-weight:700;
+      }
+      .coverRow .text{
+        color:#0f3d7a; font-weight:700;
+        white-space:normal; word-break:break-word; overflow-wrap:anywhere;
+      }
+      .coverRow.sub .text{
+        color:#1a1a1a; font-weight:500; /* サブ項目は通常トーン */
+      }
+      .coverSpacer{ height:1.25em; }
+    </style>
+
+    <div class="coverOutline">
+      <!-- 1行目：1. 狙い -->
+      <div class="coverRow">
+        <span class="num">1.</span>
+        <span class="text">狙い：イメージ共有</span>
+      </div>
+      <!-- サブ項目（番号列は空、本文列に揃える） -->
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・スマらく改修</span>
+      </div>
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・e-Auto更新</span>
+      </div>
+
+      <!-- 1行の空白行（1と2の間） -->
+      <div class="coverSpacer" aria-hidden="true"></div>
+
+      <!-- 2行目：2. 改修点 -->
+      <div class="coverRow">
+        <span class="num">2.</span>
+        <span class="text">改修点：Pain解消</span>
+      </div>
+      <!-- サブ項目（本文列に揃える） -->
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・非スマらく理由解消</span>
+      </div>
+      <!-- 追加：UI/UXの改善 -->
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・UI/UXの改善</span>
+      </div>
+    </div>
+
+    <button class="coverStartBtn" onclick="startDemo()" aria-label="デモを開始する" style="margin-top:16px;">デモ開始</button>
   </div>
 </section>
 <!-- END: screen-00-cover -->
@@ -518,7 +756,7 @@
   <main id="screens">
 
 <!-- START: screen-01-intro -->
-<section class="screen active" data-title="手続き開始">
+<section class="screen" data-title="手続き開始">
   <div class="officialInline" role="note" aria-label="公式案内と注意点">
     <div class="officialInline-row">
       <svg class="officialInline-bullet" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -531,65 +769,101 @@
         送信元メールは
         <span class="inlineChip" aria-label="送信元メールドメイン">@example.co.jp</span>
         から届きます。
-        <a href="#" class="officialLink"
-           onclick="openNotice('偽サイトの見分け方：送信元ドメイン、リンク先URL、個人情報の要求有無（変更ではなく新規の要求の有無）を確認してください。')">
-          偽サイトの見分け方はコチラ
-        </a>
+        <a href="#" class="officialLink" onclick="openSecurityCheck()">偽サイトの見分け方はコチラ</a>
       </span>
     </div>
   </div>
 
   <div class="card">
-    <div class="heroStrip" aria-hidden="true">
-      <div class="heroChip">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="#3c7fe6" d="M12 2l7 4v6c0 5-4 8-7 10-3-2-7-5-7-10V6l7-4z"/>
-        </svg>
-        公式・安全
-      </div>
-      <div class="heroChip">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="#3c7fe6" d="M12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13h-1v6l5 3 .5-.87-4.5-2.63V7z"/>
-        </svg>
-        所要時間約12分
-      </div>
-      <div class="heroChip">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="1" y="1" width="22" height="22" rx="5" fill="#3c7fe6"/>
-          <path fill="#ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/>
-        </svg>
-        困ったらAIに相談
-      </div>
-    </div>
-
-    <div aria-hidden="true" style="height:0.9em;"></div>
-
+    <!-- 先頭に動画リンク -->
     <a href="#" class="videoChip" role="button"
        onclick="openNotice('本番では60秒動画に推移します')"
-       aria-label="使い方の60秒動画をご覧になりたい方はコチラ">
+       aria-label="使い方の60秒動画（視聴は任意）"
+       style="margin-top:4px;">
       <svg class="videoChip-icon" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
         <rect x="1.5" y="1.5" width="19" height="19" rx="4"/>
         <polygon points="9,6.5 16,11 9,15.5"/>
       </svg>
-     使い方の60秒動画をご覧になりたい方はコチラ
+      使い方の60秒動画（視聴は任意）
     </a>
 
-    <div class="list" style="margin-top:8px;">・スマホまたはPCで手続きできます（途中保存OK）</div>
-    <div class="list">・紙の保険証券の郵送もできます</div>
-    <div class="list">・困ったらAIに質問できます。また電話予約やチャットもご利用いただけます</div>
+    <!-- アイコン付き案内4行 -->
+    <div class="item infoRow" style="margin-top:8px;">
+      <!-- スマホ/PC風アイコン（モニタ＋スマホ） -->
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="4" width="12" height="9" rx="2" fill="#3c7fe6"></rect>
+        <rect x="17" y="6" width="4" height="10" rx="1.5" fill="#1f5fbf"></rect>
+        <rect x="8" y="13.5" width="2" height="1.5" fill="#3c7fe6"></rect>
+      </svg>
+      <div style="line-height:1.55;">スマホまたはPCで手続きできます（途中保存OK）</div>
+    </div>
+
+    <div class="item infoRow">
+      <!-- 所要時間（時計アイコン） -->
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="#3c7fe6" d="M12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm.5-13h-1v6l5 3 .5-.87-4.5-2.63V7z"/>
+      </svg>
+      <div style="line-height:1.55;">所要時間約12分です</div>
+    </div>
+
+    <div class="item infoRow">
+      <!-- 〒の絵（シンプルな郵便マーク） -->
+      <div aria-hidden="true" style="width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; border:1px solid #c8d6f3; background:#eef4ff; color:#1f5fbf; font-weight:800; font-size:12px;">〒</div>
+      <div style="line-height:1.55;">紙の保険証券の郵送もできます</div>
+    </div>
+
+    <div class="item infoRow">
+      <!-- AI相談（ヘッダーと同系の人アイコン） -->
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="1" y="1" width="22" height="22" rx="5" fill="#3c7fe6"/>
+        <path fill="#ffffff" d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9v-1a7 7 0 0 1 14 0v1H5z"/>
+      </svg>
+      <div style="line-height:1.55;">困ったらAIに質問できます。また電話予約やチャットもご利用いただけます</div>
+    </div>
   </div>
 
+  <!-- 事前準備（アイコン付き3行）＋ 次へボタンを同カード内に移動 -->
   <div class="card">
     <div class="h1">事前にご準備ください</div>
-    <ul class="list">
-      <li>免許証（色・有効期限を確認します）</li>
-      <li>車検証（お車情報の確認に使います）</li>
-      <li>メールアドレス（控え送付・お知らせ用）</li>
-    </ul>
-    <div class="desc">所要時間は約10〜12分。途中保存して再開できます。</div>
-  </div>
 
-  <div class="card">
+    <!-- 免許証（カード風アイコン） -->
+    <div class="item infoRow" style="margin-top:8px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <!-- カード枠 -->
+        <rect x="3" y="5" width="18" height="12" rx="2" fill="#eef4ff" stroke="#1f5fbf" stroke-width="1.2"></rect>
+        <!-- カード内のライン -->
+        <rect x="5.5" y="8" width="8.5" height="1.6" fill="#2b6fd6"></rect>
+        <rect x="5.5" y="10.4" width="6.5" height="1.6" fill="#93b8ff"></rect>
+        <!-- 赤強調欄（有効期限イメージ） -->
+        <rect x="15.5" y="8" width="4.5" height="4" rx="1" fill="#ffdfe0" stroke="#d32f2f" stroke-width="0.8"></rect>
+      </svg>
+      <div style="line-height:1.55;">免許証（色・有効期限を確認します）</div>
+    </div>
+
+    <!-- 車検証（ペーパー風アイコン） -->
+    <div class="item infoRow">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <!-- 用紙 -->
+        <rect x="5" y="4" width="14" height="16" rx="1.5" fill="#fff" stroke="#cfd8ea" stroke-width="1.2"></rect>
+        <!-- タイトル行 -->
+        <rect x="7" y="7" width="10" height="1.6" fill="#1f5fbf"></rect>
+        <!-- 明細行 -->
+        <rect x="7" y="10" width="8" height="1.4" fill="#93b8ff"></rect>
+        <rect x="7" y="12.5" width="9" height="1.4" fill="#c8d6f3"></rect>
+      </svg>
+      <div style="line-height:1.55;">車検証（お車情報の確認に使います）</div>
+    </div>
+
+    <!-- メール（封筒風アイコン） -->
+    <div class="item infoRow">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="6" width="18" height="12" rx="2" fill="#eef4ff" stroke="#1f5fbf" stroke-width="1.2"></rect>
+        <path d="M4 8l8 6 8-6" fill="none" stroke="#2b6fd6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <div style="line-height:1.55;">メールアドレス（控え送付・お知らせ用）</div>
+    </div>
+
+    <!-- 「所要時間は約10〜12分…」は削除 -->
     <button class="btnPrimary" onclick="next()">次へ（ログイン）</button>
   </div>
 </section>
@@ -642,7 +916,7 @@
     <div class="h1">車検証の情報を入力する</div>
     <div class="desc">以下の方法で車検証の情報を入力できます。</div>
     <button class="btnPrimary" onclick="showOCRGuide()">カメラで読み取る</button>
-    <button class="btnPrimary" onclick="showManual()">手入力する（選択式･音声入力）</button>
+    <button class="btnPrimary" onclick="showManual()">手入力する（選択式）</button>
   </div>
 
   <div class="card" id="ocrShoot" style="display:none;">
@@ -675,8 +949,11 @@
 
   <div class="card" id="manualForm" style="display:none;">
     <div class="h1">お車情報を入力する</div>
+
     <div class="field">
-      <div class="label">メーカー</div>
+      <div class="label">
+        <span>メーカー</span>
+      </div>
       <select id="maker" onchange="onMakerChange()">
         <option value="">選択してください</option>
         <option value="toyota">トヨタ</option>
@@ -685,8 +962,11 @@
         <option value="mercedes">ベンツ</option>
       </select>
     </div>
+
     <div class="field" id="modelField" style="display:block;">
-      <div class="label">車名（トヨタのみ例示）</div>
+      <div class="label">
+        <span>車名</span>
+      </div>
       <select id="model" onchange="onModelChange()">
         <option value="">選択してください</option>
         <option value="crown">クラウン</option>
@@ -694,26 +974,18 @@
         <option value="corolla">カローラ</option>
       </select>
     </div>
+
     <div class="field" id="typeField" style="display:block;">
-      <div class="label">型式（例示）</div>
+      <div class="label">
+        <span>型式</span>
+      </div>
       <select id="type">
         <option value="">選択してください</option>
         <option value="ZVW50">ZVW50</option>
         <option value="DAA-ZVW55">DAA-ZVW55</option>
       </select>
     </div>
-    <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>車台番号（半角英数字／8～17桁）</span>
-        <button class="ghost" onclick="startVoiceForField('vin')" aria-label="音声で車台番号を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
-      <input class="input" id="vin" placeholder="例：ZVW50-1234567" />
-    </div>
+
     <div class="field">
       <div class="label">初度登録年月</div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
@@ -723,6 +995,7 @@
         <select id="firstRegMonth" class="visHiddenSelect" aria-hidden="true"><option value="">月</option></select>
       </div>
     </div>
+
     <button class="btnPrimary" onclick="if(validateFirstRegSelect()) next()">次へ</button>
   </div>
 </section>
@@ -734,7 +1007,7 @@
     <div class="h1">免許証の情報を確認する</div>
     <ul class="list" id="licenseSummaryList">
       <li>免許証の色：ブルー</li>
-      <li>免許証の有効期限：2026年（令和8年8月1日）</li>
+      <li>免許証の有効期限：2026年（令和8年）8月1日</li>
     </ul>
     <div class="desc">変更はございますか？</div>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -749,6 +1022,11 @@
 <section class="screen" data-title="免許証の色">
   <div class="card">
     <div class="h1">免許証の色を選ぶ</div>
+
+    <div class="label">
+      <span>免許証の色</span>
+    </div>
+
     <div class="colorRow">
       <button class="colorBtn" onclick="selectColor('ゴールド', this)"><span class="swatch gold"></span> ゴールド</button>
       <button class="colorBtn" onclick="selectColor('ブルー', this)"><span class="swatch blue"></span> ブルー</button>
@@ -806,7 +1084,7 @@
       <li>氏名：山田 太郎</li>
       <li>性別：男性</li>
       <li>住所：東京都港区赤坂1-1-1 〇〇マンション101</li>
-      <li>電話番号：090-0000-000</li>
+      <li>電話番号：090-0000-0000</li>
       <li>生年月日：1965年04月12日</li>
       <li>勤務先：ABC株式会社</li>
     </ul>
@@ -836,7 +1114,9 @@
     </div>
 
     <div class="field">
-      <div class="label">性別</div>
+      <div class="label">
+        <span>性別</span>
+      </ assign clue by Ai>
       <div class="choiceRow" role="radiogroup" aria-label="性別">
         <button class="choiceToggle" id="choice_gender_m" onclick="toggleChoice('gender_m')">男性</button>
         <button class="choiceToggle" id="choice_gender_f" onclick="toggleChoice('gender_f')">女性</button>
@@ -870,7 +1150,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="label" style="display:flex; align-items:center; justify-content:space-between Rauch;">
         <span>電話番号</span>
         <button class="ghost" onclick="startVoiceForField('cust_phone', 'digits')" aria-label="音声で電話番号を入力">
           <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
@@ -883,7 +1163,9 @@
     </div>
 
     <div class="field">
-      <div class="label">生年月日</div>
+      <div class="label">
+        <span>生年月日</span>
+      </div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="dobYear"><option value="">年</option></select>
 
@@ -944,7 +1226,7 @@
     </div>
 
     <div class="field">
-      <div class="label">性別</div>
+      <div class="label"><span>性別</span></div>
       <div class="choiceRow" role="radiogroup" aria-label="性別">
         <button class="choiceToggle" id="choice_gender_m2" onclick="toggleChoice('gender_m2')">男性</button>
         <button class="choiceToggle" id="choice_gender_f2" onclick="toggleChoice('gender_f2')">女性</button>
@@ -991,7 +1273,7 @@
     </div>
 
     <div class="field">
-      <div class="label">生年月日</div>
+      <div class="label"><span>生年月日</span></div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="md_dobYear"><option value="">年</option></select>
 
@@ -1098,12 +1380,12 @@
     <div class="h1">現在の補償内容と保険料を確認する</div>
     <a href="#" class="videoChip" role="button"
        onclick="openNotice('本番では補償のポイント解説動画に推移します')"
-       aria-label="補償のポイント60秒動画をご覧になりたい方はコチラ">
+       aria-label="補償のポイント60秒動画（視聴は任意）">
       <svg class="videoChip-icon" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
         <rect x="1.5" y="1.5" width="19" height="19" rx="4"/>
         <polygon points="9,6.5 16,11 9,15.5"/>
       </svg>
-      補償のポイント60秒動画をご覧になりたい方はコチラ
+      補償のポイント60秒動画（視聴は任意）
     </a>
     <ul class="list" style="margin-top:8px;">
       <li>対人・対物：無制限</li>
@@ -1186,9 +1468,9 @@
         <div class="foldBody">
           <ul class="list" style="margin-top:0; padding-left:1em; list-style:disc;">
             <li>対人・対物：無制限</li>
-            <li>人身傷害：3,000万円➡ 5,000万円</li>
+            <li>人身傷害：3,000万円 ➡ 5,000万円</li>
             <li>車両保険：200万円・免責5万円</li>
-            <li>特約：弁護士費用／代車費用➡ 弁護士費用／代車費用／DAP（ドライブレコーダー）</li>
+            <li>特約：弁護士費用／代車費用 ➡ 弁護士費用／代車費用／DAP（ドライブレコーダー）</li>
           </ul>
         </div>
       </div>
@@ -1206,7 +1488,7 @@
         </tbody>
       </table>
 
-      <button class="btnPrimary" onclick="chooseSimplePlan('up')">このプランで進む</button>
+      <button class="btnPrimary" onclick="chooseSimplePlan('up')">このプランを選ぶ</button>
       <div aria-hidden="true" style="height:8px;"></div>
       <button class="btnPrimary" onclick="goStepByStep()">項目ごとに設定する（人身傷害・車両・特約）</button>
     </div>
@@ -1223,8 +1505,8 @@
           <ul class="list" style="margin-top:0; padding-left:1em; list-style:disc;">
             <li>対人・対物：無制限</li>
             <li>人身傷害：3,000万円</li>
-            <li>車両保険：200万円・免責5万円➡ なし</li>
-            <li>特約：弁護士費用／代車費用➡ なし</li>
+            <li>車両保険：200万円・免責5万円 ➡ なし</li>
+            <li>特約：弁護士費用／代車費用 ➡ なし</li>
           </ul>
         </div>
       </div>
@@ -1242,7 +1524,7 @@
         </tbody>
       </table>
 
-      <button class="btnPrimary" onclick="chooseSimplePlan('down')">このプランで進む</button>
+      <button class="btnPrimary" onclick="chooseSimplePlan('down')">このプランを選ぶ</button>
       <div aria-hidden="true" style="height:8px;"></div>
       <button class="btnPrimary" onclick="goStepByStep()">項目ごとに設定する（人身傷害・車両・特約）</button>
     </div>
@@ -1278,7 +1560,10 @@
       <li>現在：3,000万円</li>
     </ul>
     <div class="field">
-      <div class="label">人身傷害（選択してください）</div>
+      <div class="label">
+        人身傷害
+        <button type="button" class="tipIcon" aria-label="人身傷害の説明" onclick="showTermTip('人身傷害')">?</button>
+      </div>
       <select id="bodilyAmount" onchange="onBodilyChange(this.value)">
         <option value="unlimited">無制限</option>
         <option value="10000">1億円</option>
@@ -1301,7 +1586,7 @@
 </section>
 <!-- END: screen-18-bodily-amount -->
 
- <!-- START: screen-19-vehicle-amount -->
+<!-- START: screen-19-vehicle-amount -->
 <section class="screen" data-title="車両保険の金額を選ぶ">
   <div class="card">
     <div class="h1">車両保険の金額を選ぶ</div>
@@ -1314,7 +1599,10 @@
       <option value="200" selected>200万円</option>
       <option value="250">250万円</option>
     </select>
-    <div class="label" style="margin-top:8px;">自己負担額（免責）</div>
+    <div class="label" style="margin-top:8px;">
+      自己負担額（免責）
+      <button type="button" class="tipIcon" aria-label="免責の説明" onclick="showTermTip('免責')">i</button>
+    </div>
     <select id="deduct" onchange="recalcAll()">
       <option value="0">0万円</option>
       <option value="50000" selected>5万円</option>
@@ -1453,7 +1741,7 @@
     <div class="foldHeader">大切なポイント（短くまとめました）</div>
     <div class="foldBody">
       <ul class="list">
-        <li>保険を使うと翌年の割引（等級）が変わる場合があります</li>
+        <li>保険を使うと翌年の等級が変わる場合があります</li>
         <li>自己負担（免責）がある補償があります</li>
         <li>正しい内容のご申告をお願いします（虚偽は補償対象外になることがあります）</li>
         <li>事故のときは早めのご連絡が必要です</li>
@@ -1555,7 +1843,7 @@
       <select id="bulkReceiveSelect" onchange="onBulkReceiveChange(this.value)">
         <option value="">選択してください</option>
         <option value="paper">全てを紙で受け取る</option>
-        <option value="web">全てを電子ファイルで受け取る</option>
+        <option value="web">全てをWebで受け取る</option>
       </select>
     </div>
 
@@ -1563,9 +1851,11 @@
 
     <div class="label" style="font-weight:700;">個別に選択・変更する</div>
 
-    <!-- 以降、従来の「WEBと書面の選択」（タイトル行は削除） -->
     <div class="field" style="margin-top:8px;">
-      <div class="label">ご契約のしおり（約款）</div>
+      <div class="label">
+        ご契約のしおり（約款）
+        <button type="button" class="tipIcon" aria-label="約款の説明" onclick="showTermTip('約款')">i</button>
+      </div>
       <div class="choiceRow">
         <button class="choiceToggle" id="choice_terms_web" onclick="toggleChoice('terms_web')">Web約款</button>
         <button class="choiceToggle" id="choice_terms_paper" onclick="toggleChoice('terms_paper')">書面</button>
@@ -1573,7 +1863,10 @@
     </div>
 
     <div class="field">
-      <div class="label">保険証券</div>
+      <div class="label">
+        保険証券
+        <button type="button" class="tipIcon" aria-label="保険証券の説明" onclick="showTermTip('保険証券')">i</button>
+      </div>
       <div class="choiceRow">
         <button class="choiceToggle" id="choice_cert_web" onclick="toggleChoice('cert_web')">Web証券</button>
         <button class="choiceToggle" id="choice_cert_paper" onclick="toggleChoice('cert_paper')">書面</button>
@@ -1581,7 +1874,10 @@
     </div>
 
     <div class="field">
-      <div class="label">次回更新時のご案内</div>
+      <div class="label">
+        次回更新時のご案内
+        <button type="button" class="tipIcon" aria-label="更新案内の説明" onclick="showTermTip('更新案内')">i</button>
+      </div>
       <div class="choiceRow">
         <button class="choiceToggle" id="choice_notice_web" onclick="toggleChoice('notice_web')">Web更新案内</button>
         <button class="choiceToggle" id="choice_notice_paper" onclick="toggleChoice('notice_paper')">書面</button>
@@ -1589,7 +1885,10 @@
     </div>
 
     <div class="field">
-      <div class="label">申込書控えのPDF送付</div>
+      <div class="label">
+        申込書控えのPDF送付
+        <button type="button" class="tipIcon" aria-label="申込書控えPDFの説明" onclick="showTermTip('申込書控えPDF')">i</button>
+      </div>
       <div class="choiceRow">
         <button class="choiceToggle" id="choice_pdf_no" onclick="toggleChoice('pdf_no')">不要</button>
         <button class="choiceToggle" id="choice_pdf_yes" onclick="toggleChoice('pdf_yes')">必要</button>
@@ -1729,6 +2028,45 @@
   </div>
 </div>
 <!-- END: modal-reason -->
+
+<!-- START: modal-security-check -->
+<div class="modal" id="securityCheckModal" role="dialog" aria-modal="true" aria-labelledby="securityCheckTitle" tabindex="-1">
+  <div class="box">
+    <div class="h1" id="securityCheckTitle">偽サイトの見分け方（チェックリスト）</div>
+    <div class="desc" id="securityCheckBody">
+      <ul class="list" aria-label="偽サイトの見分け方チェック項目">
+        <li>送信元メールが <strong>@example.co.jp</strong> か確認</li>
+        <li>リンク先URLが公式ドメイン <strong>example.co.jp</strong> か確認</li>
+        <li>個人情報の「新規の要求」がないか確認（変更の案内のみが一般的）</li>
+        <li>不審な場合は、この画面の「ヘルプ」からお問い合わせ</li>
+      </ul>
+    </div>
+    <div style="display:flex; gap:6px; margin-top:10px;">
+      <button class="btnPrimary" style="flex:1" onclick="closeModal(document.getElementById('securityCheckModal'))" id="securityCheckCloseBtn">閉じる</button>
+    </div>
+  </div>
+</div>
+<!-- END: modal-security-check -->
+
+<!-- START: modal-help -->
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" tabindex="-1">
+  <div class="box">
+    <div class="h1" id="helpTitle">ヘルプ（困ったときは）</div>
+    <div class="desc" id="helpBody">
+      <ul class="list">
+        <li>この画面の「音声で解説」を押すと、要点を読み上げます</li>
+        <li>入力欄の右側の「音声で入力」で話しかけると自動入力できます</li>
+        <li>「文字拡大」を押すと、文字を大きくできます（もう一度押すと戻ります）</li>
+        <li>途中で中断するときは「途中保存」を押してください。次回は続きから再開できます</li>
+        <li>受け取り方法は「一括で選択する」で簡単に設定できます。個別の変更も可能です</li>
+      </ul>
+    </div>
+    <div style="display:flex; gap:6px; margin-top:10px;">
+      <button class="btnPrimary" style="flex:1" onclick="closeModal(document.getElementById('helpModal'))" id="helpCloseBtn">閉じる</button>
+    </div>
+  </div>
+</div>
+<!-- END: modal-help -->
 
 <!-- START: modal-ai-choice -->
 <div class="modal" id="aiChoiceModal" role="dialog" aria-modal="true" aria-labelledby="aiChoiceTitle" tabindex="-1">
@@ -1966,14 +2304,13 @@
     if (!App) App = (window.App = { modules:{}, bus:{ on(){}, emit(){} }});
     if (App.modules && App.modules.progress) return;
 
-    // 内部関数：可視ステップの計算（TITLE_NO優先、無い場合はindexベース）
+    // 可視ステップの計算（TITLE_NO優先、無い場合はindexベース）
     function computeVisualStep(i, screens, TITLE_NO, MAX_STEPS){
       try{
         const titles = screens.map(s => s.dataset.title || '');
         const t = titles[i] || '';
         const m = (TITLE_NO && typeof TITLE_NO[t] === 'number') ? TITLE_NO[t] : null;
         if (typeof m === 'number') return Math.max(1, Math.min(MAX_STEPS, m));
-        // マップが無ければ cover を除いて単純カウント
         const coverCount = screens.slice(0, i+1).filter(s => s.dataset.role === 'cover').length;
         return Math.max(1, Math.min(MAX_STEPS, (i + 1 - coverCount)));
       }catch(e){
@@ -1981,24 +2318,47 @@
       }
     }
 
-    // 内部関数：章ハイライトの更新
+    // 章ハイライト更新（active表示＋完了✓付与）
     function updateChapters(visualStep){
       try{
-        const chap = (visualStep<=13) ? 'input' : (visualStep<=21 ? 'estimate' : (visualStep===22 ? 'explain' : 'apply'));
-        ['chapInput','chapEstimate','chapExplain','chapApply'].forEach(id=>{
+        // 章のアクティブ判定（従来の境界）
+        const chapKey = (visualStep<=13) ? 'input'
+                        : (visualStep<=21 ? 'estimate'
+                        : (visualStep===22 ? 'explain' : 'apply'));
+        const ids = ['chapInput','chapEstimate','chapExplain','chapApply'];
+        ids.forEach(id=>{
           const el=document.getElementById(id);
           if(!el) return;
-          el.classList.toggle('active',
-            (chap==='input'   && id==='chapInput') ||
-            (chap==='estimate'&& id==='chapEstimate') ||
-            (chap==='explain' && id==='chapExplain') ||
-            (chap==='apply'   && id==='chapApply')
-          );
+          const isActive =
+            (chapKey==='input'   && id==='chapInput') ||
+            (chapKey==='estimate'&& id==='chapEstimate') ||
+            (chapKey==='explain' && id==='chapExplain') ||
+            (chapKey==='apply'   && id==='chapApply');
+          el.classList.toggle('active', isActive);
         });
+
+        // ✓付与タイミング（指定ステップで点灯）
+        // ・「お車情報」章に✓：step >= 7（お客様情報の確認）
+        // ・「お客様情報」章に✓：step >= 14（現在の内容を確認）
+        // ・「更新手続」章に✓：step >= 22（重要なご説明）
+        // ・「申込」章に✓：step >= 26（申込完了）
+        const doneInput    = (visualStep >= 7);
+        const doneEstimate = (visualStep >= 14);
+        const doneExplain  = (visualStep >= 22);
+        const doneApply    = (visualStep >= 26);
+
+        const inEl  = document.getElementById('chapInput');
+        const estEl = document.getElementById('chapEstimate');
+        const exEl  = document.getElementById('chapExplain');
+        const apEl  = document.getElementById('chapApply');
+        if (inEl)  inEl.classList.toggle('done', doneInput);
+        if (estEl) estEl.classList.toggle('done', doneEstimate);
+        if (exEl)  exEl.classList.toggle('done', doneExplain);
+        if (apEl)  apEl.classList.toggle('done', doneApply);
       }catch(e){}
     }
 
-    // 内部関数：進捗の可視更新
+    // 進捗UI更新
     function updateProgressUI(visualStep, MAX_STEPS){
       try{
         const progText = document.getElementById('progressText');
@@ -2017,15 +2377,13 @@
       }catch(e){}
     }
 
-    // 内部関数：残り時間の目安更新（<1分は「残り約1分未満」で表示）
+    // 残り時間の目安更新（<1分は「残り約1分未満」で表示）
     function updateTimeLeft(visualStep, MAX_STEPS){
       try{
         const remainingRaw = 12 * (MAX_STEPS - visualStep) / MAX_STEPS;
         const remainingRounded = Math.round(remainingRaw);
         const timeLeftEl = document.getElementById('timeLeft');
         if (!timeLeftEl) return;
-
-        // 最終ステップは0分表示で問題ないためそのまま
         if (visualStep < MAX_STEPS && remainingRounded === 0 && remainingRaw > 0){
           timeLeftEl.textContent = '残り約1分未満';
         }else{
@@ -2034,7 +2392,7 @@
       }catch(e){}
     }
 
-    // 画面アクティブ変更時に呼び出すエントリポイント
+    // 画面アクティブ変更時の進捗更新
     function onActive(index, screens, MAX_STEPS, TITLE_NO){
       try{
         const visualStep = computeVisualStep(index, screens, TITLE_NO, MAX_STEPS);
@@ -2044,7 +2402,7 @@
       }catch(e){}
     }
 
-    App.modules.progress = { onActive, computeVisualStep };
+    App.modules.progress = { onActive, computeVisualStep, updateChapters };
   })(window.App);
 </script>
 <!-- END: js-core-progress -->
@@ -2608,34 +2966,25 @@
     if (!App) App = (window.App = { modules:{}, bus:{ on(){}, emit(){} }});
     if (App.modules && App.modules.navigation) return;
 
-    // 内部状態
     let _TITLE_NO = {};
     let _MAX_STEPS = 26;
     let _step = 0;
     let _historyStack = [];
+    const afterHooks = [];
 
-    // 依存を安全に呼ぶヘルパ
     function safe(fn){ try{ return fn && fn(); }catch(e){} }
     function screens(){ return Array.from(document.querySelectorAll('.screen')); }
     function titles(){ return screens().map(s=> s.dataset.title || ''); }
     function isCover(i){ const ss = screens(); return !!(ss[i] && ss[i].dataset.role === 'cover'); }
     function curTitle(i){ const t = titles(); return t[i] || ''; }
 
-    // 外部フック（多重フック：優先度A）
-    const afterHooks = [];
     function configure(cfg){
       _TITLE_NO = cfg && cfg.TITLE_NO ? cfg.TITLE_NO : _TITLE_NO;
       _MAX_STEPS = typeof cfg?.MAX_STEPS === 'number' ? cfg.MAX_STEPS : _MAX_STEPS;
     }
-    function setAfterActivate(fn){
-      // 従来APIのまま、登録されたフックは多重に保持して順次呼び出す
-      if (typeof fn === 'function') afterHooks.push(fn);
-    }
-    function addAfterActivate(fn){
-      if (typeof fn === 'function') afterHooks.push(fn);
-    }
+    function setAfterActivate(fn){ if (typeof fn === 'function') afterHooks.push(fn); }
+    function addAfterActivate(fn){ if (typeof fn === 'function') afterHooks.push(fn); }
 
-    // 進捗更新
     function updateProgress(i){
       if (isCover(i)) return;
       if (App.modules && App.modules.progress && typeof App.modules.progress.onActive === 'function'){
@@ -2643,11 +2992,8 @@
       }
     }
 
-    // 画面切り替え本体
     function setActive(i){
-      // 音声ガイド停止（読み上げ）
       safe(()=> window.stopGuidedVoice && window.stopGuidedVoice());
-      // 音声入力停止（認識中断＋ターゲットクリア）
       safe(()=> window.cancelVoiceInput && window.cancelVoiceInput());
 
       const ss = screens();
@@ -2657,34 +3003,33 @@
         s.classList.toggle('anim-in', isActive);
       });
 
-      // cover表示制御
       const onCover = isCover(i);
       document.body.classList.toggle('cover', onCover);
 
-      // フッターの音声ステータスは画面切替後は非表示（受付時間のみ表示）
+      // フッター音声ステータスは切替後に隠す
       try{
         const vs = document.getElementById('voiceStatus');
         if (vs) vs.style.display = 'none';
       }catch(e){}
 
-      // スクロール
-      safe(()=> window.scrollToTop && window.scrollToTop());
+      // 画面切替時に残留インジケータを一括クリーンアップ
+      try{
+        document.querySelectorAll('.voiceIndicator').forEach(ind=>{
+          ind.style.display = 'none';
+          ind.classList.remove('fadeShrink','ready','recording','recognizing');
+        });
+      }catch(e){}
 
-      // 進捗
+      safe(()=> window.scrollToTop && window.scrollToTop());
       updateProgress(i);
 
       const title = curTitle(i);
-      // 最終見積の整形（必要時）
       if (title === '最終見積のまとめ' || title === '最終見積もり'){
         safe(()=> window.updateFinalSummary && window.updateFinalSummary());
       }
 
-      // 画面ごとの初期化フック（多重フック順次呼び出し）
-      try{
-        afterHooks.forEach(fn => { try{ fn(title); }catch(e){} });
-      }catch(e){}
+      try{ afterHooks.forEach(fn => { try{ fn(title); }catch(e){} }); }catch(e){}
 
-      // 初期フォーカス
       safe(()=> App.modules && App.modules.accessibility && App.modules.accessibility.focusFirstInteractive());
 
       _step = i;
@@ -2700,7 +3045,6 @@
       pushHistory(_step);
       const idx = Math.min(_step + 1, screens().length - 1);
       setActive(idx);
-      // 見積り再計算
       safe(()=> App.modules && App.modules.estimate && App.modules.estimate.recalcAll());
     }
 
@@ -2722,7 +3066,6 @@
       }
     }
 
-    // 公開API
     App.modules.navigation = {
       configure, setAfterActivate, addAfterActivate, setActive, next, prev, goToTitle,
       titles,
@@ -2730,12 +3073,10 @@
       get historyStack(){ return _historyStack; }
     };
 
-    // 互換API（window に露出）
     window.setActive = setActive;
     window.next = next;
     window.prev = prev;
     window.goToTitle = goToTitle;
-    // 新API
     window.addAfterActivate = addAfterActivate;
   })(window.App);
 </script>
@@ -3567,6 +3908,270 @@
 </script>
 <!-- END: js-core-ui-helpers -->
 
+<!-- START: js-help-security-handlers -->
+<script>
+  (function(){
+    // 偽サイトチェック（既存のまま）
+    if (typeof window.openSecurityCheck !== 'function'){
+      window.openSecurityCheck = function(){
+        try{
+          var m = document.getElementById('securityCheckModal');
+          if (m && typeof openModal === 'function') openModal(m);
+          else if (m) m.classList.add('show');
+          else if (typeof openNotice === 'function') openNotice('偽サイトの見分け方：送信元・URL・個人情報要求の確認をしてください。');
+        }catch(e){}
+      };
+    }
+
+    // 現在アクティブ画面のタイトル
+    function getActiveTitle(){
+      try{
+        var s = document.querySelector('.screen.active');
+        return s ? (s.dataset.title || '') : '';
+      }catch(e){ return ''; }
+    }
+
+    // 画面タイトル → ヘルプ本文（短文・2〜4行）
+    function helpTextByTitle(title){
+      var fallback = '<ul class="list"><li>本番ではこの画面の使い方についてポイントを解説する内容を表示します</li></ul>';
+      switch (title) {
+        case '手続き開始':
+          return '<ul class="list">' +
+                   '<li>公式サイトと送信元ドメインをご案内します。偽サイトの見分け方はリンクから確認できます</li>' +
+                   '<li>使い方の動画・音声解説・文字拡大・AI相談が利用できます</li>' +
+                   '<li>準備物（免許証・車検証・メールアドレス）をご用意ください</li>' +
+                 '</ul>';
+        case 'ログイン':
+          return '<ul class="list">' +
+                   '<li>電話番号またはメールアドレスを入力して認証コード（4桁）を受け取ります</li>' +
+                   '<li>届いた認証コードを入力して「認証して次へ」を押してください</li>' +
+                 '</ul>';
+        case 'お車の情報':
+          return '<ul class="list">' +
+                   '<li>車名・型式・ナンバーの登録内容を確認します</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「車検証の情報」へ進んでください</li>' +
+                 '</ul>';
+        case '車検証の情報':
+          return '<ul class="list">' +
+                   '<li>カメラ読み取りまたは手入力（選択式・音声入力）を選べます</li>' +
+                   '<li>初度登録は年・月を選択します。当年は今月まで、未来月は選べません</li>' +
+                 '</ul>';
+        case '免許証の情報を確認する':
+          return '<ul class="list">' +
+                   '<li>免許証の色と有効期限を確認します</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「免許証の色」へ進みます</li>' +
+                 '</ul>';
+        case '免許証の色':
+          return '<ul class="list">' +
+                   '<li>ゴールド・ブルー・グリーンから選びます（選択済みには✓が表示されます）</li>' +
+                   '<li>続いて有効期限の年・月・日を選択してください（ポップアップの四角ボタン）</li>' +
+                 '</ul>';
+        case 'お客様情報の確認':
+          return '<ul class="list">' +
+                   '<li>氏名・住所・電話番号・生年月日・勤務先などの登録内容を確認します</li>' +
+                   '<li>変更がある場合は「お客様情報の編集」に進んでください</li>' +
+                 '</ul>';
+        case 'お客様情報の編集':
+          return '<ul class="list">' +
+                   '<li>氏名・住所・電話・生年月日などを入力します</li>' +
+                   '<li>音声入力が利用できます（郵便番号は7桁で市区の住所候補が入ります）</li>' +
+                   '<li>生年月日の月・日はポップアップで選択します</li>' +
+                 '</ul>';
+        case '主に運転する方（記名被保険者）':
+          return '<ul class="list">' +
+                   '<li>主に運転する方の登録内容を確認します</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「主に運転する方の編集」へ進みます</li>' +
+                 '</ul>';
+        case '主に運転する方の編集':
+          return '<ul class="list">' +
+                   '<li>氏名・住所・電話・生年月日などを入力します</li>' +
+                   '<li>音声入力が利用できます（郵便番号は7桁で市区の住所候補が入ります）</li>' +
+                   '<li>生年月日の月・日はポップアップで選択します</li>' +
+                 '</ul>';
+        case '運転者の範囲と年齢条件':
+          return '<ul class="list">' +
+                   '<li>運転者の範囲と年齢条件の登録内容を確認します</li>' +
+                   '<li>変更がある場合は「運転者範囲・年齢条件の編集」へ進んでください</li>' +
+                 '</ul>';
+        case '運転者範囲・年齢条件の編集':
+          return '<ul class="list">' +
+                   '<li>運転者の範囲（本人のみ等）と年齢条件（26歳以上等）を選びます</li>' +
+                   '<li>決定したら「OK」で次へ進みます</li>' +
+                 '</ul>';
+        case '使用目的・走行距離':
+          return '<ul class="list">' +
+                   '<li>使用目的（通勤・レジャー等）と年間走行距離の目安を選びます</li>' +
+                   '<li>変更がなければ「次へ」で進んでください</li>' +
+                 '</ul>';
+        case '現在の内容を確認':
+          return '<ul class="list">' +
+                   '<li>現在の補償内容・保険期間・等級を確認します</li>' +
+                   '<li>補償のポイント動画や詳細リンクから解説が見られます</li>' +
+                 '</ul>';
+        case '現在と同じ補償内容で更新した場合の保険料':
+          return '<ul class="list">' +
+                   '<li>現在と同じ補償内容での保険料（更新後）を確認します</li>' +
+                   '<li>主な理由の詳細は「詳細はコチラ」からご覧ください</li>' +
+                 '</ul>';
+        case '更新方法の選択':
+          return '<ul class="list">' +
+                   '<li>同じ補償で更新、別プラン、項目ごとの設定から選べます</li>' +
+                   '<li>おすすめプラン（充実／保険料重視）も用意しています</li>' +
+                 '</ul>';
+        case '別のプランから選ぶ':
+          return '<ul class="list">' +
+                   '<li>タブで「安心重視」「保険料重視」を切り替えます</li>' +
+                   '<li>人身傷害・車両保険・特約の変更は「➡」で表示されます</li>' +
+                   '<li>選んだプランで進む／項目ごとに設定に進むを選べます</li>' +
+                 '</ul>';
+        case '人身傷害の金額を選ぶ':
+          return '<ul class="list">' +
+                   '<li>人身傷害の金額を選びます。無制限や1億円なども選択可能です</li>' +
+                   '<li>変更すると月額・年額と差額が更新されます</li>' +
+                 '</ul>';
+        case '車両保険の金額を選ぶ':
+          return '<ul class="list">' +
+                   '<li>車両保険の金額を選び、自己負担額（免責）を指定します</li>' +
+                   '<li>変更すると月額・年額と差額が更新されます</li>' +
+                 '</ul>';
+        case '特約の付け外し':
+          return '<ul class="list">' +
+                   '<li>弁護士費用・代車費用・DAP（ドライブレコーダー）などの特約を選べます</li>' +
+                   '<li>選択に応じて月額・年額と差額が更新されます</li>' +
+                 '</ul>';
+        case '最終見積のまとめ':
+          return '<ul class="list">' +
+                   '<li>補償内容の変更は「➡」で表示されます</li>' +
+                   '<li>人身傷害・車両保険・特約の差分を確認してください</li>' +
+                   '<li>修正がある場合は「修正へ戻る」から各項目へ戻れます</li>' +
+                 '</ul>';
+        case '重要なご説明':
+          return '<ul class="list">' +
+                   '<li>大切なポイントを短くまとめています。必要に応じて各章をタップで詳しく確認できます</li>' +
+                   '<li>全文の確認やPDF受け取りの設定もここで行えます</li>' +
+                 '</ul>';
+        case '連絡方法を選ぶ':
+          return '<ul class="list">' +
+                   '<li>メールまたはSMSを選び、連絡先を入力します</li>' +
+                   '<li>情報配信の希望も選択できます。必要に応じて変更してください</li>' +
+                 '</ul>';
+        case '受け取り方法を選ぶ':
+          return '<ul class="list">' +
+                   '<li>一括選択で全体の設定ができます。個別の変更も可能です</li>' +
+                   '<li>約款・証券・更新案内・申込書控えの受け取り方法を選びます</li>' +
+                   '<li>迷ったら各項目の「i」ボタンで用語の説明をご覧ください</li>' +
+                 '</ul>';
+        case '同意と申込':
+          return '<ul class="list">' +
+                   '<li>内容をご確認のうえ、チェックを入れて「内容に同意して申し込む」を押してください</li>' +
+                   '<li>最終のお申込内容はリンクから確認できます</li>' +
+                 '</ul>';
+        case '申込完了':
+          return '<ul class="list">' +
+                   '<li>受け取り方法の設定に応じて、約款・証券・控えPDFの送付内容が表示されます</li>' +
+                   '<li>次へ（払込方法の確認）から手続きを続けられます</li>' +
+                 '</ul>';
+        default:
+          return fallback;
+      }
+    }
+
+    // ヘルプモーダル起動（本文差し替え）
+    if (typeof window.openHelp !== 'function'){
+      window.openHelp = function(){
+        try{
+          var m = document.getElementById('helpModal');
+          var body = document.getElementById('helpBody');
+          var titleEl = document.getElementById('helpTitle');
+          var curTitle = getActiveTitle();
+          if (titleEl) titleEl.textContent = 'ヘルプ（この画面の使い方）';
+          if (body) body.innerHTML = helpTextByTitle(curTitle);
+          if (m && typeof openModal === 'function') openModal(m);
+          else if (m) m.classList.add('show');
+          else if (typeof openNotice === 'function') openNotice('本番ではこの画面の使い方についてポイントを解説する内容を表示します');
+        }catch(e){}
+      };
+    } else {
+      // 既存 openHelp がある場合も本文差し替えを適用（冪等）
+      var origOpenHelp = window.openHelp;
+      window.openHelp = function(){
+        try{
+          var m = document.getElementById('helpModal');
+          var body = document.getElementById('helpBody');
+          var titleEl = document.getElementById('helpTitle');
+          var curTitle = getActiveTitle();
+          if (titleEl) titleEl.textContent = 'ヘルプ（この画面の使い方）';
+          if (body) body.innerHTML = helpTextByTitle(curTitle);
+        }catch(e){}
+        try{ origOpenHelp(); }catch(e){}
+      };
+    }
+
+    // バックドロップで閉じる適用
+    document.addEventListener('DOMContentLoaded', function(){
+      ['securityCheckModal','helpModal'].forEach(function(id){
+        var m = document.getElementById(id);
+        if (!m) return;
+        m.addEventListener('mousedown', function(e){
+          if(e.target === m){
+            try{ closeModal(m); }catch(_){ m.classList.remove('show'); }
+          }
+        });
+      });
+    });
+  })();
+</script>
+<!-- END: js-help-security-handlers -->
+
+<!-- START: js-term-tips -->
+<script>
+  (function(){
+    if (typeof window.showTermTip !== 'function'){
+      window.showTermTip = function(key){
+        var msg = '';
+        switch(String(key||'')){
+          case '免責':
+            msg = '免責（自己負担額）：事故のときにご自身で負担いただく金額のことです。免責を大きくすると保険料は下がる傾向があります。';
+            break;
+          case '約款':
+            msg = '約款（ご契約のしおり）：保険の大切なルールをまとめた文書です。Webまたは書面でお受け取りいただけます。';
+            break;
+          case '保険証券':
+            msg = '保険証券：ご契約の証明書です。Web（電子）または書面のどちらでもお選びいただけます。';
+            break;
+          case '更新案内':
+            msg = '更新案内：次回更新時にお知らせするご案内です。Web（電子）または書面で受け取れます。';
+            break;
+          case '申込書控えPDF':
+            msg = '申込書控え（PDF）：今回のお申込内容をPDFでお送りする控えです。必要に応じてメールで送付します。';
+            break;
+          case '人身傷害':
+            msg = '人身傷害保険：自動車事故の際にご契約車両を運転されている方や同乗者の方が死亡、またはケガをされた場合に、治療費や休業損害などを補償する保険です。示談交渉を待たずに総損害額が支払われます。';
+            break;
+          default:
+            msg = '用語の説明をご用意しています。詳しい解説は重要事項やヘルプからもご覧いただけます。';
+        }
+        try{
+          if (typeof openNotice === 'function') openNotice(msg);
+          else alert(msg);
+        }catch(e){}
+      };
+    } else {
+      // 既存がある場合は「人身傷害」を追記して差し替え
+      const orig = window.showTermTip;
+      window.showTermTip = function(key){
+        if (String(key||'') === '人身傷害'){
+          const msg = '人身傷害保険：自動車事故の際にご契約車両を運転されている方や同乗者の方が死亡、またはケガをされた場合に、治療費や休業損害などを補償する保険です。示談交渉を待たずに総損害額が支払われます。';
+          try{ if (typeof openNotice === 'function') openNotice(msg); else alert(msg); }catch(e){}
+          return;
+        }
+        try{ orig(key); }catch(e){}
+      };
+    }
+  })();
+</script>
+<!-- END: js-term-tips -->
+
 <!-- START: js-license-color-helper -->
 <script>
   (function(){
@@ -3621,6 +4226,7 @@
     };
   }
 
+  // ② 手入力時の住所補完（上書き・重複なし）
   if (typeof window.mockZipToAddress !== 'function') {
     window.mockZipToAddress = function(zip){
       try{
@@ -3946,79 +4552,24 @@
 <!-- START: js-voice-input -->
 <script>
 (function(){
-  let recognition = null;
-  let recognizing = false;
-  let supported = false;
+  // 簡素版 音声入力：一般フィールド（氏名/住所/電話/郵便/勤務先）とVINのみ対応
+  let recognition = null, recognizing = false, supported = false;
   let targetFieldId = null;
-  let modeDigitsOnly = false;
-  let lastFinalTranscript = ''; // 数字欄のfinal確定用
-  let hideStatusTid = null;
+  let modeDigitsOnly = false; // 郵便/電話など数字のみ
+  let lastFinalTranscript = '';
 
-  function getEl(id){ return document.getElementById(id); }
-  function showVoiceStatus(){ try{ const s=getEl('voiceStatus'); if(s) s.style.display=''; }catch(e){} }
-  function hideVoiceStatusDelayed(ms){
-    try{
-      clearTimeout(hideStatusTid);
-      hideStatusTid = setTimeout(()=>{ const s=getEl('voiceStatus'); if(s) s.style.display='none'; }, ms||1500);
-    }catch(e){}
+  function getEl(id){ try{ return document.getElementById(id); }catch(e){ return null; } }
+  function isActiveId(id){
+    try{ const el = getEl(id); if(!el) return false; const scr = el.closest('.screen'); return !!(scr && scr.classList.contains('active')); }catch(e){ return false; }
   }
-
-  // ミニインジケータ（フィールド近傍）
-  function ensureIndicatorHost(fieldId){
-    const inp = getEl(fieldId); if(!inp) return null;
-    // 入力欄直後に置く
-    if (!inp.__voiceIndicator){
-      const ind = document.createElement('div');
-      ind.className = 'voiceIndicator ready';
-      ind.innerHTML = '<span class="dot"></span><span class="text">音声の準備中…</span>';
-      inp.insertAdjacentElement('afterend', ind);
-      inp.__voiceIndicator = ind;
-    }
-    return inp.__voiceIndicator;
-  }
-  function setIndicator(fieldId, stateText, stateClass){
-    try{
-      const ind = ensureIndicatorHost(fieldId);
-      if (!ind) return;
-      ind.style.display = '';
-      ind.classList.remove('ready','recording','recognizing');
-      ind.classList.add(stateClass || 'ready');
-      const t = ind.querySelector('.text');
-      if (t) t.textContent = stateText || '音声の準備中…';
-    }catch(e){}
-  }
-  function hideIndicator(fieldId){
-    try{
-      const inp = getEl(fieldId);
-      const ind = inp && inp.__voiceIndicator;
-      if (ind) ind.style.display = 'none';
-    }catch(e){}
-  }
-
   function setStatus(text){
-    const s = getEl('voiceStatus');
-    if (s){
-      s.textContent = String(text || '');
-      showVoiceStatus();
-    }
-  }
-
-  function toggleButtons(isRecording){
-    const start = getEl('btnStartVoice'), stop = getEl('btnStopVoice');
-    if(start) start.style.display = isRecording ? 'none' : '';
-    if(stop)  stop.style.display  = isRecording ? '' : 'none';
-  }
-
-  function isActiveField(fieldId){
     try{
-      const el = getEl(fieldId);
-      if (!el) return false;
-      if (!el.offsetParent) return false;
-      const scr = el.closest('.screen');
-      return !!(scr && scr.classList && scr.classList.contains('active'));
-    }catch(e){ return false; }
+      const s = document.getElementById('voiceStatus');
+      if (s){ s.textContent = String(text || ''); s.style.display = ''; }
+    }catch(e){}
   }
 
+  // 正規化
   function normalizeDashesAndSpaces(s){
     let t = String(s || '');
     t = t.replace(/ー|−|―|‐|–|—/g, '-');
@@ -4026,8 +4577,7 @@
     t = t.replace(/スペース|空白|ブランク/gi, ' ');
     return t;
   }
-
-  function normalizeJapaneseNumberSpeech(s){
+  function normalizeDigitsJa(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
     t = t.replace(/の|ノ|ー/g, '');
@@ -4049,257 +4599,177 @@
     t = t.replace(/[^\d]/g, '');
     return t;
   }
-
-  function normalizeVinSpeech(s){
+  function normalizeVin(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
     t = t.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch=> String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
     t = t.replace(/[、。.,\s]/g, '');
     t = t.replace(/[^A-Za-z0-9-]/g, '');
     t = t.replace(/-+/g, '-');
-    return t;
+    return t.toUpperCase();
   }
-
-  function formatPhoneDisplay(d){
+  function formatPhone(d){
     const p = String(d || '');
     if (p.length === 11) return `${p.slice(0,3)}-${p.slice(3,7)}-${p.slice(7)}`;
     if (p.length === 10) return `${p.slice(0,3)}-${p.slice(3,6)}-${p.slice(6)}`;
     return p;
   }
-  function formatZipDisplay(d){
+  function formatZip(d){
     const z = String(d || '');
     if (z.length === 7) return `${z.slice(0,3)}-${z.slice(3)}`;
     return z;
   }
 
-  function putValue(fieldId, valueText){
-    if (!isActiveField(fieldId)) return;
-    const inp = getEl(fieldId);
-    if(!inp) return;
-    let v = String(valueText||'').trim();
+  function putValue(fieldId, text){
+    if (!isActiveId(fieldId)) return;
+    const el = getEl(fieldId); if (!el) return;
+    let v = String(text || '').trim();
 
-    if (fieldId === 'cust_phone' || fieldId === 'md_phone'){
-      v = normalizeJapaneseNumberSpeech(v);
-      v = formatPhoneDisplay(v);
-    } else if (fieldId === 'zip' || fieldId === 'md_zip'){
-      v = normalizeJapaneseNumberSpeech(v);
-      v = formatZipDisplay(v);
-    } else if (fieldId === 'vin'){
-      v = normalizeVinSpeech(v);
+    if (fieldId==='cust_phone' || fieldId==='md_phone'){
+      v = formatPhone(normalizeDigitsJa(v));
+    } else if (fieldId==='zip' || fieldId==='md_zip'){
+      v = formatZip(normalizeDigitsJa(v));
+    } else if (fieldId==='vin'){
+      v = normalizeVin(v);
     } else {
       v = normalizeDashesAndSpaces(v);
       v = v.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch=> String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
     }
+    el.value = v;
 
-    inp.value = v;
-
-    if (fieldId === 'zip'){
-      const pure = v.replace(/[^\d]/g,'');
-      try{ mockZipToAddress(pure); }catch(e){}
-    }
-    if (fieldId === 'md_zip' && typeof window.mdZipToAddress === 'function'){
-      const pure = v.replace(/[^\d]/g,'');
-      try{ mdZipToAddress(pure); }catch(e){}
-    }
-  }
-
-  // 未対応端末：サンプル投入せず、フィールドにフォーカス＋ガイド表示
-  function softFallbackGuide(){
-    if (targetFieldId && isActiveField(targetFieldId)){
-      try{
-        const el = getEl(targetFieldId);
-        if (el && typeof el.focus === 'function') el.focus();
-        setStatus('この端末ではブラウザの音声認識が未対応です。キーボードのマイクをご利用ください。');
-        if (typeof showToast === 'function') showToast('音声認識は未対応です。キーボードのマイクをご利用ください');
-        setIndicator(targetFieldId, '未対応：キーボードのマイクをご利用ください', 'ready');
-      }catch(e){}
-    }
-    toggleButtons(false);
-    recognizing = false;
-    hideVoiceStatusDelayed(1500);
-    hideIndicator(targetFieldId);
-    targetFieldId = null;
-    modeDigitsOnly = false;
-    lastFinalTranscript = '';
-  }
-
-  // エラー時・未入力時のみ使うサンプル投入（未対応端末では通常使わない）
-  function fallbackMock(reasonText){
-    try{ setStatus(reasonText || '音声認識で問題が発生しました'); }catch(e){}
-    if (targetFieldId && isActiveField(targetFieldId)){
-      switch (targetFieldId) {
-        case 'cust_name':
-        case 'mainDriverName': putValue(targetFieldId, '山田 花子'); break;
-        case 'zip':
-        case 'md_zip':         putValue(targetFieldId, '1050001'); break;
-        case 'addr':
-        case 'md_addr':        putValue(targetFieldId, '東京都港区赤坂1-1-1 〇〇マンション101'); break;
-        case 'cust_phone':
-        case 'md_phone':       putValue(targetFieldId, '09012345678'); break;
-        case 'company':
-        case 'md_company':     putValue(targetFieldId, 'ABC株式会社'); break;
-        case 'vin':            putValue(targetFieldId, 'ZVW50-1234567'); break;
-        default: /* サンプル投入なし */ break;
+    // 住所補完（郵便7桁時のみ、未入力のとき一度だけ実行）
+    try{
+      if (fieldId==='zip'){
+        const addr=getEl('addr'); const digits=v.replace(/[^\d]/g,'');
+        if(addr && !addr.value && typeof window.mockZipToAddress==='function' && digits.length===7){ window.mockZipToAddress(digits); }
       }
-    }
-    toggleButtons(false);
-    recognizing = false;
-    hideVoiceStatusDelayed(1500);
-    hideIndicator(targetFieldId);
-    targetFieldId = null;
-    modeDigitsOnly = false;
-    lastFinalTranscript = '';
+      if (fieldId==='md_zip'){
+        const addr=getEl('md_addr'); const digits=v.replace(/[^\d]/g,'');
+        if(addr && !addr.value && typeof window.mdZipToAddress==='function' && digits.length===7){ window.mdZipToAddress(digits); }
+      }
+    }catch(e){}
   }
 
   function initRecognizer(){
     try{
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SR){ supported = false; return; }
+      if (!SR){ supported=false; return; }
       recognition = new SR();
+      supported = true;
       recognition.lang = 'ja-JP';
       recognition.continuous = false;
-      recognition.interimResults = true; // finalのみ反映方針で捕捉性確保
+      recognition.interimResults = true;
 
       recognition.onstart = function(){
-        recognizing = true;
-        lastFinalTranscript = '';
+        recognizing = true; lastFinalTranscript='';
         setStatus('録音中です。お話しください…');
-        toggleButtons(true);
-        if (targetFieldId) setIndicator(targetFieldId, '録音中…', 'recording');
       };
-      recognition.onerror = function(evt){
+      recognition.onerror = function(){
         recognizing = false;
-        toggleButtons(false);
-        if(evt && evt.error === 'not-allowed'){
-          setStatus('マイク権限が拒否されました。権限を許可してください。');
-          setIndicator(targetFieldId, '権限が必要です', 'ready');
-          fallbackMock('マイク権限が拒否されました。');
-        }else{
-          setStatus('音声認識でエラーが発生しました。');
-          setIndicator(targetFieldId, 'エラーが発生しました', 'ready');
-          fallbackMock('音声認識でエラーが発生しました。');
-        }
+        setStatus('音声認識でエラーが発生しました。キーボードのマイクもご利用いただけます。');
       };
       recognition.onend = function(){
         recognizing = false;
-        toggleButtons(false);
 
-        if (modeDigitsOnly && targetFieldId && isActiveField(targetFieldId)){
-          const buf = String(lastFinalTranscript || '').trim();
-          if (buf){
-            const normalized = normalizeJapaneseNumberSpeech(buf);
-            putValue(targetFieldId, normalized);
-          } else if (!getEl(targetFieldId)?.value){
-            fallbackMock('入力が確認できませんでした。');
-          }
-        } else {
-          if(targetFieldId && isActiveField(targetFieldId) && !getEl(targetFieldId)?.value){
-            fallbackMock('入力が確認できませんでした。');
+        if (targetFieldId && isActiveId(targetFieldId)){
+          if (modeDigitsOnly){
+            putValue(targetFieldId, normalizeDigitsJa(lastFinalTranscript));
+          }else{
+            putValue(targetFieldId, lastFinalTranscript);
           }
         }
-        // 終了時はインジケータ・ステータスを短時間後に消す（優先度D）
-        setIndicator(targetFieldId, '認識完了', 'recognizing');
-        hideVoiceStatusDelayed(1500);
-        setTimeout(()=> hideIndicator(targetFieldId), 1500);
-
-        targetFieldId = null;
-        modeDigitsOnly = false;
-        lastFinalTranscript = '';
+        // 終了時のフォーカス移動は行わない（仕様）
       };
       recognition.onresult = function(evt){
         try{
-          let finalChunk = '';
-          let interimAccum = '';
-          for(let i=evt.resultIndex; i<evt.results.length; i++){
-            const res = evt.results[i];
-            const text = res[0]?.transcript || '';
-            if (res.isFinal){
-              finalChunk += text;
-            } else {
-              interimAccum += text;
-            }
+          let finalChunk='', interimAccum='';
+          for(let i=evt.resultIndex;i<evt.results.length;i++){
+            const res=evt.results[i]; const text=res[0]?.transcript||'';
+            if(res.isFinal) finalChunk+=text; else interimAccum+=text;
           }
-          if (finalChunk) lastFinalTranscript = finalChunk;
-
-          if (modeDigitsOnly){
-            if (finalChunk){
-              const normalized = normalizeJapaneseNumberSpeech(finalChunk);
-              if (targetFieldId && isActiveField(targetFieldId)) putValue(targetFieldId, normalized);
-            }
-            setStatus('認識中…');
-            if (targetFieldId) setIndicator(targetFieldId, '認識中…', 'recognizing');
-          } else {
-            const raw = (finalChunk || interimAccum);
-            const normalized = normalizeDashesAndSpaces(raw).replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
-            if (targetFieldId && isActiveField(targetFieldId)) putValue(targetFieldId, normalized);
-            setStatus('認識中…');
-            if (targetFieldId) setIndicator(targetFieldId, '認識中…', 'recognizing');
-          }
-        }catch(e){
-          setStatus('認識結果の処理に失敗しました。');
-          setIndicator(targetFieldId, '処理に失敗しました', 'ready');
-          fallbackMock('認識結果の処理に失敗しました。');
-        }
+          lastFinalTranscript = finalChunk || interimAccum;
+          setStatus('認識中…');
+        }catch(e){}
       };
-
-      supported = true;
-    }catch(e){
-      supported = false;
-    }
+    }catch(e){ supported=false; }
   }
 
+  // 公開API（簡素版）
   window.cancelVoiceInput = function(){
     try{ if(recognizing && recognition){ recognition.stop(); } }catch(e){}
-    recognizing = false;
-    toggleButtons(false);
+    recognizing=false;
     setStatus('停止しました。');
-    if (targetFieldId) setIndicator(targetFieldId, '停止しました', 'ready');
-    hideVoiceStatusDelayed(800);
-    setTimeout(()=> hideIndicator(targetFieldId), 800);
-
-    targetFieldId = null;
-    modeDigitsOnly = false;
-    lastFinalTranscript = '';
+    targetFieldId=null; modeDigitsOnly=false; lastFinalTranscript='';
   };
 
   window.startVoiceForField = function(fieldId, mode){
     targetFieldId = fieldId;
     modeDigitsOnly = (mode === 'digits');
-    lastFinalTranscript = '';
-    toggleButtons(true);
+    lastFinalTranscript='';
     setStatus('録音の準備をしています…');
-    setIndicator(fieldId, '準備中…', 'ready');
 
-    // 初期化
     if(recognition === null) initRecognizer();
-
-    // ブラウザ未対応時はサンプル投入せず、ガイド表示＋フォーカスのみ
     if (!supported || !recognition){
-      softFallbackGuide();
+      setStatus('音声認識が未対応です。キーボードのマイクをご利用ください。');
       return;
     }
-
     try{ recognition.interimResults = true; }catch(e){}
-    try{
-      recognition.start();
-      setStatus('録音中です。お話しください…');
-      setIndicator(fieldId, '録音中…', 'recording');
-    }catch(e){
-      setStatus('音声認識の開始に失敗しました。');
-      setIndicator(fieldId, '開始に失敗しました', 'ready');
-      fallbackMock('音声認識の開始に失敗しました。');
-    }
+    try{ recognition.start(); setStatus('録音中です。お話しください…'); }
+    catch(e){ setStatus('音声認識の開始に失敗しました。'); }
   };
 
-  window.startNameVoice = function(){ window.startVoiceForField('mainDriverName'); };
-  window.stopNameVoice  = function(){ window.cancelVoiceInput(); };
+  // VIN（車台番号）専用
+  window.startVoiceForVin = function(){
+    targetFieldId = 'vin';
+    modeDigitsOnly = false;
+    lastFinalTranscript='';
+    setStatus('録音です。車台番号（例：ZVW50-1234567）をお話しください…');
+
+    if(recognition === null) initRecognizer();
+    if (!supported || !recognition){
+      setStatus('音声認識が未対応です。キーボードのマイクをご利用ください。');
+      return;
+    }
+    try{ recognition.interimResults = true; }catch(e){}
+    try{ recognition.start(); }
+    catch(e){ setStatus('音声認識の開始に失敗しました。'); }
+  };
 })();
 </script>
 <!-- END: js-voice-input -->
 
+<!-- START: js-voice-input-extend -->
+<script>
+(function(){
+  // 既存の next-field チェーンを補完（通常入力チェーンは js-core 側に依存）
+  // 本拡張では、モード完了後の追加フォーカス連携（メーカー→車名→型式→初度登録年、色→有効期限年、性別→郵便、誕生日→勤務先）を維持
+  // 上位ブロックで reflect/focus を済ませているため、ここでは保守用のユーティリティのみ提供
+
+  // 互換案内（未対応端末／トースト）
+  window.voiceGuideHint = function(msg){
+    try{
+      if (typeof showToast === 'function') showToast(msg || 'キーボードのマイクをご利用ください');
+      else alert(msg || 'キーボードのマイクをご利用ください');
+    }catch(e){}
+  };
+
+  // 追加フォーカスの安全呼び出し（必要箇所で利用）
+  window.safeFocus = function(id){
+    try{
+      const el = document.getElementById(id);
+      if (el && el.offsetParent && typeof el.focus === 'function'){
+        setTimeout(()=>{ try{ el.focus(); }catch(e){} }, 0);
+      }
+    }catch(e){}
+  };
+})();
+</script>
+<!-- END: js-voice-input-extend -->
+
 <!-- START: js-md-zip-helper -->
 <script>
 (function(){
+  // ② 主運転者の住所補完（上書き・重複なし）
   window.mdZipToAddress = function(zip){
     try{
       const z = String(zip || '').replace(/[^\d]/g,'');
