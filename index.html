@@ -280,9 +280,9 @@
   .footerNote{ text-align:center; font-size:13px !important; line-height:1.55; margin-top:6px; color:var(--blue-900); }
   .large .footerNote{ font-size:13px !important; }
 
-  /* フッターアクション（戻ると途中保存の等幅維持） */
-  .footerActions{ display:grid; grid-template-columns: 1fr 1fr; gap:6px; width:100%; }
-  .footerActions .ghost{ width:100%; }
+  /* フッターアクション（戻る/保存をコンパクトに。等幅固定を解除） */
+  .footerActions{ display:flex; align-items:center; gap:6px; width:auto; }
+  .footerActions .ghost{ width:auto; min-width:88px; padding:8px 10px; }
 
   /* 申込完了リスト（行頭記号 ■） */
   #donePostalUnder.doneLine, #doneList .doneLine{ position:relative; padding-left:1.8em; }
@@ -303,6 +303,42 @@
   }
 </style>
 <!-- END: styles-addon -->
+
+<!-- START: styles-footer-compact -->
+<style>
+  /* フッターのボタンを最小幅・最小余白にしてスマホで1行に収める */
+  footer .footerRow{
+    display:flex; align-items:center; justify-content:flex-start; gap:4px; flex-wrap:nowrap;
+  }
+  footer .footerActions{
+    display:flex; align-items:center; gap:4px; flex-wrap:nowrap; width:100%;
+  }
+  /* ゴースト/サポートボタン幅の最小化（等幅解除＋白抜き保持） */
+  footer .footerActions .ghost,
+  footer .footerActions .supportItem,
+  footer .supportItem{
+    min-width:60px;       /* 360px幅端末で5ボタンを1行に収める想定 */
+    padding:6px 8px;      /* 横幅を圧縮 */
+    font-size:12.5px;     /* わずかに縮小 */
+    line-height:1.2;
+    white-space:nowrap;
+  }
+  /* 既存のmin-widthを確実に上書き */
+  .supportItem{ min-width:60px !important; }
+
+  /* より狭い端末向けの微調整 */
+  @media (max-width:360px){
+    footer .footerActions .ghost,
+    footer .footerActions .supportItem,
+    footer .supportItem{
+      min-width:56px;
+      padding:5px 7px;
+      font-size:12px;
+    }
+    footer .footerRow{ gap:3px; }
+  }
+</style>
+<!-- END: styles-footer-compact -->
 
 <!-- START: styles-override-airobot -->
 <style>
@@ -470,13 +506,13 @@
     min-height:46px;
     padding:12px;
     font-size:15px;
-    white-space:nowrap;     /* ボタン内改行禁止 */
+    white-space:nowrap;     /* sop btn no wrap */
   }
   .choiceToggle{
     min-height:44px;
     padding:10px 12px;
     font-size:14px;
-    white-space:nowrap;     /* 二段化防止 */
+    white-space:nowrap;     /* prevent two lines */
   }
   .colorBtn{
     min-height:44px;
@@ -523,21 +559,25 @@
     .colorBtn.active::after{ color:#66B2FF; }
   }
 
-  /* 解説アイコン：ヘッダー「ヘルプ」（丸に？）と同じ見た目に統一 */
+  /* 解説アイコン：右横に置き、やや下げる（ベースライン寄り） */
+  .label{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+  }
   .tipIcon{
     display:inline-flex; align-items:center; justify-content:center;
-    width:22px; height:22px; border-radius:999px;
+    width:19px; height:19px; border-radius:999px;
     border:none; background:transparent; cursor:pointer;
-    padding:0; margin-left:6px;
-    /* テキストは非表示（SVGで描画） */
+    padding:0; margin-left:8px;
     font-size:0; line-height:0;
     position:relative;
+    top:7px; /* ほんの少し下げて上付き感を解消 */
   }
   .tipIcon::before{
     content:"";
     display:block; width:22px; height:22px;
     background-repeat:no-repeat; background-position:center; background-size:contain;
-    /* ヘッダーのヘルプと同一SVG（丸に？） */
     background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%233c7fe6" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 17.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm2-6.8c-.6.6-1 .9-1 .8v.5h-2v-1c0-.6.5-1.1 1.1-1.3.9-.3 1.9-1.1 1.9-2.2 0-1.3-1.1-2.3-2.5-2.3-1.1 0-2 .6-2.4 1.6l-1.8-.8C8 5.7 9.9 4.5 12 4.5c2.5 0 4.5 1.7 4.5 3.9 0 1.6-.8 2.6-2.5 3.3z"/></svg>');
   }
   .tipIcon:active{ opacity:.9; }
@@ -664,7 +704,7 @@
 <section class="screen active" data-title="表紙" data-role="cover" aria-label="プロトタイプの表紙（セダン・ラインアート／タイヤ重ね＋青塗り）">
   <div class="coverWrap">
     <!-- セダン：青のアウトライン。タイヤは車体ラインに少し重ね、青で塗りつぶし -->
-    <div class="coverCar" aria-hidden="true" style="margin-bottom:12px;">
+    <div class="coverCar" aria-hidden="true" style="margin-bottom:4px;">
 <svg viewBox="0 0 280 120" role="img" aria-label="セダンのラインアート（タイヤ青塗り）">
   <path d="M30 78c0-10 12-22 28-26h60c10 0 18-6 26-12 12-8 24-12 36-12h26c20 0 34 12 40 28l6 16c6 2 10 8 10 14 0 6-4 10-10 10H42c-6 0-10-4-10-10 0-6 4-12 10-16h-4c-6 0-8-2-8-6z"
         fill="none" stroke="#3c7fe6" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
@@ -674,7 +714,7 @@
     </div>
 
     <!-- タイトル（線画との間は1行分の余白） -->
-    <div class="coverTitle" style="margin-top:6px; margin-bottom:8px;">
+    <div class="coverTitle" style="margin-top:4px; margin-bottom:4px;">
       <div class="coverLine">プロトタイプ</div>
     </div>
 
@@ -683,7 +723,7 @@
       .coverOutline{
         width:100%; max-width:420px;
         margin:0 auto;
-        padding-left:100px; /* 左側インデントをさらに拡大（約5文字分の右寄せ） */
+        padding-left:80px; /* 既存の右寄せ量を維持 */
         text-align:left;
       }
       .coverRow{
@@ -725,17 +765,29 @@
       <!-- 1行の空白行（1と2の間） -->
       <div class="coverSpacer" aria-hidden="true"></div>
 
-      <!-- 2行目：2. 改修の主眼 -->
+      <!-- 2行目：2. 改修点 -->
       <div class="coverRow">
         <span class="num">2.</span>
-        <span class="text">改修の主眼：Pain解消</span>
+        <span class="text">改修点：Pain解消</span>
       </div>
       <!-- サブ項目（本文列に揃える） -->
       <div class="coverRow sub">
         <span class="num" aria-hidden="true"></span>
-        <span class="text">・非スマらく理由の解消</span>
+        <span class="text">・非スマらく理由解消</span>
+      </div>
+      <!-- 追加：UI/UXの改善 -->
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・高齢者目線でUI/UX改善</span>
+      </div>
+      <!-- 追加：離脱防止 -->
+      <div class="coverRow sub">
+        <span class="num" aria-hidden="true"></span>
+        <span class="text">・離脱率を下げる</span>
       </div>
     </div>
+  <!-- 1行の空白行 -->
+      <div class="coverSpacer" aria-hidden="true"></div>
 
     <button class="coverStartBtn" onclick="startDemo()" aria-label="デモを開始する" style="margin-top:16px;">デモ開始</button>
   </div>
@@ -759,7 +811,7 @@
         <span class="inlineChip" aria-label="公式ドメイン">example.co.jp</span><br>
         送信元メールは
         <span class="inlineChip" aria-label="送信元メールドメイン">@example.co.jp</span>
-        から届きます。
+        から届きます。<br>
         <a href="#" class="officialLink" onclick="openSecurityCheck()">偽サイトの見分け方はコチラ</a>
       </span>
     </div>
@@ -880,7 +932,7 @@
           </div>
         </div>
 
-        <button class="btnPrimary" onclick="if(validateOtpLogin()) next()">認証して次へ</button>
+        <button class="btnPrimary" onclick="if(validateOtpLogin()) next()">次へ（お車の情報）</button>
       </div>
     </section>
 <!-- END: screen-02-login -->
@@ -907,7 +959,7 @@
     <div class="h1">車検証の情報を入力する</div>
     <div class="desc">以下の方法で車検証の情報を入力できます。</div>
     <button class="btnPrimary" onclick="showOCRGuide()">カメラで読み取る</button>
-    <button class="btnPrimary" onclick="showManual()">手入力する（選択式･音声入力）</button>
+    <button class="btnPrimary" onclick="showManual()">手入力する（選択式）</button>
   </div>
 
   <div class="card" id="ocrShoot" style="display:none;">
@@ -934,22 +986,120 @@
     <div class="list">・車台番号：ZVW50-1234567（新規）</div>
     <div class="list">・ナンバー：品川 300 あ 12-34（変更なし）</div>
     <div class="list">・初度登録年月：2018年3月（変更なし）</div>
-    <button class="btnPrimary" onclick="next()">この内容で進む</button>
+    <button class="btnPrimary" onclick="next()">次へ（免許証の情報）</button>
     <button class="btnPrimary" onclick="showManual()">変更する</button>
   </div>
 
   <div class="card" id="manualForm" style="display:none;">
+
+    <!-- 実物風：自動車検査証の記載内容（赤枠＝1段目3列目：初度登録年月／4段目1列目：型式） -->
+    <div class="foldCard" aria-label="自動車検査証の記載内容">
+      <div class="foldHeader">・自動車検査証の記載内容</div>
+      <div class="foldBody">
+        <img alt="自動車検査証の記載例（赤枠＝初度登録年月／型式）"
+             style="width:100%; border:1px solid var(--border); border-radius:8px;"
+             src="data:image/svg+xml;utf8,
+<svg xmlns='http://www.w3.org/2000/svg' width='360' height='230'>
+  <!-- 用紙 -->
+  <rect x='10' y='10' width='340' height='210' rx='6' fill='%23ffffff' stroke='%23cfd8ea' stroke-width='1.2'/>
+  <text x='24' y='28' font-size='12' fill='%231f5fbf' font-weight='700'>自動車検査証（抜粋・イメージ）</text>
+
+  <!-- グリッド（行） -->
+  <!-- 行高さ -->
+  <g id='rows' stroke='%23e3e9f7' stroke-width='1'>
+    <line x1='10' y1='40' x2='350' y2='40'/>
+    <line x1='10' y1='75' x2='350' y2='75'/>   <!-- 1段目 -->
+    <line x1='10' y1='110' x2='350' y2='110'/> <!-- 2段目 -->
+    <line x1='10' y1='145' x2='350' y2='145'/> <!-- 3段目 -->
+    <line x1='10' y1='180' x2='350' y2='180'/> <!-- 4段目 -->
+  </g>
+
+  <!-- 1段目（7列） -->
+  <g font-size='10' fill='%230f3d7a'>
+    <!-- 列境界（おおよそ均等） -->
+    <g stroke='%23e3e9f7' stroke-width='1'>
+      <line x1='60' y1='40' x2='60' y2='75'/>
+      <line x1='120' y1='40' x2='120' y2='75'/>
+      <line x1='180' y1='40' x2='180' y2='75'/>
+      <line x1='220' y1='40' x2='220' y2='75'/>
+      <line x1='260' y1='40' x2='260' y2='75'/>
+      <line x1='300' y1='40' x2='300' y2='75'/>
+    </g>
+    <text x='20' y='62'>登録番号/車両番号</text>
+    <text x='68' y='62'>登録/交付年月日</text>
+    <text x='128' y='62'>初度登録年月</text> <!-- ← 1段目・左から3つ目 -->
+    <text x='186' y='62'>車の種類</text>
+    <text x='226' y='62'>用途</text>
+    <text x='266' y='62'>自家/事業</text>
+    <text x='306' y='62'>車体形状</text>
+  </g>
+
+  <!-- 2段目（例示） -->
+  <g font-size='10' fill='%230f3d7a'>
+    <g stroke='%23e3e9f7' stroke-width='1'>
+      <line x1='90' y1='75' x2='90' y2='110'/>
+      <line x1='150' y1='75' x2='150' y2='110'/>
+      <line x1='210' y1='75' x2='210' y2='110'/>
+      <line x1='260' y1='75' x2='260' y2='110'/>
+      <line x1='300' y1='75' x2='300' y2='110'/>
+    </g>
+    <text x='20' y='98'>車名</text>
+    <text x='98' y='98'>乗車定員</text>
+    <text x='158' y='98'>最大積載量</text>
+    <text x='216' y='98'>車両重量</text>
+    <text x='268' y='98'>車両総重量</text>
+    <text x='308' y='98'>車台番号</text>
+  </g>
+
+  <!-- 3段目（例示） -->
+  <g font-size='10' fill='%230f3d7a'>
+    <g stroke='%23e3e9f7' stroke-width='1'>
+      <line x1='140' y1='110' x2='140' y2='145'/>
+      <line x1='200' y1='110' x2='200' y2='145'/>
+      <line x1='260' y1='110' x2='260' y2='145'/>
+      <line x1='310' y1='110' x2='310' y2='145'/>
+    </g>
+    <text x='20' y='132'>長･幅･高</text>
+    <text x='148' y='132'>軸重xxx</text>
+    <text x='208' y='132'>（予備）</text>
+    <text x='268' y='132'>（予備）</text>
+    <text x='318' y='132'>（予備）</text>
+  </g>
+
+  <!-- 4段目（左端＝型式） -->
+  <g font-size='10' fill='%230f3d7a'>
+    <g stroke='%23e3e9f7' stroke-width='1'>
+      <line x1='110' y1='145' x2='110' y2='180'/>
+      <line x1='180' y1='145' x2='180' y2='180'/>
+      <line x1='240' y1='145' x2='240' y2='180'/>
+      <line x1='300' y1='145' x2='300' y2='180'/>
+    </g>
+    <text x='20' y='168'>型式</text>            <!-- ← 4段目・一番左 -->
+    <text x='118' y='168'>原動機型式</text>
+    <text x='188' y='168'>排気量/出力</text>
+    <text x='248' y='168'>燃料</text>
+    <text x='308' y='168'>型式指定番号/類別</text>
+  </g>
+
+  <!-- 赤枠（強調） -->
+  <!-- 1段目3列目：初度登録年月（目安座標） -->
+  <rect x='120' y='42' width='60' height='31' fill='none' stroke='%23d32f2f' stroke-width='2'/>
+  <!-- 4段目1列目：型式（目安座標） -->
+  <rect x='12' y='147' width='98' height='31' fill='none' stroke='%23d32f2f' stroke-width='2'/>
+
+  <!-- 注釈 -->
+  <text x='14' y='205' font-size='10' fill='%23666'>赤枠＝「初度登録年月」（1段目・左から3つ目）／「型式」（4段目・一番左）</text>
+</svg>"/>
+      </div>
+      <div class="foldSub">赤枠位置をご確認ください。該当欄の内容をこの下の入力欄にご記入ください。</div>
+    </div>
+    <!-- 図示ここまで -->
+
     <div class="h1">お車情報を入力する</div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="label">
         <span>メーカー</span>
-        <button class="ghost" onclick="startVoiceForMaker()" aria-label="音声でメーカーを入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
       </div>
       <select id="maker" onchange="onMakerChange()">
         <option value="">選択してください</option>
@@ -961,14 +1111,8 @@
     </div>
 
     <div class="field" id="modelField" style="display:block;">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="label">
         <span>車名</span>
-        <button class="ghost" onclick="startVoiceForModel()" aria-label="音声で車名を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
       </div>
       <select id="model" onchange="onModelChange()">
         <option value="">選択してください</option>
@@ -979,14 +1123,8 @@
     </div>
 
     <div class="field" id="typeField" style="display:block;">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
+      <div class="label">
         <span>型式</span>
-        <button class="ghost" onclick="startVoiceForType()" aria-label="音声で型式を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
       </div>
       <select id="type">
         <option value="">選択してください</option>
@@ -996,14 +1134,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">初度登録年月
-        <button class="ghost" onclick="startVoiceForDate('firstReg')" aria-label="音声で初度登録の年・月を入力" style="margin-left:6px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label">初度登録年月</div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="firstRegYear"><option value="">年</option></select>
 
@@ -1012,7 +1143,7 @@
       </div>
     </div>
 
-    <button class="btnPrimary" onclick="if(validateFirstRegSelect()) next()">次へ</button>
+    <button class="btnPrimary" onclick="if(validateFirstRegSelect()) next()">次へ（免許証の情報）</button>
   </div>
 </section>
 <!-- END: screen-04-vehicle-shaken -->
@@ -1039,15 +1170,8 @@
   <div class="card">
     <div class="h1">免許証の色を選ぶ</div>
 
-    <!-- 免許色：右詰めの「音声で入力」ボタンを追加 -->
-    <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
+    <div class="label">
       <span>免許証の色</span>
-      <button class="ghost" onclick="startVoiceForColor()" aria-label="音声で免許証の色を入力">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-          <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-        </svg>
-        音声で入力
-      </button>
     </div>
 
     <div class="colorRow">
@@ -1083,14 +1207,7 @@
 
     <div class="desc" style="margin-top:8px;">年・月・日をそれぞれお選びください。</div>
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">有効期限
-        <button class="ghost" onclick="startVoiceForDate('license')" aria-label="音声で有効期限を入力" style="margin-left:6px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label">有効期限</div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="licenseYear"><option value="">年</option></select>
 
@@ -1101,7 +1218,7 @@
         <select id="licenseDay" class="visHiddenSelect" aria-hidden="true"><option value="">日</option></select>
       </div>
     </div>
-    <button class="btnPrimary" onclick="if(validateDateSelect()) next()">次へ</button>
+    <button class="btnPrimary" onclick="if(validateDateSelect()) next()">次へ（お客様情報）</button>
   </div>
 </section>
 <!-- END: screen-06-license -->
@@ -1144,15 +1261,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>性別</span>
-        <button class="ghost" onclick="startVoiceForGender('cust')" aria-label="音声で性別を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label">性別</div>
       <div class="choiceRow" role="radiogroup" aria-label="性別">
         <button class="choiceToggle" id="choice_gender_m" onclick="toggleChoice('gender_m')">男性</button>
         <button class="choiceToggle" id="choice_gender_f" onclick="toggleChoice('gender_f')">女性</button>
@@ -1199,15 +1308,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>生年月日</span>
-        <button class="ghost" onclick="startVoiceForDate('dob')" aria-label="音声で生年月日を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label">生年月日</div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="dobYear"><option value="">年</option></select>
 
@@ -1232,7 +1333,7 @@
       <input class="input" id="company" placeholder="ABC株式会社">
     </div>
 
-    <button class="btnPrimary" onclick="goToTitle('主に運転する方（記名被保険者）')">OK</button>
+    <button class="btnPrimary" onclick="goToTitle('主に運転する方（記名被保険者）')">次へ（主に運転する方）</button>
   </div>
 </section>
 <!-- END: screen-08-customer-edit -->
@@ -1268,15 +1369,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>性別</span>
-        <button class="ghost" onclick="startVoiceForGender('md')" aria-label="音声で性別を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label"><span>性別</span></div>
       <div class="choiceRow" role="radiogroup" aria-label="性別">
         <button class="choiceToggle" id="choice_gender_m2" onclick="toggleChoice('gender_m2')">男性</button>
         <button class="choiceToggle" id="choice_gender_f2" onclick="toggleChoice('gender_f2')">女性</button>
@@ -1323,15 +1416,7 @@
     </div>
 
     <div class="field">
-      <div class="label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>生年月日</span>
-        <button class="ghost" onclick="startVoiceForDate('md_dob')" aria-label="音声で生年月日を入力">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="margin-right:6px;">
-            <path fill="#3c7fe6" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V20H9v2h6v-2h-2v-2.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-          音声で入力
-        </button>
-      </div>
+      <div class="label"><span>生年月日</span></div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <select id="md_dobYear"><option value="">年</option></select>
 
@@ -1356,7 +1441,7 @@
       <input class="input" id="md_company" placeholder="ABC株式会社">
     </div>
 
-    <button class="btnPrimary" onclick="goToTitle('運転者の範囲と年齢条件')">OK</button>
+    <button class="btnPrimary" onclick="goToTitle('運転者の範囲と年齢条件')">次へ（年齢条件等）</button>
   </div>
 </section>
 <!-- END: screen-10-main-driver-edit -->
@@ -1397,7 +1482,7 @@
         <option>35歳以上補償</option>
       </select>
     </div>
-    <button class="btnPrimary" onclick="goToTitle('使用目的・走行距離')">OK</button>
+    <button class="btnPrimary" onclick="goToTitle('使用目的・走行距離')">次へ（走行距離等）</button>
   </div>
 </section>
 <!-- END: screen-12-driver-scope-age-edit -->
@@ -1427,7 +1512,7 @@
       </select>
     </div>
 
-    <button class="btnPrimary" onclick="next()">次へ</button>
+    <button class="btnPrimary" onclick="next()">次へ（現在の補償内容）</button>
   </div>
 </section>
 <!-- END: screen-13-usage-mileage -->
@@ -1488,7 +1573,7 @@
           全体の料率改定（物価・部品・修理費の上昇）／年齢・地域・使用状況の変化／等級の進行や事故有の影響（該当する場合）
           <div><a href="#" class="link blockLink" onclick="openReasonDetail()">詳細はコチラ</a></div>
         </div>
-        <button class="btnPrimary" onclick="goToTitle('更新方法の選択')">更新方法を選ぶ</button>
+        <button class="btnPrimary" onclick="goToTitle('更新方法の選択')">次へ（更新方法を選ぶ）</button>
       </div>
     </section>
 <!-- END: screen-15-same-coverage-premium -->
@@ -1638,8 +1723,7 @@
         <tr class="rowDelta"><td class="rowLabel">差額</td><td id="kpiDelta1">+¥900</td><td id="kpiDelta1Y">+¥10,800</td></tr>
       </tbody>
     </table>
-    <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細説明画面に遷移します')">・補償の詳細はコチラ</a></div>
-    <button class="btnPrimary" onclick="next()">次へ</button>
+    <button class="btnPrimary" onclick="next()">次へ（車両保険）</button>
   </div>
 </section>
 <!-- END: screen-18-bodily-amount -->
@@ -1674,8 +1758,7 @@
         <tr class="rowDelta"><td class="rowLabel">差額</td><td id="kpiDelta2">+¥750</td><td id="kpiDelta2Y">+¥9,000</td></tr>
       </tbody>
     </table>
-    <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細説明画面に遷移します')">・補償の詳細はコチラ</a></div>
-    <button class="btnPrimary" onclick="next()">次へ</button>
+    <button class="btnPrimary" onclick="next()">次へ（特約）</button>
   </div>
 </section>
 <!-- END: screen-19-vehicle-amount -->
@@ -1699,6 +1782,12 @@
       <input type="checkbox" id="opt_dap" onchange="recalcAll()" aria-label="DAP（ドライブレコーダー）特約">
       <label class="item" for="opt_dap" style="margin:0;">DAP（ドライブレコーダー）特約（+¥200/月）</label>
     </div>
+
+    <!-- リンクを保険料表の「上」に移動 -->
+    <div class="desc" style="margin-top:4px;">
+      <a href="#" class="link" onclick="openNotice('本番では補償内容の詳細説明画面に遷移します')">補償の詳細はコチラ</a>
+    </div>
+
     <table class="priceTable">
       <thead><tr><th class="rowLabel"></th><th>月額</th><th>年額</th></tr></thead>
       <tbody>
@@ -1707,8 +1796,8 @@
         <tr class="rowDelta"><td class="rowLabel">差額</td><td id="kpiDelta3">+¥1,130</td><td id="kpiDelta3Y">+¥13,560</td></tr>
       </tbody>
     </table>
-    <div class="desc" style="margin-top:4px;"><a href="#" class="link" onclick="openNotice('本番では補償内容の詳細説明画面に遷移します')">・補償の詳細はコチラ</a></div>
-    <button class="btnPrimary" onclick="next()">次へ</button>
+
+    <button class="btnPrimary" onclick="next()">次へ（最終見積）</button>
   </div>
 </section>
 <!-- END: screen-20-riders -->
@@ -1745,7 +1834,7 @@
       </tbody>
     </table>
 
-    <button class="btnPrimary" onclick="goToTitle('重要なご説明')">OK</button>
+    <button class="btnPrimary" onclick="goToTitle('重要なご説明')">次へ（重要事項）</button>
     <button class="btnPrimary" onclick="goToTitle('人身傷害の金額を選ぶ')">修正へ戻る</button>
   </div>
 
@@ -2036,10 +2125,9 @@
   <div class="footerRow">
     <div class="footerActions">
       <button class="ghost" onclick="prev()">戻る</button>
-      <button class="ghost" onclick="saveDraft()">途中保存</button>
-    </div>
-    <div style="display:flex; gap:6px;">
+      <button class="ghost" onclick="saveDraft()">保存</button>
       <button class="supportItem" onclick="openNotice('本番では電話予約画面に推移します。')">電話予約</button>
+      <button class="supportItem" onclick="openNotice('本番ではzoomでの面談画面に推移します')">zoom相談</button>
       <button class="supportItem" onclick="openNotice('本番ではチャット画面に推移します。')">チャット</button>
     </div>
   </div>
@@ -2096,7 +2184,7 @@
         <li>送信元メールが <strong>@example.co.jp</strong> か確認</li>
         <li>リンク先URLが公式ドメイン <strong>example.co.jp</strong> か確認</li>
         <li>個人情報の「新規の要求」がないか確認（変更の案内のみが一般的）</li>
-        <li>不審な場合は、この画面の「ヘルプ」からお問い合わせ</li>
+        <li>不審な場合は、画面下の「電話予約」か「チャット」からお問い合わせください</li>
       </ul>
     </div>
     <div style="display:flex; gap:6px; margin-top:10px;">
@@ -3158,6 +3246,16 @@
       return era ? `${year}年（${era}）` : `${year}年`;
     }
 
+    // 汎用フォーカス（安全）
+    function safeFocusById(id){
+      try{
+        const el = document.getElementById(id);
+        if (el && el.offsetParent && typeof el.focus === 'function'){
+          setTimeout(()=>{ try{ el.focus(); }catch(e){} }, 0);
+        }
+      }catch(e){}
+    }
+
     function fillYearOptions(sel, startY, endY){
       if (!sel || sel.options.length > 1) return;
       for(let y=startY; y<=endY; y++){
@@ -3166,7 +3264,6 @@
     }
     function fillMonthOptions(sel, max=12){
       if (!sel) return;
-      // 一旦初期化し直す（最大月の制限に対応）
       sel.innerHTML = '<option value="">月</option>';
       for(let m=1; m<=max; m++){
         const o=document.createElement('option'); o.value=String(m).padStart(2,'0'); o.textContent=`${m}月`; sel.appendChild(o);
@@ -3190,6 +3287,9 @@
         fillYearOptions(ySel, startY, endY);
         if (mSel.options.length <= 1) fillMonthOptions(mSel, 12);
         fillDayOptions(dSel);
+
+        // 年を選んだら 月ボタン へ
+        ySel.addEventListener('change', function(){ safeFocusById('licenseMonthDisplay'); });
       }catch(e){}
     }
     function validateLicenseDate(){
@@ -3219,6 +3319,10 @@
         fillYearOptions(ySel, startY, endY);
         if (mSel.options.length <= 1) fillMonthOptions(mSel, 12);
         fillDayOptions(dSel);
+
+        // 年 → 月、 日 → 勤務先（お客様 = company）
+        ySel.addEventListener('change', function(){ safeFocusById('dobMonthDisplay'); });
+        dSel.addEventListener('change', function(){ safeFocusById('company'); });
       }catch(e){}
     }
     function validateDobSelect(){
@@ -3248,6 +3352,10 @@
         fillYearOptions(ySel, startY, endY);
         if (mSel.options.length <= 1) fillMonthOptions(mSel, 12);
         fillDayOptions(dSel);
+
+        // 年 → 月、 日 → 勤務先（主運転者 = md_company）
+        ySel.addEventListener('change', function(){ safeFocusById('md_dobMonthDisplay'); });
+        dSel.addEventListener('change', function(){ safeFocusById('md_company'); });
       }catch(e){}
     }
 
@@ -3262,13 +3370,14 @@
         const selectedY = Number(ySel.value || endY);
         const maxMonth  = (selectedY === now.getFullYear()) ? (now.getMonth()+1) : 12;
         fillMonthOptions(mSel, maxMonth);
-        // 年変更で再計算（onceだと2回目以降が機能しないので都度バインドに変更）
+        // 年変更で再計算＋月ボタンへフォーカス
         ySel.addEventListener('change', function(){
           try{
             const sy = Number(ySel.value || endY);
             const mm = (sy === now.getFullYear()) ? (now.getMonth()+1) : 12;
             fillMonthOptions(mSel, mm);
           }catch(e){}
+          safeFocusById('firstRegMonthDisplay');
         });
       }catch(e){}
     }
@@ -3343,7 +3452,7 @@
       months.forEach((mm)=>{
         const btn = document.createElement('button');
         const curVal = String(getEl(cfg.monthId)?.value||'');
-        btn.className = 'mdCell' + (curVal === String(mm).padStart(2,'0') ? ' selected':'');
+        btn.className = 'mdCell' + (curVal === String(mm).padStart(2,'0') ? 'selected':'');
         btn.type='button';
         btn.setAttribute('role','gridcell');
         btn.setAttribute('aria-selected', btn.classList.contains('selected') ? 'true' : 'false');
@@ -3367,7 +3476,7 @@
       const makeCell = function(d){
         const btn = document.createElement('button');
         const curVal = String(getEl(cfg.dayId)?.value||'');
-        btn.className = 'mdCell' + (curVal === String(d).padStart(2,'0') ? ' selected':'');
+        btn.className = 'mdCell' + (curVal === String(d).padStart(2,'0') ? 'selected':'');
         btn.type='button';
         btn.setAttribute('role','gridcell');
         btn.setAttribute('aria-selected', btn.classList.contains('selected') ? 'true' : 'false');
@@ -3389,21 +3498,17 @@
       if (!cfg) return;
       const val = String(m).padStart(2,'0');
 
-      // 視覚状態（チェック/色）を反映
       try{
         btn && btn.classList.add('selected');
         btn && btn.setAttribute('aria-selected','true');
       }catch(e){}
 
-      // selectへ反映
       const sel = getEl(cfg.monthId);
       if (sel){ sel.value = val; lastSelectedMonth = val; sel.dispatchEvent(new Event('change')); }
 
-      // 表示ボタンへ反映
       const disp = getEl(cfg.monthBtn);
       if (disp) disp.textContent = m + '月';
 
-      // 初度登録は月のみ → 0.5秒後に閉じる、他は日へ
       if (group === 'firstReg'){
         setTimeout(closePicker, 500);
       }else{
@@ -3416,28 +3521,32 @@
       if (!cfg) return;
       const val = String(d).padStart(2,'0');
 
-      // 視覚状態（チェック/色）
       try{
         btn && btn.classList.add('selected');
         btn && btn.setAttribute('aria-selected','true');
       }catch(e){}
 
-      // selectへ反映
       const sel = getEl(cfg.dayId);
       if (sel){ sel.value = val; sel.dispatchEvent(new Event('change')); }
 
-      // 表示ボタンへ反映
       const disp = getEl(cfg.dayBtn);
       if (disp) disp.textContent = d + '日';
 
       // 0.5秒後に閉じて元画面へ
-      setTimeout(closePicker, 500);
+      setTimeout(()=>{
+        closePicker();
+        // 日選択完了後：勤務先へ自動フォーカス（dob→company / md_dob→md_company）
+        if (group === 'dob'){
+          setTimeout(()=>{ try{ document.getElementById('company')?.focus(); }catch(e){} }, 0);
+        }else if (group === 'md_dob'){
+          setTimeout(()=>{ try{ document.getElementById('md_company')?.focus(); }catch(e){} }, 0);
+        }
+      }, 500);
     }
 
     // 公開関数（各対象）
     function openMonthDayPicker(targetGroup, targetPhase){
       group = targetGroup || 'license';
-      // 初期準備の最低限（populateが未完でも安全に動作）
       const cfg = groups[group];
       if (cfg){
         if (!getEl(cfg.monthId)) return openPicker();
@@ -3450,10 +3559,9 @@
       }
       openPicker();
       if (targetPhase === 'day'){
-        // 月未選択なら月から促す
         const mv = cfg && (getEl(cfg.monthId)?.value || '');
         if (!mv && group !== 'firstReg'){ renderMonthGrid(); return; }
-        if (group === 'firstReg'){ /* 初度登録は日なし */ return; }
+        if (group === 'firstReg'){ return; }
         renderDayGrid();
       }
     }
@@ -3789,6 +3897,16 @@
       return s.replace(/[０-９]/g, function(d){ return String.fromCharCode(d.charCodeAt(0) - 0xFEE0); });
     }
 
+    // 汎用フォーカス
+    function safeFocus(id){
+      try{
+        var el = document.getElementById(id);
+        if (el && el.offsetParent && typeof el.focus === 'function'){
+          setTimeout(function(){ try{ el.focus(); }catch(e){} }, 0);
+        }
+      }catch(e){}
+    }
+
     // 次のOTPへ自動フォーカス
     function otpAutoNext(idx){
       try{
@@ -3832,6 +3950,70 @@
       }
     }
 
+    // ============ 手入力の完了で次フィールドに移動（Zip→Addr→Phone→DobYear） ============
+    function digitsOnly(str){
+      return String(str || '').replace(/[^\d０-９]/g,'').replace(/[０-９]/g, function(d){ return String.fromCharCode(d.charCodeAt(0) - 0xFEE0); });
+    }
+    function bindManualFocusChain(){
+      try{
+        // 1) お客様側
+        var zip      = document.getElementById('zip');
+        var addr     = document.getElementById('addr');
+        var phone    = document.getElementById('cust_phone');
+        var dobYear  = document.getElementById('dobYear');
+
+        // 2) 主運転者側
+        var md_zip     = document.getElementById('md_zip');
+        var md_addr    = document.getElementById('md_addr');
+        var md_phone   = document.getElementById('md_phone');
+        var md_dobYear = document.getElementById('md_dobYear');
+
+        // 共通バインダ：Enter で移動、blur でも値があれば移動
+        function chainOnEnterAndBlur(srcEl, nextId){
+          if (!srcEl || !nextId) return;
+          srcEl.addEventListener('keydown', function(e){
+            if (e.key === 'Enter'){
+              e.preventDefault();
+              // 値があるときだけ遷移。空なら遷移しない（誤移動防止）
+              var val = (srcEl.value || '').trim();
+              if (val) safeFocus(nextId);
+            }
+          });
+          srcEl.addEventListener('blur', function(){
+            try{
+              var val = (srcEl.value || '').trim();
+              if (val) safeFocus(nextId);
+            }catch(e){}
+          });
+        }
+
+        // 郵便番号：7桁入力時点でも即時遷移（input監視）
+        function chainZipInput(zipEl, nextId){
+          if (!zipEl || !nextId) return;
+          zipEl.addEventListener('input', function(){
+            try{
+              var d = digitsOnly(zipEl.value);
+              if (d.length >= 7){
+                safeFocus(nextId);
+              }
+            }catch(e){}
+          });
+        }
+
+        // お客様側のチェーン
+        chainZipInput(zip, 'addr');
+        chainOnEnterAndBlur(zip, 'addr');
+        chainOnEnterAndBlur(addr, 'cust_phone');
+        chainOnEnterAndBlur(phone, 'dobYear');
+
+        // 主運転者側のチェーン
+        chainZipInput(md_zip, 'md_addr');
+        chainOnEnterAndBlur(md_zip, 'md_addr');
+        chainOnEnterAndBlur(md_addr, 'md_phone');
+        chainOnEnterAndBlur(md_phone, 'md_dobYear');
+      }catch(e){}
+    }
+
     // 使い勝手向上（Enterキー送信、初期バインド）
     function bindOtpUX(){
       try{
@@ -3860,8 +4042,11 @@
       }catch(e){}
     }
 
-    // DOM準備時にUXバインド
-    document.addEventListener('DOMContentLoaded', bindOtpUX);
+    // DOM準備時にUXバインド＋手入力チェーンをセット
+    document.addEventListener('DOMContentLoaded', function(){
+      bindOtpUX();
+      bindManualFocusChain();
+    });
 
     // モジュール公開 + 互換グローバル
     App.modules.inputAssist = { otpAutoNext, validateOtpLogin };
@@ -3995,29 +4180,32 @@
       switch (title) {
         case '手続き開始':
           return '<ul class="list">' +
+                   '<li>「音声解説」「文字拡大」「ヘルプ」「AIと対話」が利用できます（全画面でご利用できます）</li>' +
+                   '<li>ヘルプからは各画面の概要を確認できます（全画面でご利用できます）</li>' +
+　　　　　　 　　 '<li>進捗バーで操作の進み具合と残りの予測時間を確認できます（全画面でご利用できます）</li>' +
                    '<li>公式サイトと送信元ドメインをご案内します。偽サイトの見分け方はリンクから確認できます</li>' +
-                   '<li>使い方の動画・音声解説・文字拡大・AI相談が利用できます</li>' +
+                   '<li>使い方の60秒動画をご覧いただけます</li>' +
                    '<li>準備物（免許証・車検証・メールアドレス）をご用意ください</li>' +
                  '</ul>';
         case 'ログイン':
           return '<ul class="list">' +
                    '<li>電話番号またはメールアドレスを入力して認証コード（4桁）を受け取ります</li>' +
-                   '<li>届いた認証コードを入力して「認証して次へ」を押してください</li>' +
+                   '<li>届いた認証コードを入力して「次へ（お車の情報）」を押してください</li>' +
                  '</ul>';
         case 'お車の情報':
           return '<ul class="list">' +
                    '<li>車名・型式・ナンバーの登録内容を確認します</li>' +
-                   '<li>変更がなければ「変更なし」、変更する場合は「車検証の情報」へ進んでください</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「変更する」へ進んでください</li>' +
                  '</ul>';
         case '車検証の情報':
           return '<ul class="list">' +
-                   '<li>カメラ読み取りまたは手入力（選択式・音声入力）を選べます</li>' +
+                   '<li>カメラ読み取りまたは手入力（選択式）を選べます</li>' +
                    '<li>初度登録は年・月を選択します。当年は今月まで、未来月は選べません</li>' +
                  '</ul>';
         case '免許証の情報を確認する':
           return '<ul class="list">' +
                    '<li>免許証の色と有効期限を確認します</li>' +
-                   '<li>変更がなければ「変更なし」、変更する場合は「免許証の色」へ進みます</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「変更する」へ進んでください</li>' +
                  '</ul>';
         case '免許証の色':
           return '<ul class="list">' +
@@ -4026,71 +4214,73 @@
                  '</ul>';
         case 'お客様情報の確認':
           return '<ul class="list">' +
-                   '<li>氏名・住所・電話番号・生年月日・勤務先などの登録内容を確認します</li>' +
-                   '<li>変更がある場合は「お客様情報の編集」に進んでください</li>' +
+                   '<li>氏名・性別・住所・電話番号・生年月日・勤務先の登録内容を確認します</li>' +
+                   '<li>変更がある場合は「変更する」へ進んでください</li>' +
                  '</ul>';
         case 'お客様情報の編集':
           return '<ul class="list">' +
-                   '<li>氏名・住所・電話・生年月日などを入力します</li>' +
+                   '<li>氏名・性別・住所・電話・生年月日・勤務先などを入力します</li>' +
                    '<li>音声入力が利用できます（郵便番号は7桁で市区の住所候補が入ります）</li>' +
                    '<li>生年月日の月・日はポップアップで選択します</li>' +
                  '</ul>';
         case '主に運転する方（記名被保険者）':
           return '<ul class="list">' +
                    '<li>主に運転する方の登録内容を確認します</li>' +
-                   '<li>変更がなければ「変更なし」、変更する場合は「主に運転する方の編集」へ進みます</li>' +
+                   '<li>変更がなければ「変更なし」、変更する場合は「変更する」へ進んでください</li>' +
                  '</ul>';
         case '主に運転する方の編集':
           return '<ul class="list">' +
-                   '<li>氏名・住所・電話・生年月日などを入力します</li>' +
+                   '<li>氏名・性別・住所・電話・生年月日・勤務先などを入力します</li>' +
                    '<li>音声入力が利用できます（郵便番号は7桁で市区の住所候補が入ります）</li>' +
                    '<li>生年月日の月・日はポップアップで選択します</li>' +
                  '</ul>';
         case '運転者の範囲と年齢条件':
           return '<ul class="list">' +
                    '<li>運転者の範囲と年齢条件の登録内容を確認します</li>' +
-                   '<li>変更がある場合は「運転者範囲・年齢条件の編集」へ進んでください</li>' +
+                   '<li>変更がある場合は変更する場合は「変更する」へ進んでください</li>' +
                  '</ul>';
         case '運転者範囲・年齢条件の編集':
           return '<ul class="list">' +
                    '<li>運転者の範囲（本人のみ等）と年齢条件（26歳以上等）を選びます</li>' +
-                   '<li>決定したら「OK」で次へ進みます</li>' +
+                   '<li>決定したら「次へ（走行距離等）」へ進んでください</li>' +
                  '</ul>';
         case '使用目的・走行距離':
           return '<ul class="list">' +
                    '<li>使用目的（通勤・レジャー等）と年間走行距離の目安を選びます</li>' +
-                   '<li>変更がなければ「次へ」で進んでください</li>' +
+                   '<li>選択が終わったら「次へ（現在の補償内容）」へ進んでください</li>' +
                  '</ul>';
         case '現在の内容を確認':
           return '<ul class="list">' +
-                   '<li>現在の補償内容・保険期間・等級を確認します</li>' +
-                   '<li>補償のポイント動画や詳細リンクから解説が見られます</li>' +
+                   '<li>現在の補償内容・保険期間・等級などを確認します</li>' +
+                   '<li>補償のポイント60秒動画や「補償の詳細はコチラ」のリンクから補償内容の詳細が見られます</li>' +
                  '</ul>';
         case '現在と同じ補償内容で更新した場合の保険料':
           return '<ul class="list">' +
-                   '<li>現在と同じ補償内容での保険料（更新後）を確認します</li>' +
-                   '<li>主な理由の詳細は「詳細はコチラ」からご覧ください</li>' +
+                   '<li>現在と同じ補償内容で更新した場合の保険料（更新後）を確認します</li>' +
+                   '<li>金額か変わる主な理由の詳細は「詳細はコチラ」からご覧ください</li>' +
                  '</ul>';
         case '更新方法の選択':
           return '<ul class="list">' +
-                   '<li>同じ補償で更新、別プラン、項目ごとの設定から選べます</li>' +
-                   '<li>おすすめプラン（充実／保険料重視）も用意しています</li>' +
+                   '<li>同じ補償で更新、別プランから選ぶ、項目ごとの設定の３つから選べます</li>' +
+                   '<li>別プランでは補償充実プランと保険料重視プランをご用意しています</li>' +
                  '</ul>';
         case '別のプランから選ぶ':
           return '<ul class="list">' +
                    '<li>タブで「安心重視」「保険料重視」を切り替えます</li>' +
-                   '<li>人身傷害・車両保険・特約の変更は「➡」で表示されます</li>' +
-                   '<li>選んだプランで進む／項目ごとに設定に進むを選べます</li>' +
+                   '<li>人身傷害・車両保険・特約に変更がある場合は「➡」で表示されます</li>' +
+                   '<li>「このプランを選ぶ」か「項目ごとに設定する」を選べます</li>' +
                  '</ul>';
         case '人身傷害の金額を選ぶ':
           return '<ul class="list">' +
                    '<li>人身傷害の金額を選びます。無制限や1億円なども選択可能です</li>' +
-                   '<li>変更すると月額・年額と差額が更新されます</li>' +
+                   '<li>人身傷害の解説は「？」ボタンでご覧ください</li>' +
+　　　　　　　　　'<li>変更すると月額・年額と差額が更新されます</li>' +
                  '</ul>';
         case '車両保険の金額を選ぶ':
           return '<ul class="list">' +
                    '<li>車両保険の金額を選び、自己負担額（免責）を指定します</li>' +
-                   '<li>変更すると月額・年額と差額が更新されます</li>' +
+                   '<li>自己負担（免責）の解説は「？」ボタンでご覧ください</li>' +
+　　　　　　　　　'<li>変更すると月額・年額と差額が更新されます</li>' +
                  '</ul>';
         case '特約の付け外し':
           return '<ul class="list">' +
@@ -4100,13 +4290,14 @@
         case '最終見積のまとめ':
           return '<ul class="list">' +
                    '<li>補償内容の変更は「➡」で表示されます</li>' +
-                   '<li>人身傷害・車両保険・特約の差分を確認してください</li>' +
+                   '<li>人身傷害・車両保険・特約の差分と保険料を確認してください</li>' +
                    '<li>修正がある場合は「修正へ戻る」から各項目へ戻れます</li>' +
                  '</ul>';
         case '重要なご説明':
           return '<ul class="list">' +
                    '<li>大切なポイントを短くまとめています。必要に応じて各章をタップで詳しく確認できます</li>' +
                    '<li>全文の確認やPDF受け取りの設定もここで行えます</li>' +
+　　　　　　　　　'<li>PDFで受け取るとパソコン画面で見たり印刷してご覧いただけます</li>' +
                  '</ul>';
         case '連絡方法を選ぶ':
           return '<ul class="list">' +
@@ -4115,19 +4306,19 @@
                  '</ul>';
         case '受け取り方法を選ぶ':
           return '<ul class="list">' +
+                   '<li>ご契約のしおり（約款）・証券・更新案内・申込書控えの受け取り方法を選びます</li>' +
                    '<li>一括選択で全体の設定ができます。個別の変更も可能です</li>' +
-                   '<li>約款・証券・更新案内・申込書控えの受け取り方法を選びます</li>' +
-                   '<li>迷ったら各項目の「i」ボタンで用語の説明をご覧ください</li>' +
+                   '<li>迷ったら各項目の「？」ボタンで用語の説明をご覧ください</li>' +
                  '</ul>';
         case '同意と申込':
           return '<ul class="list">' +
-                   '<li>内容をご確認のうえ、チェックを入れて「内容に同意して申し込む」を押してください</li>' +
-                   '<li>最終のお申込内容はリンクから確認できます</li>' +
+                   '<li>最終のお申込内容をご確認のうえ、チェックを入れて「内容に同意して申し込む」を押してください</li>' +
+                   '<li>最終のお申込内容は「最終のお申込内容はコチラ」のリンクから確認できます</li>' +
                  '</ul>';
         case '申込完了':
           return '<ul class="list">' +
-                   '<li>受け取り方法の設定に応じて、約款・証券・控えPDFの送付内容が表示されます</li>' +
-                   '<li>次へ（払込方法の確認）から手続きを続けられます</li>' +
+                   '<li>受け取り方法の設定に応じて、ご契約のしおり（約款）・証券・申込書控えPDFの送付内容が表示されます</li>' +
+                   '<li>「次へ（払込方法の確認）」から手続きを続けられます</li>' +
                  '</ul>';
         default:
           return fallback;
@@ -4233,6 +4424,15 @@
 <!-- START: js-license-color-helper -->
 <script>
   (function(){
+    function safeFocus(id){
+      try{
+        const el = document.getElementById(id);
+        if (el && el.offsetParent && typeof el.focus === 'function'){
+          setTimeout(()=>{ try{ el.focus(); }catch(e){} }, 0);
+        }
+      }catch(e){}
+    }
+
     if (typeof window.selectColor !== 'function'){
       window.selectColor = function(name, el){
         // ボタンのactive切り替え
@@ -4243,6 +4443,16 @@
 
         // 可能ならトースト通知（未定義時は無視）
         try{ if (typeof showToast === 'function') showToast(name + 'を選択しました'); }catch(e){}
+
+        // フォーカス移動：免許証の色選択後 → 有効期限の年
+        safeFocus('licenseYear');
+      };
+    } else {
+      // 既存 selectColor がある場合は、終了時にフォーカスだけ追加
+      const orig = window.selectColor;
+      window.selectColor = function(name, el){
+        try{ orig(name, el); }catch(e){}
+        safeFocus('licenseYear');
       };
     }
   })();
@@ -4252,6 +4462,49 @@
 <!-- START: js-vehicle-handlers -->
 <script>
 (function(){
+  function safeFocus(id){
+    try{
+      const el = document.getElementById(id);
+      if (el && el.offsetParent && typeof el.focus === 'function'){
+        setTimeout(()=>{ try{ el.focus({preventScroll:true}); }catch(e){ try{ el.focus(); }catch(_){}} }, 0);
+      }
+    }catch(e){}
+  }
+
+  // select向けの安定フォーカス（iOSでの一瞬のピッカー開閉→フォーカス消失を抑止）
+  function focusSelectSafely(id){
+    try{
+      const el = document.getElementById(id);
+      if (!el || !el.offsetParent) return;
+
+      // 直前のアクティブ要素を確実にblurしてから実行
+      try{
+        if (document.activeElement && typeof document.activeElement.blur === 'function'){
+          document.activeElement.blur();
+        }
+      }catch(e){}
+
+      // ネイティブドロップダウンの自動オープン抑止のため、一時的にpointer-eventsを無効化
+      const prevPointerEvents = el.style.pointerEvents;
+      el.style.pointerEvents = 'none';
+
+      // レイアウト確定後に2段階でフォーカス（タイミング依存の端末で安定化）
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          setTimeout(()=>{
+            try{
+              el.focus({preventScroll:true});
+            }catch(e){
+              try{ el.focus(); }catch(_){}
+            }
+            // 短時間の猶予後にpointer-eventsを戻す
+            setTimeout(()=>{ el.style.pointerEvents = prevPointerEvents || ''; }, 160);
+          }, 40);
+        });
+      });
+    }catch(e){}
+  }
+
   if (typeof window.onMakerChange !== 'function') {
     window.onMakerChange = function(){
       try{
@@ -4266,6 +4519,18 @@
           if (modelSel) modelSel.value = '';
           if (typeSel)  typeSel.value  = '';
         }
+        // フォーカス移動：メーカー選択後 → 車名（安定版）
+        if (maker){ focusSelectSafely('model'); }
+      }catch(e){}
+    };
+  } else {
+    // 既存がある場合は上書き（安定版フォーカスに差し替え）
+    const orig = window.onMakerChange;
+    window.onMakerChange = function(){
+      try{ orig(); }catch(e){}
+      try{
+        const maker = document.getElementById('maker')?.value || '';
+        if (maker){ focusSelectSafely('model'); }
       }catch(e){}
     };
   }
@@ -4280,11 +4545,22 @@
         if (typeSel && model === 'prius' && !typeSel.value){
           typeSel.value = 'ZVW50';
         }
+        // フォーカス移動：車名選択後 → 型式（安定版）
+        if (model){ focusSelectSafely('type'); }
+      }catch(e){}
+    };
+  } else {
+    const orig2 = window.onModelChange;
+    window.onModelChange = function(){
+      try{ orig2(); }catch(e){}
+      try{
+        const model = document.getElementById('model')?.value || '';
+        if (model){ focusSelectSafely('type'); }
       }catch(e){}
     };
   }
 
-  // ② 手入力時の住所補完（上書き・重複なし）
+  // 住所補完（お客様）：上書き・重複なし
   if (typeof window.mockZipToAddress !== 'function') {
     window.mockZipToAddress = function(zip){
       try{
@@ -4346,6 +4622,18 @@
       }
     };
   }
+
+  // 型式選択 → 初度登録年 へフォーカス（安定版）
+  document.addEventListener('DOMContentLoaded', function(){
+    try{
+      const typeSel = document.getElementById('type');
+      if (typeSel){
+        typeSel.addEventListener('change', function(){
+          if (typeSel.value){ focusSelectSafely('firstRegYear'); }
+        });
+      }
+    }catch(e){}
+  });
 })();
 </script>
 <!-- END: js-vehicle-handlers -->
@@ -4360,6 +4648,15 @@
     {keys:['notice_web','notice_paper'], label:'次回更新案内'},
     {keys:['pdf_yes','pdf_no'],          label:'申込書控えPDF送付'}
   ];
+
+  function safeFocus(id){
+    try{
+      const el = document.getElementById(id);
+      if (el && el.offsetParent && typeof el.focus === 'function'){
+        setTimeout(()=>{ try{ el.focus(); }catch(e){} }, 0);
+      }
+    }catch(e){}
+  }
 
   function initA11y(){
     document.querySelectorAll('.choiceRow').forEach(row=>{
@@ -4442,6 +4739,15 @@
           b.setAttribute('tabindex', isOn ? '0' : '-1');
         });
       }
+
+      // 性別選択完了後に郵便番号へフォーカス
+      if (willActivate){
+        if (key === 'gender_m' || key === 'gender_f'){
+          safeFocus('zip');
+        } else if (key === 'gender_m2' || key === 'gender_f2'){
+          safeFocus('md_zip');
+        }
+      }
     }catch(e){}
   };
 
@@ -4511,7 +4817,6 @@
         setAll(true);
         goToTitle && goToTitle('同意と申込');
       }else{
-        // 統合後は画面24（受け取り方法を選ぶ）に留まる/戻る
         goToTitle && goToTitle('受け取り方法を選ぶ');
       }
     }catch(e){}
@@ -4610,71 +4915,69 @@
 <!-- START: js-voice-input -->
 <script>
 (function(){
-  // Recognizer core state
-  let recognition = null, recognizing = false, supported = false;
+  // 拡張版 音声入力：氏名/住所/電話/郵便/勤務先/VINに対応
+  // ミニインジケーター表示＋終了時フェードアウト、入力後の自動フォーカス（郵便→住所→電話→生年月日の年）を復活
+  let recognition = null;
+  let recognizing = false;
+  let supported = false;
   let targetFieldId = null;
-  let modeDigitsOnly = false, modeDate = false, modeGender = false;
-  let modeColor = false, modeMaker = false, modeModel = false, modeType = false, modeVin = false;
-  let dateGroup = null, genderGroup = null;
+  let modeDigitsOnly = false;
   let lastFinalTranscript = '';
   let hideStatusTid = null;
 
-  // DOM helpers
   function getEl(id){ try{ return document.getElementById(id); }catch(e){ return null; } }
-  function isActiveId(id){
-    try{ const el = getEl(id); if(!el) return false; const scr = el.closest('.screen'); return !!(scr && scr.classList.contains('active')); }catch(e){ return false; }
-  }
-  function focusId(id){
+  function isActiveField(fieldId){
     try{
-      const el = getEl(id);
-      if (el && isActiveId(id) && typeof el.focus === 'function'){
-        setTimeout(()=>{ try{ el.focus(); }catch(e){} }, 0);
-      }
-    }catch(e){}
+      const el = getEl(fieldId);
+      if (!el) return false;
+      if (!el.offsetParent) return false;
+      const scr = el.closest('.screen');
+      return !!(scr && scr.classList.contains('active'));
+    }catch(e){ return false; }
+  }
+
+  // フッター音声ステータス
+  function showVoiceStatus(){
+    try{ const s=getEl('voiceStatus'); if(s) s.style.display=''; }catch(e){}
   }
   function setStatus(text){
-    try{
-      const s = getEl('voiceStatus');
-      if (s){ s.textContent = String(text || ''); s.style.display = ''; }
-    }catch(e){}
-  }
-  function toggleButtons(isRecording){
-    try{
-      const start = getEl('btnStartVoice'), stop = getEl('btnStopVoice');
-      if(start) start.style.display = isRecording ? 'none' : '';
-      if(stop)  stop.style.display  = isRecording ? '' : 'none';
-    }catch(e){}
+    const s = getEl('voiceStatus');
+    if (s){ s.textContent = String(text || ''); showVoiceStatus(); }
   }
   function applyShrinkThenHide(el){
     try{
       if (!el) return;
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduced){ el.style.display = 'none'; el.classList.remove('fadeShrink'); return; }
+      if (prefersReduced){
+        el.style.display = 'none';
+        el.classList.remove('fadeShrink');
+        return;
+      }
       el.classList.add('fadeShrink');
       setTimeout(()=>{ el.style.display = 'none'; el.classList.remove('fadeShrink'); }, 250);
     }catch(e){}
   }
-  function hideVoiceStatusNow(){
+  function hideVoiceStatusDelayed(ms){
     try{
       clearTimeout(hideStatusTid);
-      const s = getEl('voiceStatus'); if (!s) return;
-      applyShrinkThenHide(s);
+      hideStatusTid = setTimeout(()=>{
+        const s=getEl('voiceStatus');
+        if(s) applyShrinkThenHide(s);
+      }, ms||0);
     }catch(e){}
   }
 
-  // Mini indicator next to field
+  // ミニインジケーター（フィールド近傍）
   function ensureIndicatorHost(fieldId){
-    try{
-      const inp = getEl(fieldId); if(!inp) return null;
-      if (!inp.__voiceIndicator){
-        const ind = document.createElement('div');
-        ind.className = 'voiceIndicator ready';
-        ind.innerHTML = '<span class="dot"></span><span class="text">音声の準備中…</span>';
-        inp.insertAdjacentElement('afterend', ind);
-        inp.__voiceIndicator = ind;
-      }
-      return inp.__voiceIndicator;
-    }catch(e){ return null; }
+    const inp = getEl(fieldId); if(!inp) return null;
+    if (!inp.__voiceIndicator){
+      const ind = document.createElement('div');
+      ind.className = 'voiceIndicator ready';
+      ind.innerHTML = '<span class="dot"></span><span class="text">音声の準備中…</span>';
+      inp.insertAdjacentElement('afterend', ind);
+      inp.__voiceIndicator = ind;
+    }
+    return inp.__voiceIndicator;
   }
   function setIndicator(fieldId, stateText, stateClass){
     try{
@@ -4699,7 +5002,27 @@
     }catch(e){}
   }
 
-  // Normalizers
+  // 入力後の自動フォーカス（郵便→住所→電話→生年月日の年）
+  function focusNextForField(fid){
+    try{
+      const map = {
+        'zip':        'addr',
+        'addr':       'cust_phone',
+        'cust_phone': 'dobYear',
+        'md_zip':     'md_addr',
+        'md_addr':    'md_phone',
+        'md_phone':   'md_dobYear'
+      };
+      const nextId = map[fid];
+      if (!nextId) return;
+      const nextEl = getEl(nextId);
+      if (nextEl && isActiveField(nextId) && typeof nextEl.focus === 'function'){
+        setTimeout(()=>{ try{ nextEl.focus(); }catch(e){} }, 0);
+      }
+    }catch(e){}
+  }
+
+  // 正規化ヘルパー
   function normalizeDashesAndSpaces(s){
     let t = String(s || '');
     t = t.replace(/ー|−|―|‐|–|—/g, '-');
@@ -4707,7 +5030,7 @@
     t = t.replace(/スペース|空白|ブランク/gi, ' ');
     return t;
   }
-  function normalizeJapaneseNumberSpeech(s){
+  function normalizeDigitsJa(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
     t = t.replace(/の|ノ|ー/g, '');
@@ -4732,17 +5055,11 @@
   function normalizeVinSpeech(s){
     if (!s) return '';
     let t = normalizeDashesAndSpaces(s);
-    // 全角→半角英数字
     t = t.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch=> String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
-    // 句読点・空白除去
     t = t.replace(/[、。.,\s]/g, '');
-    // 許容：英数字＋ダッシュのみ
     t = t.replace(/[^A-Za-z0-9-]/g, '');
-    // ダッシュ連続を1つに
     t = t.replace(/-+/g, '-');
-    // 大文字統一
-    t = t.toUpperCase();
-    return t;
+    return t.toUpperCase();
   }
   function formatPhoneDisplay(d){
     const p = String(d || '');
@@ -4756,375 +5073,231 @@
     return z;
   }
 
-  // Era & date parsing
-  function eraToYear(label, num){
-    const n = Number(num||0);
-    if (!n) return null;
-    if (/令和/.test(label)) return 2018 + n;
-    if (/平成/.test(label)) return 1988 + n;
-    if (/昭和/.test(label)) return 1925 + n;
-    return null;
-  }
-  function toDigitsJa(s){
-    let t = String(s||'');
-    const map = [
-      {re:/十/gi, rep:'10'},
-      {re:/〇|零/gi, rep:'0'}, {re:/一/gi, rep:'1'}, {re:/二/gi, rep:'2'}, {re:/三/gi, rep:'3'},
-      {re:/四/gi, rep:'4'}, {re:/五/gi, rep:'5'}, {re:/六/gi, rep:'6'}, {re:/七/gi, rep:'7'},
-      {re:/八/gi, rep:'8'}, {re:/九/gi, rep:'9'}
-    ];
-    map.forEach(m=> t = t.replace(m.re, m.rep));
-    return t;
-  }
-  function parseSpokenDate(raw){
-    const s0 = String(raw||'').trim();
-    let s = s0.replace(/年|ねん/gi,'年').replace(/月|がつ/gi,'月').replace(/日|にち/gi,'日');
-    s = s.replace(/[．。]/g,' ').replace(/\s+/g,' ');
-    // Era
-    const eraMatch = s.match(/(令和|平成|昭和)\s*([0-9〇一二三四五六七八九十]+)\s*年/);
-    let year = null;
-    if (eraMatch){
-      const num = toDigitsJa(eraMatch[2]);
-      year = eraToYear(eraMatch[1], num);
-    }
-    // Western
-    const west = s.match(/([12][0-9]{3})\s*年/);
-    if (!year && west) year = Number(west[1]);
-    // Month
-    let month = null;
-    const mm = s.match(/([0-9]{1,2}|[〇一二三四五六七八九十]+)\s*月/);
-    if (mm){
-      const mDigits = mm[1].match(/[〇一二三四五六七八九十]/) ? Number(toDigitsJa(mm[1])) : Number(mm[1]);
-      if (mDigits>=1 && mDigits<=12) month = String(mDigits).padStart(2,'0');
-    }
-    // Day
-    let day = null;
-    const dd = s.match(/([0-9]{1,2}|[〇一二三四五六七八九十]+)\s*日/);
-    if (dd){
-      const dDigits = dd[1].match(/[〇一二三四五六七八九十]/) ? Number(toDigitsJa(dd[1])) : Number(dd[1]);
-      if (dDigits>=1 && d<=31) day = String(dDigits).padStart(2,'0');
-    }
-    // Tokens fallback
-    if (!month){
-      const tokens = s.replace(/[^\d\s]/g,' ').split(' ').filter(Boolean);
-      if (tokens.length>=2){
-        const y = Number(tokens[0]); const m = Number(tokens[1]);
-        if (!year && y>=1900 && y<=2100) year = y;
-        if (m>=1 && m<=12) month = String(m).padStart(2,'0');
-        if (tokens.length>=3){
-          const d=Number(tokens[2]);
-          if (d>=1 && d<=31) day = String(d).padStart(2,'0');
-        }
-      }
-    }
-    return { year, month, day };
-  }
-  const DATE_IDS = {
-    license:{year:'licenseYear',month:'licenseMonth',day:'licenseDay',monthBtn:'licenseMonthDisplay',dayBtn:'licenseDayDisplay'},
-    dob:{year:'dobYear',month:'dobMonth',day:'dobDay',monthBtn:'dobMonthDisplay',dayBtn:'dobDayDisplay'},
-    md_dob:{year:'md_dobYear',month:'md_dobMonth',day:'md_dobDay',monthBtn:'md_dobMonthDisplay',dayBtn:'md_dobDayDisplay'},
-    firstReg:{year:'firstRegYear',month:'firstRegMonth',day:null,monthBtn:'firstRegMonthDisplay',dayBtn:null}
-  };
-  function reflectDate(group,y,m,d){
-    const ids=DATE_IDS[group]; if(!ids) return;
-    if(y){ const ySel=getEl(ids.year); if(ySel){ ySel.value=String(y); ySel.dispatchEvent(new Event('change')); } }
-    if(m){ const mSel=getEl(ids.month); if(mSel){ mSel.value=m; mSel.dispatchEvent(new Event('change')); } const mBtn=getEl(ids.monthBtn); if(mBtn) mBtn.textContent=`${Number(m)}月`; }
-    if(ids.day && d){ const dSel=getEl(ids.day); if(dSel){ dSel.value=d; dSel.dispatchEvent(new Event('change')); } const dBtn=getEl(ids.dayBtn); if(dBtn) dBtn.textContent=`${Number(d)}日`; }
-  }
+  function putValue(fieldId, valueText){
+    if (!isActiveField(fieldId)) return;
+    const inp = getEl(fieldId);
+    if(!inp) return;
+    let v = String(valueText||'').trim();
 
-  // Gender & color & maker/model/type
-  function parseGender(raw){ const s=String(raw||''); if(/[女|女性|じょせい|おんな]/i.test(s)) return 'female'; if(/[男|男性|だんせい|おとこ]/i.test(s)) return 'male'; return null; }
-  function forceSelectGender(group, gender){
-    try{
-      const maleId   = (group==='cust') ? 'choice_gender_m'  : 'choice_gender_m2';
-      const femaleId = (group==='cust') ? 'choice_gender_f'  : 'choice_gender_f2';
-      const chosenId = (gender==='female') ? femaleId : maleId;
-      const otherId  = (gender==='female') ? maleId   : femaleId;
-      const chosenEl = document.getElementById(chosenId);
-      const otherEl  = document.getElementById(otherId);
-      if (chosenEl){
-        chosenEl.classList.add('active');
-        chosenEl.setAttribute('aria-checked','true');
-        chosenEl.setAttribute('tabindex','0');
-      }
-      if (otherEl){
-        otherEl.classList.remove('active');
-        otherEl.setAttribute('aria-checked','false');
-        otherEl.setAttribute('tabindex','-1');
-      }
-    }catch(e){}
-  }
-  function chooseColorByName(name){ try{ const btn=Array.from(document.querySelectorAll('.colorBtn')).find(b=>(b.textContent||'').includes(name)); if(btn) btn.click(); }catch(e){} }
-  function parseColor(raw){ const s=String(raw||''); if(/ゴールド|金|きん/i.test(s))return'ゴールド'; if(/ブルー|青|あお/i.test(s))return'ブルー'; if(/グリーン|緑|みどり/i.test(s))return'グリーン'; return null; }
-  function setSelectByLabel(selectId, map, fallback){
-    try{
-      const sel=getEl(selectId); if(!sel) return;
-      const speech=String(lastFinalTranscript||'').trim();
-      let key=null; for(const k in map){ if(map[k].test(speech)){ key=k; break; } }
-      if(!key) key=fallback;
-      const val=key;
-      if(Array.from(sel.options).some(o=>String(o.value)===String(val))){ sel.value=String(val); sel.dispatchEvent(new Event('change')); }
-    }catch(e){}
-  }
-
-  // Field putValue (keeps address auto-fill behavior)
-  function putValue(fieldId,valueText){
-    if (modeDate||modeGender||modeColor||modeMaker||modeModel||modeType||modeVin) return;
-    if (!isActiveId(fieldId)) return;
-    const inp=getEl(fieldId); if(!inp) return;
-    let v=String(valueText||'').trim();
-
-    if (fieldId==='cust_phone' || fieldId==='md_phone'){ v=formatPhoneDisplay(normalizeJapaneseNumberSpeech(v)); }
-    else if (fieldId==='zip' || fieldId==='md_zip'){ v=formatZipDisplay(normalizeJapaneseNumberSpeech(v)); }
-    else if (fieldId==='vin'){ v=normalizeVinSpeech(v); }
-    else {
+    if (fieldId === 'cust_phone' || fieldId === 'md_phone'){
+      v = formatPhoneDisplay(normalizeDigitsJa(v));
+    } else if (fieldId === 'zip' || fieldId === 'md_zip'){
+      v = formatZipDisplay(normalizeDigitsJa(v));
+    } else if (fieldId === 'vin'){
+      v = normalizeVinSpeech(v);
+    } else {
       v = normalizeDashesAndSpaces(v);
       v = v.replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch=> String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
     }
-    inp.value=v;
 
-    // address auto-fill only once
+    inp.value = v;
+
+    // 住所補完（郵便7桁時のみ、未入力のとき一度だけ実行）
     try{
-      if(fieldId==='zip'){
-        const addr=getEl('addr'); const digits=v.replace(/[^\d]/g,'');
-        if(addr && !addr.value && typeof window.mockZipToAddress==='function' && digits.length===7){ window.mockZipToAddress(digits); }
+      if (fieldId === 'zip'){
+        const addrEl = getEl('addr');
+        const zipDigits = v.replace(/[^\d]/g,'');
+        if (addrEl && !addrEl.value && typeof window.mockZipToAddress === 'function' && zipDigits.length === 7){
+          window.mockZipToAddress(zipDigits);
+        }
       }
-      if(fieldId==='md_zip'){
-        const addr=getEl('md_addr'); const digits=v.replace(/[^\d]/g,'');
-        if(addr && !addr.value && typeof window.mdZipToAddress==='function' && digits.length===7){ window.mdZipToAddress(digits); }
+      if (fieldId === 'md_zip'){
+        const addrEl = getEl('md_addr');
+        const zipDigits = v.replace(/[^\d]/g,'');
+        if (addrEl && !addrEl.value && typeof window.mdZipToAddress === 'function' && zipDigits.length === 7){
+          window.mdZipToAddress(zipDigits);
+        }
       }
     }catch(e){}
 
-    // フォーカス遷移（復元）
-    try{
-      if (fieldId === 'zip')        { focusId('addr'); }
-      else if (fieldId === 'addr')  { focusId('cust_phone'); }
-      else if (fieldId === 'cust_phone') { focusId('dobYear'); }
-
-      else if (fieldId === 'md_zip'){ focusId('md_addr'); }
-      else if (fieldId === 'md_addr'){ focusId('md_phone'); }
-      else if (fieldId === 'md_phone'){ focusId('md_dobYear'); }
-    }catch(e){}
+    // 入力後：次フィールドへ自動移動
+    focusNextForField(fieldId);
   }
 
-  // Recognizer init
+  // 未対応端末ガイド
+  function softFallbackGuide(){
+    if (targetFieldId && isActiveField(targetFieldId)){
+      try{
+        const el = getEl(targetFieldId);
+        if (el && typeof el.focus === 'function') el.focus();
+        setStatus('この端末ではブラウザの音声認識が未対応です。キーボードのマイクをご利用ください。');
+        if (typeof showToast === 'function') showToast('音声認識は未対応です。キーボードのマイクをご利用ください');
+        setIndicator(targetFieldId, '未対応：キーボードのマイクをご利用ください', 'ready');
+      }catch(e){}
+    }
+    recognizing = false;
+    hideVoiceStatusDelayed(0);
+    hideIndicator(targetFieldId);
+    targetFieldId = null;
+    modeDigitsOnly = false;
+    lastFinalTranscript = '';
+  }
+
+  // 疑似入力（デモ用フォールバック）
+  function fallbackMock(reasonText){
+    try{ setStatus(reasonText || '音声認識で問題が発生しました'); }catch(e){}
+    if (targetFieldId && isActiveField(targetFieldId)){
+      switch (targetFieldId) {
+        case 'cust_name':
+        case 'mainDriverName': putValue(targetFieldId, '山田 花子'); break;
+        case 'zip':
+        case 'md_zip':         putValue(targetFieldId, '1050001'); break;
+        case 'addr':
+        case 'md_addr':        putValue(targetFieldId, '東京都港区赤坂'); break;
+        case 'cust_phone':
+        case 'md_phone':       putValue(targetFieldId, '09012345678'); break;
+        case 'company':
+        case 'md_company':     putValue(targetFieldId, 'ABC株式会社'); break;
+        case 'vin':            putValue(targetFieldId, 'ZVW50-1234567'); break;
+        default: break;
+      }
+    }
+    recognizing = false;
+    hideVoiceStatusDelayed(0);
+    hideIndicator(targetFieldId);
+    targetFieldId = null;
+    modeDigitsOnly = false;
+    lastFinalTranscript = '';
+  }
+
   function initRecognizer(){
     try{
-      const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-      if(!SR){ supported=false; return; }
-      recognition=new SR(); supported=true;
-      recognition.lang='ja-JP'; recognition.continuous=false; recognition.interimResults=true;
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){ supported = false; return; }
+      recognition = new SR();
+      recognition.lang = 'ja-JP';
+      recognition.continuous = false;
+      recognition.interimResults = true;
 
-      recognition.onstart=function(){
-        recognizing=true; lastFinalTranscript='';
-        setStatus('録音中です。お話しください…'); toggleButtons(true);
+      recognition.onstart = function(){
+        recognizing = true;
+        lastFinalTranscript = '';
+        setStatus('録音中です。お話しください…');
         if (targetFieldId) setIndicator(targetFieldId, '録音中…', 'recording');
       };
-      recognition.onerror=function(evt){
-        recognizing=false; toggleButtons(false);
-        fallbackMock('音声認識でエラーが発生しました。');
+      recognition.onerror = function(evt){
+        recognizing = false;
+        if(evt && evt.error === 'not-allowed'){
+          setStatus('マイク権限が拒否されました。権限を許可してください。');
+          setIndicator(targetFieldId, '権限が必要です', 'ready');
+          fallbackMock('マイク権限が拒否されました。');
+        }else{
+          setStatus('音声認識でエラーが発生しました。');
+          setIndicator(targetFieldId, 'エラーが発生しました', 'ready');
+          fallbackMock('音声認識でエラーが発生しました。');
+        }
       };
-      recognition.onend=function(){
-        recognizing=false; toggleButtons(false);
+      recognition.onend = function(){
+        recognizing = false;
 
-        if (modeDate && dateGroup){
-          const {year,month,day}=parseSpokenDate(lastFinalTranscript);
-          if (year||month||day){ reflectDate(dateGroup,year,month,day); }
-          else { fallbackMock('入力が確認できませんでした。'); }
-          if (dateGroup==='dob'){ focusId('company'); }
-          if (dateGroup==='md_dob'){ focusId('md_company'); }
-        } else if (modeGender && genderGroup){
-          const g=parseGender(lastFinalTranscript)||'male';
-          forceSelectGender(genderGroup, g);
-          if (genderGroup==='cust'){ focusId('zip'); } else { focusId('md_zip'); }
-        } else if (modeColor){
-          const col=parseColor(lastFinalTranscript)||'ブルー'; chooseColorByName(col);
-          focusId('licenseYear');
-        } else if (modeMaker){
-          const map={ 'toyota':/(トヨタ|toyota|豊田)/i, 'mazda':/(マツダ|mazda)/i, 'suzuki':/(スズキ|suzuki)/i, 'mercedes':/(ベンツ|メルセデス|mercedes|benz)/i };
-          setSelectByLabel('maker',map,'toyota'); focusId('model');
-        } else if (modeModel){
-          const map={ 'crown':/(クラウン|crown)/i, 'prius':/(プリウス|prius)/i, 'corolla':/(カローラ|corolla)/i };
-          setSelectByLabel('model',map,'prius'); focusId('type');
-        } else if (modeType){
-          const map={ 'ZVW50':/(ZVW50)/i, 'DAA-ZVW55':/(DAA-?ZVW55|ZVW55)/i };
-          setSelectByLabel('type',map,'DAA-ZVW55'); focusId('firstRegYear');
-        } else if (modeVin && isActiveId('vin')){
-          const vinNorm = normalizeVinSpeech(lastFinalTranscript);
-          if (vinNorm && vinNorm.length>=8){ putValue('vin', vinNorm); } else { fallbackMock('車台番号の入力が確認できませんでした。'); }
-        } else if (modeDigitsOnly && targetFieldId && isActiveId(targetFieldId)){
-          const digits=normalizeJapaneseNumberSpeech(lastFinalTranscript);
-          putValue(targetFieldId,digits);
-        } else if (targetFieldId && isActiveId(targetFieldId)){
-          putValue(targetFieldId,lastFinalTranscript);
+        if (targetFieldId && isActiveField(targetFieldId)){
+          const buf = String(lastFinalTranscript || '').trim();
+          if (modeDigitsOnly){
+            if (buf){ putValue(targetFieldId, normalizeDigitsJa(buf)); }
+            else if (!getEl(targetFieldId)?.value){ fallbackMock('入力が確認できませんでした。'); }
+          }else{
+            if (!getEl(targetFieldId)?.value){ fallbackMock('入力が確認できませんでした。'); }
+          }
         }
 
+        // 認識完了後：すぐフェードアウト
         const fid = targetFieldId;
-        setIndicator(fid || dateGroup || 'voice', '認識完了', 'recognizing');
-        hideVoiceStatusNow();
-        hideIndicator(fid || dateGroup || 'voice');
+        setIndicator(fid, '認識完了', 'recognizing');
+        hideVoiceStatusDelayed(0);
+        hideIndicator(fid);
 
-        targetFieldId=null; modeDigitsOnly=false; modeDate=false; dateGroup=null; modeGender=false; genderGroup=null;
-        modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=false; lastFinalTranscript='';
+        targetFieldId = null;
+        modeDigitsOnly = false;
+        lastFinalTranscript = '';
       };
-      recognition.onresult=function(evt){
+      recognition.onresult = function(evt){
         try{
           let finalChunk='', interimAccum='';
           for(let i=evt.resultIndex;i<evt.results.length;i++){
             const res=evt.results[i]; const text=res[0]?.transcript||'';
             if(res.isFinal) finalChunk+=text; else interimAccum+=text;
           }
-          if (finalChunk) lastFinalTranscript = finalChunk; else lastFinalTranscript = interimAccum;
-          setStatus('認識中…');
-          if (targetFieldId) setIndicator(targetFieldId, '認識中…', 'recognizing');
+          if (finalChunk) lastFinalTranscript = finalChunk;
+
+          if (modeDigitsOnly){
+            if (finalChunk){
+              const normalized = normalizeDigitsJa(finalChunk);
+              if (targetFieldId && isActiveField(targetFieldId)) putValue(targetFieldId, normalized);
+            }
+            setStatus('認識中…');
+            if (targetFieldId) setIndicator(targetFieldId, '認識中…', 'recognizing');
+          } else {
+            const raw = (finalChunk || interimAccum);
+            const normalized = normalizeDashesAndSpaces(raw).replace(/[、。.,]/g, ' ').replace(/\s+/g, ' ').trim();
+            if (targetFieldId && isActiveField(targetFieldId)) putValue(targetFieldId, normalized);
+            setStatus('認識中…');
+            if (targetFieldId) setIndicator(targetFieldId, '認識中…', 'recognizing');
+          }
         }catch(e){
+          setStatus('認識結果の処理に失敗しました。');
+          setIndicator(targetFieldId, '処理に失敗しました', 'ready');
           fallbackMock('認識結果の処理に失敗しました。');
         }
       };
-    }catch(e){ supported=false; }
+
+      supported = true;
+    }catch(e){ supported = false; }
   }
 
-  // Fallbacks with specified defaults & focus moves
-  function fallbackMock(reasonText){
-    try{ setStatus(reasonText || '音声認識で問題が発生しました'); }catch(e){}
-    if (modeDate && dateGroup){
-      if (dateGroup==='firstReg'){ reflectDate('firstReg', 2024, '03', null); }
-      else if (dateGroup==='license'){ reflectDate('license', 2026, '03', '08'); }
-      else if (dateGroup==='dob' || dateGroup==='md_dob'){ reflectDate(dateGroup, 2020, '03', '08'); }
-      if (dateGroup==='dob'){ focusId('company'); }
-      if (dateGroup==='md_dob'){ focusId('md_company'); }
-    } else if (modeGender && genderGroup){
-      // 失敗時は必ず男性を強制選択
-      forceSelectGender(genderGroup, 'male');
-      if (genderGroup==='cust'){ focusId('zip'); } else { focusId('md_zip'); }
-    } else if (modeColor){
-      chooseColorByName('ブルー'); focusId('licenseYear');
-    } else if (modeMaker){
-      setSelectByLabel('maker', {}, 'toyota'); focusId('model');
-    } else if (modeModel){
-      setSelectByLabel('model', {}, 'prius'); focusId('type');
-    } else if (modeType){
-      setSelectByLabel('type', {}, 'DAA-ZVW55'); focusId('firstRegYear');
-    } else if (modeVin){
-      // VINは未入力のまま（必要に応じて案内を追加可）
-    }
-    hideVoiceStatusNow();
-  }
-
-  // Public API (kept compatible)
+  // 公開API
   window.cancelVoiceInput = function(){
     try{ if(recognizing && recognition){ recognition.stop(); } }catch(e){}
-    recognizing=false; toggleButtons(false); setStatus('停止しました。');
-    hideVoiceStatusNow();
-    hideIndicator(targetFieldId || dateGroup || 'voice');
-    targetFieldId=null; modeDigitsOnly=false; modeDate=false; dateGroup=null; modeGender=false; genderGroup=null;
-    modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=false; lastFinalTranscript='';
+    recognizing = false;
+    setStatus('停止しました。');
+    if (targetFieldId) setIndicator(targetFieldId, '停止しました', 'ready');
+    const fid = targetFieldId;
+    hideVoiceStatusDelayed(0);
+    hideIndicator(fid);
+    targetFieldId = null;
+    modeDigitsOnly = false;
+    lastFinalTranscript = '';
   };
 
   window.startVoiceForField = function(fieldId, mode){
     targetFieldId = fieldId;
     modeDigitsOnly = (mode === 'digits');
-    modeDate=false; dateGroup=null; modeGender=false; genderGroup=null;
-    modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音の準備をしています…');
+    lastFinalTranscript = '';
+    setStatus('録音の準備をしています…');
     setIndicator(fieldId, '準備中…', 'ready');
 
     if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
+    if (!supported || !recognition){
+      softFallbackGuide();
+      return;
+    }
     try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); setStatus('録音中です。お話しください…'); setIndicator(fieldId, '録音中…', 'recording'); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
+    try{
+      recognition.start();
+      setStatus('録音中です。お話しください…');
+      setIndicator(fieldId, '録音中…', 'recording');
+    }catch(e){
+      setStatus('音声認識の開始に失敗しました。');
+      setIndicator(fieldId, '開始に失敗しました', 'ready');
+      fallbackMock('音声認識の開始に失敗しました。');
+    }
   };
 
-  window.startVoiceForDate = function(groupKey){
-    modeDigitsOnly=false; modeDate=true; dateGroup=groupKey;
-    targetFieldId=null; modeGender=false; genderGroup=null; modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音の準備をしています…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); setStatus('録音中です。「令和6年8月1日」などとお話しください…'); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  window.startVoiceForGender = function(groupKey){
-    modeDigitsOnly=false; modeDate=false; modeGender=true; genderGroup=groupKey;
-    targetFieldId=null; modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音の準備をしています…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); setStatus('録音中です。「男性」または「女性」とお話しください…'); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  window.startVoiceForColor = function(){
-    modeDigitsOnly=false; modeDate=false; modeGender=false; modeColor=true;
-    targetFieldId=null; modeMaker=false; modeModel=false; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音中です。「ブルー」「ゴールド」「グリーン」からお選びください…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  window.startVoiceForMaker = function(){
-    modeDigitsOnly=false; modeDate=false; modeGender=false; modeColor=false; modeMaker=true;
-    targetFieldId=null; modeModel=false; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音です。「トヨタ」「マツダ」「スズキ」「ベンツ」からお選びください…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  window.startVoiceForModel = function(){
-    modeDigitsOnly=false; modeDate=false; modeGender=false; modeColor=false; modeMaker=false; modeModel=true;
-    targetFieldId=null; modeType=false; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音です。「プリウス」「クラウン」「カローラ」からお選びください…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  window.startVoiceForType = function(){
-    modeDigitsOnly=false; modeDate=false; modeGender=false; modeColor=false; modeMaker=false; modeModel=false; modeType=true;
-    targetFieldId=null; modeVin=false;
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音です。「ZVW50」または「DAA-ZVW55」とお話しください…');
-
-    if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
-    try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
-  };
-
-  // VIN (車台番号) 専用
+  // VIN（車台番号）専用
   window.startVoiceForVin = function(){
-    modeDigitsOnly=false; modeDate=false; modeGender=false; modeColor=false; modeMaker=false; modeModel=false; modeType=false; modeVin=true;
-    targetFieldId='vin';
-    lastFinalTranscript=''; toggleButtons(true); setStatus('録音です。車台番号（例：ZVW50-1234567）をお話しください…');
-    setIndicator('vin', '録音中…', 'recording');
+    targetFieldId = 'vin';
+    modeDigitsOnly = false;
+    lastFinalTranscript='';
+    setStatus('録音です。車台番号（例：ZVW50-1234567）をお話しください…');
 
     if(recognition === null) initRecognizer();
-    if (!supported || !recognition){ fallbackMock('音声認識が未対応です'); return; }
+    if (!supported || !recognition){
+      softFallbackGuide();
+      return;
+    }
     try{ recognition.interimResults = true; }catch(e){}
-    try{ recognition.start(); }
-    catch(e){ fallbackMock('音声認識の開始に失敗しました。'); }
+    try{ recognition.start(); setIndicator('vin','録音中…','recording'); }
+    catch(e){ setStatus('音声認識の開始に失敗しました。'); setIndicator('vin','開始に失敗しました','ready'); }
   };
-
-  // Name mic shortcut (compat)
-  window.startNameVoice = function(){ window.startVoiceForField('mainDriverName'); };
-  window.stopNameVoice  = function(){ window.cancelVoiceInput(); };
 })();
 </script>
 <!-- END: js-voice-input -->
